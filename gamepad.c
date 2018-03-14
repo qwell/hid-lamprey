@@ -5,7 +5,8 @@
 #include <string.h>
 #include <libevdev/libevdev.h>
 
-#define DEADZONE 20 // Percent
+#include "include/defaults.h"
+#include "include/settings.h"
 
 #define LOW_BTN BTN_MISC
 #define HIGH_BTN BTN_THUMBR
@@ -16,25 +17,17 @@
 #define LOW_HAT ABS_HAT0X
 #define HIGH_HAT ABS_HAT3Y
 
+#ifndef __linux__
+#error "No.  Go get a real OS and try again."
+#endif
+
 int main () {
 	int i;
 	struct libevdev *dev = NULL;
 	int fd;
 	int rc = 1;
 
-	// Detect the first joystick event file
-	// TODO: ^ that
-	/*
-	GDir* dir = g_dir_open("/dev/input/by-path/", 0, NULL);
-	const gchar * fname;
-	while ((fname = g_dir_read_name (dir))) {
-		if (g_str_has_suffix (fname, "event-joystick")) {
-			break;
-		}
-	}
-	*/
-
-	char *path = "/dev/input/by-path/pci-0000:03:00.0-usb-0:3:1.0-event-joystick";
+	char *path = "/dev/input/by-path/" DEVICE_PATH;
 	printf("Opening event file %s\n", path);
 
 	fd = open(path, O_RDONLY|O_NONBLOCK);
