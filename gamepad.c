@@ -7,6 +7,7 @@
 
 #include "include/defaults.h"
 #include "include/settings.h"
+#include "include/xdo.h"
 
 #define LOW_BTN BTN_MISC
 #define HIGH_BTN BTN_THUMBR
@@ -22,6 +23,8 @@
 #endif
 
 int main () {
+	xdo_init();
+
 	int i;
 	struct libevdev *dev = NULL;
 	int fd;

@@ -1,7 +1,12 @@
 CC=gcc
-CFLAGS=-Wall $(shell pkg-config --cflags libevdev)
-LIBS=$(shell pkg-config --libs libevdev)
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
+
+CFLAGS=-Wall
+CFLAGS+=$(shell pkg-config --cflags libevdev)
+
+LIBS=
+LIBS+=$(shell pkg-config --libs libevdev)
+LIBS+=-lxdo
 
 SRC=$(wildcard *.c)
 OBJS=$(SRC:.c=.o)

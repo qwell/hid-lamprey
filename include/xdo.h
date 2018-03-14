@@ -1,0 +1,1 @@
+void xdo_init();
