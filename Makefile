@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=$(shell pkg-config --cflags libevdev)
+CFLAGS=-Wall $(shell pkg-config --cflags libevdev)
 LIBS=$(shell pkg-config --libs libevdev)
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
@@ -15,6 +15,6 @@ gamepad: $(OBJS)
 	$(CC) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
 
 clean:
-	rm -rf gamepad
-	rm -rf *.o
-	rm -rf .*.o.d
+	@rm -rf gamepad
+	@rm -rf *.o
+	@rm -rf .*.o.d
