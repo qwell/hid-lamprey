@@ -10,6 +10,12 @@
 
 #include "include/evdev.h"
 
+struct axis_data {
+	int number;
+	int min;
+	int max;
+};
+
 void gamepad_start() {
 	int i;
 	struct libevdev *dev = NULL;
@@ -49,14 +55,17 @@ void gamepad_start() {
 
 	// Get info about axes
 	int naxes = 0;
-	uint abs_map[HIGH_AXIS - LOW_AXIS];
+	struct axis_data abs_map[HIGH_AXIS - LOW_AXIS];
 	for (i = LOW_AXIS; i <= HIGH_AXIS; ++i) {
 		if (libevdev_has_event_code(dev, EV_ABS, i)) {
 			const struct input_absinfo *absinfo = libevdev_get_abs_info(dev, i);
 			printf("Joystick has absolute axis: %2d - %s { %d > %d }\n",
 			       naxes, libevdev_event_code_get_name(EV_ABS, i),
 			       absinfo->minimum, absinfo->maximum);
-			abs_map[i - LOW_AXIS] = naxes;
+			struct axis_data axis = {
+				naxes, absinfo->minimum, absinfo->maximum,
+			};
+			abs_map[i - LOW_AXIS] = axis;;
 			++naxes;
 		}
 	}
@@ -99,7 +108,11 @@ void gamepad_start() {
 					ev.code -= LOW_HAT;
 					printf("Hat %d Value %d\n", hat_map[ev.code], ev.value);
 				} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
-					printf("Axis %d Value %d\n", abs_map[ev.code], ev.value);
+					struct axis_data axis = abs_map[ev.code];
+					if (abs(ev.value) >= abs(axis.max) * DEADZONE) {
+						//TODO Smooth value with deadzone.
+						printf("Axis %d Value %d Max %d\n", axis.number, ev.value, axis.max);
+					}
 				}
 				break;
 			case EV_REL:
