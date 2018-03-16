@@ -109,9 +109,16 @@ void gamepad_start() {
 					printf("Hat %d Value %d\n", hat_map[ev.code], ev.value);
 				} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
 					struct axis_data axis = abs_map[ev.code];
+					// Only deal with values outside of the deadzone
 					if (abs(ev.value) >= abs(axis.max) * DEADZONE) {
-						//TODO Smooth value with deadzone.
-						printf("Axis %d Value %d Max %d\n", axis.number, ev.value, axis.max);
+						// Smooth value with deadzone.
+						int value = 0;
+						if (ev.value > 0) {
+							value = (ev.value - (axis.max * DEADZONE)) / (1 - DEADZONE);
+						} else if (ev.value < 0) {
+							value = (ev.value - (axis.min * DEADZONE)) / (1 - DEADZONE);
+						}
+						printf("Axis %d Value %d\n", axis.number, value);
 					}
 				}
 				break;
