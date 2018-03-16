@@ -16,6 +16,12 @@ struct axis_data {
 	int max;
 };
 
+struct hat_data {
+	int number;
+	int min;
+	int max;
+};
+
 void gamepad_start() {
 	int i;
 	struct libevdev *dev = NULL;
@@ -63,9 +69,11 @@ void gamepad_start() {
 			       naxes, libevdev_event_code_get_name(EV_ABS, i),
 			       absinfo->minimum, absinfo->maximum);
 			struct axis_data axis = {
-				naxes, absinfo->minimum, absinfo->maximum,
+				.number = naxes,
+				.min = absinfo->minimum,
+				.max = absinfo->maximum,
 			};
-			abs_map[i - LOW_AXIS] = axis;;
+			abs_map[i - LOW_AXIS] = axis;
 			++naxes;
 		}
 	}
@@ -74,7 +82,7 @@ void gamepad_start() {
 
 	// Get info about hats
 	int nhats = 0;
-	uint hat_map[HIGH_HAT - LOW_HAT];
+	struct hat_data hat_map[HIGH_HAT - LOW_HAT];
 	for (i = LOW_HAT; i <= HIGH_HAT; i++) {
 		if (libevdev_has_event_code(dev, EV_ABS, i)) {
 			const struct input_absinfo *absinfo = libevdev_get_abs_info(dev, i);
@@ -85,7 +93,12 @@ void gamepad_start() {
 			printf("Joystick has hat: %2d - %s { %d > %d }\n",
 			       nhats, libevdev_event_code_get_name(EV_ABS, i),
 			       absinfo->minimum, absinfo->maximum);
-			hat_map[i - LOW_HAT] = nhats;
+			struct hat_data hat = {
+				.number = nhats,
+				.min = absinfo->minimum,
+				.max = absinfo->maximum,
+			};
+			hat_map[i - LOW_HAT] = hat;
 			++nhats;
 		}
 	}
@@ -105,10 +118,10 @@ void gamepad_start() {
 				break;
 			case EV_ABS:
 				if (ev.code >= LOW_HAT && ev.code <= HIGH_HAT) {
-					ev.code -= LOW_HAT;
-					printf("Hat %d Value %d\n", hat_map[ev.code], ev.value);
+					struct hat_data hat = hat_map[ev.code - LOW_HAT];
+					printf("Hat %d Value %d\n", hat.number, ev.value);
 				} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
-					struct axis_data axis = abs_map[ev.code];
+					struct axis_data axis = abs_map[ev.code - LOW_AXIS];
 					// Only deal with values outside of the deadzone
 					if (abs(ev.value) >= abs(axis.max) * DEADZONE) {
 						// Smooth value with deadzone.
