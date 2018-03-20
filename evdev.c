@@ -11,6 +11,9 @@
 
 #include "include/evdev.h"
 
+struct key_data {
+};
+
 struct axis_data {
 	int min;
 	int max;
@@ -27,7 +30,7 @@ void gamepad_start() {
 	int nfds = 0;
 	int rc = 1;
 
-	uint key_map[HIGH_KEY - LOW_KEY];
+	struct key_data key_map[HIGH_KEY - LOW_KEY];
 	struct axis_data abs_map[HIGH_AXIS - LOW_AXIS];
 	struct hat_data hat_map[HIGH_HAT - LOW_HAT];
 
@@ -61,13 +64,13 @@ void gamepad_start() {
 		printf("\n");
 
 		// Get info about keys
-		int nkeys = 0;
 		for (int code = LOW_KEY; code <= HIGH_KEY; ++code) {
 			if (libevdev_has_event_code(dev, EV_KEY, code)) {
+				struct key_data key = {
+				};
 				printf("Device %d has key: %s\n",
 					i, libevdev_event_code_get_name(EV_KEY, code));
-				key_map[code - LOW_KEY] = nkeys;
-				++nkeys;
+				key_map[code - LOW_KEY] = key;
 			}
 		}
 
@@ -77,13 +80,13 @@ void gamepad_start() {
 		for (int code = LOW_AXIS; code <= HIGH_AXIS; ++code) {
 			if (libevdev_has_event_code(dev, EV_ABS, code)) {
 				const struct input_absinfo *absinfo = libevdev_get_abs_info(dev, code);
-				printf("Device %d has absolute axis: %s { %d > %d }\n",
-				       i, libevdev_event_code_get_name(EV_ABS, code),
-				       absinfo->minimum, absinfo->maximum);
 				struct axis_data axis = {
 					.min = absinfo->minimum,
 					.max = absinfo->maximum,
 				};
+				printf("Device %d has absolute axis: %s { %d > %d }\n",
+				       i, libevdev_event_code_get_name(EV_ABS, code),
+				       absinfo->minimum, absinfo->maximum);
 				abs_map[code - LOW_AXIS] = axis;
 			}
 		}
@@ -94,17 +97,18 @@ void gamepad_start() {
 		for (int code = LOW_HAT; code <= HIGH_HAT; code++) {
 			if (libevdev_has_event_code(dev, EV_ABS, code)) {
 				const struct input_absinfo *absinfo = libevdev_get_abs_info(dev, code);
+				struct hat_data hat;
+
 				if (absinfo == NULL) {
 					continue;
 				}
 
+				hat.min = absinfo->minimum;
+				hat.max = absinfo->maximum;
+
 				printf("Device %d has hat: %s { %d > %d }\n",
 				       i, libevdev_event_code_get_name(EV_ABS, code),
 				       absinfo->minimum, absinfo->maximum);
-				struct hat_data hat = {
-					.min = absinfo->minimum,
-					.max = absinfo->maximum,
-				};
 				hat_map[code - LOW_HAT] = hat;
 			}
 		}
@@ -142,7 +146,8 @@ void gamepad_start() {
 				switch (ev.type) {
 				case EV_KEY:
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
-						printf("Key %d %s\n", ev.code, ev.value ? "pressed" : "released");
+						struct key_data key = key_map[ev.code - LOW_KEY];
+						printf("Key %s %s\n", libevdev_event_code_get_name(EV_KEY, ev.code), ev.value ? "pressed" : "released");
 					}
 					break;
 				case EV_ABS:
@@ -157,7 +162,7 @@ void gamepad_start() {
 							} else if (ev.value < 0) {
 								value = (ev.value - (hat.min * HAT_DEADZONE)) / (1 - HAT_DEADZONE);
 							}
-							printf("Hat %d Value %d\n", ev.code, value);
+							printf("Hat %s Value %d\n", libevdev_event_code_get_name(EV_ABS, ev.code), value);
 						}
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
 						struct axis_data axis = abs_map[ev.code - LOW_AXIS];
@@ -170,7 +175,7 @@ void gamepad_start() {
 							} else if (ev.value < 0) {
 								value = (ev.value - (axis.min * AXIS_DEADZONE)) / (1 - AXIS_DEADZONE);
 							}
-							printf("Axis %d Value %d\n", ev.code, value);
+							printf("Axis %s Value %d\n", libevdev_event_code_get_name(EV_ABS, ev.code), value);
 						}
 					}
 					break;

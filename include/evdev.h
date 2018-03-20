@@ -1,3 +1,8 @@
+#ifndef _EVDEV_H
+#define _EVDEV_H
+
+#include <stdbool.h>
+
 #include <libevdev/libevdev.h>
 
 //#define LOW_KEY BTN_MISC
@@ -12,3 +17,20 @@
 #define HIGH_HAT ABS_HAT3Y
 
 void gamepad_start();
+
+typedef enum {
+	simultaneous = 0,
+	consecutive = 1
+} shortcut_type;
+
+struct shortcut {
+	void (*function) ();
+	shortcut_type type;
+	bool multi_device;
+	/* List of keys that trigger the shortcut.
+	 * See https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
+	 */
+	int keys[];
+};
+
+#endif
