@@ -23,7 +23,6 @@ struct hat_data {
 
 void gamepad_start() {
 	struct libevdev *dev_list[8];// = NULL;
-	struct libevdev *dev = NULL;
 	struct pollfd fds[256];
 	int nfds = 0;
 	int rc = 1;
@@ -35,16 +34,17 @@ void gamepad_start() {
 	memset(fds, 0, sizeof(fds));
 
 	for (int i = 0; i <= 1; ++i) {
-		int code;
-		dev = dev_list[i];
+		char *path = DEVICE_PATH(i);
+		char fullpath[256];
 
-		char path[256];
-		sprintf(path, "/dev/input/by-path/%s", DEVICE_PATH(i));
+		struct libevdev *dev = dev_list[i];
+
 		printf("Opening event file %s\n", path);
 
-		nfds++;
+		sprintf(fullpath, "/dev/input/by-path/%s", DEVICE_PATH(i));
+		fds[i].fd = open(fullpath, O_RDONLY|O_NONBLOCK);
 		fds[i].events = POLLIN;
-		fds[i].fd = open(path, O_RDONLY|O_NONBLOCK);
+		nfds++;
 
 		rc = libevdev_new_from_fd(fds[i].fd, &dev);
 		if (rc < 0) {
@@ -62,10 +62,10 @@ void gamepad_start() {
 
 		// Get info about keys
 		int nkeys = 0;
-		for (code = LOW_KEY; code <= HIGH_KEY; ++code) {
+		for (int code = LOW_KEY; code <= HIGH_KEY; ++code) {
 			if (libevdev_has_event_code(dev, EV_KEY, code)) {
-				printf("Device has key: %2d - %s\n",
-					nkeys, libevdev_event_code_get_name(EV_KEY, code));
+				printf("Device %d has key: %s\n",
+					i, libevdev_event_code_get_name(EV_KEY, code));
 				key_map[code - LOW_KEY] = nkeys;
 				++nkeys;
 			}
@@ -74,11 +74,11 @@ void gamepad_start() {
 		printf("\n");
 
 		// Get info about axes
-		for (code = LOW_AXIS; code <= HIGH_AXIS; ++code) {
+		for (int code = LOW_AXIS; code <= HIGH_AXIS; ++code) {
 			if (libevdev_has_event_code(dev, EV_ABS, code)) {
 				const struct input_absinfo *absinfo = libevdev_get_abs_info(dev, code);
-				printf("Device has absolute axis: %s { %d > %d }\n",
-				       libevdev_event_code_get_name(EV_ABS, code),
+				printf("Device %d has absolute axis: %s { %d > %d }\n",
+				       i, libevdev_event_code_get_name(EV_ABS, code),
 				       absinfo->minimum, absinfo->maximum);
 				struct axis_data axis = {
 					.min = absinfo->minimum,
@@ -91,15 +91,15 @@ void gamepad_start() {
 		printf("\n");
 
 		// Get info about hats
-		for (code = LOW_HAT; code <= HIGH_HAT; code++) {
+		for (int code = LOW_HAT; code <= HIGH_HAT; code++) {
 			if (libevdev_has_event_code(dev, EV_ABS, code)) {
 				const struct input_absinfo *absinfo = libevdev_get_abs_info(dev, code);
 				if (absinfo == NULL) {
 					continue;
 				}
 
-				printf("Device has hat: %s { %d > %d }\n",
-				       libevdev_event_code_get_name(EV_ABS, code),
+				printf("Device %d has hat: %s { %d > %d }\n",
+				       i, libevdev_event_code_get_name(EV_ABS, code),
 				       absinfo->minimum, absinfo->maximum);
 				struct hat_data hat = {
 					.min = absinfo->minimum,
@@ -124,6 +124,8 @@ void gamepad_start() {
 			continue;
 		}
 		for (int i = 0; i <= nfds; i++) {
+			struct libevdev *dev = NULL;
+
 			if (fds[i].revents != POLLIN) {
 				continue;
 			}
