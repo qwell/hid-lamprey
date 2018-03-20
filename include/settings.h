@@ -1,6 +1,8 @@
 #ifndef _SETTINGS_H
 #define _SETTINGS_H
 
+#include <stdbool.h>
+
 #include "evdev.h"
 
 #define DEVICE_PATH1 "pci-0000:03:00.0-usb-0:3:1.0-event-joystick"
@@ -15,6 +17,7 @@ typedef enum {
 struct shortcut {
 	void (*function) ();
 	shortcut_type type;
+	bool multi_device;
 	/* List of keys that trigger the shortcut.
 	 * See https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
 	 */
@@ -23,6 +26,7 @@ struct shortcut {
 
 static struct shortcut konami = {
 	.function = NULL,
+	.multi_device = false,
 	.type = consecutive,
 	.keys = {
 		BTN_DPAD_UP,
