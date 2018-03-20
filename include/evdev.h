@@ -1,5 +1,9 @@
-#define LOW_BTN BTN_MISC
-#define HIGH_BTN BTN_THUMBR
+#include <libevdev/libevdev.h>
+
+//#define LOW_KEY BTN_MISC
+//#define HIGH_KEY BTN_THUMBR
+#define LOW_KEY KEY_ESC
+#define HIGH_KEY KEY_MAX
 
 #define LOW_AXIS ABS_X
 #define HIGH_AXIS ABS_BRAKE
