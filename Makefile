@@ -1,7 +1,7 @@
 CC=gcc
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
-CFLAGS=-Wall
+CFLAGS=-Wall -g
 CFLAGS+=$(shell pkg-config --cflags libevdev)
 
 LIBS=
