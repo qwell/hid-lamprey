@@ -25,7 +25,7 @@ struct hat_data {
 };
 
 void hl_evdev_start() {
-	struct libevdev *dev_list[8];// = NULL;
+	struct libevdev *dev_list[8];
 	struct pollfd fds[256];
 	int nfds = 0;
 	int rc = 1;
