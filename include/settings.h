@@ -10,6 +10,9 @@
 #define DEVICE_PATH2 "pci-0000:11:00.3-usb-0:4.3:1.0-event-kbd"
 #define DEVICE_PATH(i) (i == 0 ? DEVICE_PATH1 : DEVICE_PATH2)
 
+// #define AXIS_DEADZONE .2
+// #define HAT_DEADZONE 0
+
 /* TODO Move this somewhere useful, outside of a header.
 static struct hl_shortcut konami = {
 	.function = NULL,

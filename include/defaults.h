@@ -6,6 +6,7 @@
 #define HAT_DEADZONE 0
 #endif
 
+// TODO Fix this.
 #ifndef DEVICE_PATH
 #define DEVICE_PATH ""
 #endif
