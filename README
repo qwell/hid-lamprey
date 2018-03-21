@@ -2,6 +2,5 @@ On Ubuntu, the following packages are required to build.
 	libevdev-dev
 	libxdo-dev
 
-Various settings can be changed in include/settings.h.  Currently, only device
-paths (DEVICE_PATH1, DEVICE_PATH2) and deadzones (AXIS_DEADZONE,
-HAT_DEADZONE) can be configured.
+Various settings can be changed in include/settings.h.  Currently, only
+deadzones (AXIS_DEADZONE, HAT_DEADZONE) can be configured.
