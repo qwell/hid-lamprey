@@ -10,7 +10,7 @@
 #endif
 
 int main () {
-	hl_xdo_init();
+//	hl_xdo_init();
 
 	// TODO: ...pthreads
 	hl_evdev_start();

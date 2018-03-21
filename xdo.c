@@ -6,7 +6,7 @@
 #include "include/xdo.h"
 
 void hl_xdo_init() {
-	xdo_t* xdo = xdo_new(NULL);
+	xdo_t* xdo = NULL;
 	Window activewindow = 0;
 	Window *searchwindow = NULL;
 	unsigned int nwindows;
@@ -14,6 +14,7 @@ void hl_xdo_init() {
 
 	printf("libxdo module version: %s\n", xdo_version());
 
+	xdo = xdo_new(NULL);
 	hl_xdo_getactive(xdo, &activewindow);
 	printf("Active Window: %ld\n", activewindow);
 
