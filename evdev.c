@@ -68,6 +68,7 @@ void hl_evdev_start() {
 			fprintf(stderr, "Failed to init libevdev for %s (%s)\n", filelist[i]->d_name, strerror(-rc));
 			continue;
 		}
+		free(filelist[i]);
 
 		printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
 		printf("Input device ID: bus %#x vendor %#x product %#x\n",
@@ -131,6 +132,8 @@ void hl_evdev_start() {
 
 		dev_list[i] = dev;
 	}
+
+	free(filelist);
 
 	// Poll events
 	do {
