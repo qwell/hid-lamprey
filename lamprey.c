@@ -10,8 +10,8 @@
 #endif
 
 int main () {
-	xdo_init();
+	hl_xdo_init();
 
 	// TODO: ...pthreads
-	gamepad_start();
+	hl_evdev_start();
 }

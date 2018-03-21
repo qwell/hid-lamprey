@@ -16,16 +16,16 @@
 #define LOW_HAT ABS_HAT0X
 #define HIGH_HAT ABS_HAT3Y
 
-void gamepad_start();
+void hl_evdev_start();
 
 typedef enum {
 	simultaneous = 0,
 	consecutive = 1
-} shortcut_type;
+} hl_shortcut_type;
 
-struct shortcut {
+struct hl_shortcut {
 	void (*function) ();
-	shortcut_type type;
+	hl_shortcut_type type;
 	bool multi_device;
 	/* List of keys that trigger the shortcut.
 	 * See https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h

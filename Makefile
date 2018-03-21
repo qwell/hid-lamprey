@@ -11,7 +11,7 @@ LIBS+=-lxdo
 SRC=$(wildcard *.c)
 OBJS=$(SRC:.c=.o)
 
-gamepad: $(OBJS)
+lamprey: $(OBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 -include $(patsubst %.o,.%.o.d,$(OBJS))
@@ -20,6 +20,6 @@ gamepad: $(OBJS)
 	$(CC) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
 
 clean:
-	@rm -rf gamepad
+	@rm -rf lamprey
 	@rm -rf *.o
 	@rm -rf .*.o.d

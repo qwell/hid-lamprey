@@ -24,7 +24,7 @@ struct hat_data {
 	int max;
 };
 
-void gamepad_start() {
+void hl_evdev_start() {
 	struct libevdev *dev_list[8];// = NULL;
 	struct pollfd fds[256];
 	int nfds = 0;
@@ -146,7 +146,7 @@ void gamepad_start() {
 				switch (ev.type) {
 				case EV_KEY:
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
-						struct key_data key = key_map[ev.code - LOW_KEY];
+						__attribute__((__unused__)) struct key_data key = key_map[ev.code - LOW_KEY];
 						printf("Key %s %s\n", libevdev_event_code_get_name(EV_KEY, ev.code), ev.value ? "pressed" : "released");
 					}
 					break;
