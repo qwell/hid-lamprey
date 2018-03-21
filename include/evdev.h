@@ -16,6 +16,9 @@
 #define LOW_HAT ABS_HAT0X
 #define HIGH_HAT ABS_HAT3Y
 
+#define LOW_REL REL_X
+#define HIGH_REL REL_MAX
+
 void hl_evdev_start();
 
 typedef enum {

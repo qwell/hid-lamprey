@@ -180,14 +180,8 @@ void hl_evdev_start() {
 					}
 					break;
 				case EV_REL:
-					switch (ev.code) {
-					case REL_X:
-					case REL_Y:
-						ev.code -= REL_X;
-						printf("Ball %d Axis %d Value %d\n", ev.code / 2, ev.code % 2, ev.value);
-						break;
-					default:
-						break;
+					if (ev.code >= LOW_REL && ev.code <= HIGH_REL) {
+						printf("Ball %s Value %d\n", libevdev_event_code_get_name(EV_REL, ev.code), ev.value);
 					}
 					break;
 				}
