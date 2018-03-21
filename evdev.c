@@ -38,56 +38,33 @@ struct controller {
 	char layout[5][11];
 };
 
-struct controller controllers[] = {{
-	.device = "",
-	.mapping = {
-		{'^', BTN_DPAD_UP},
-		{'^', ABS_HAT0Y, -1},
-		{'L', BTN_TL},
-		{'R', BTN_TR},
-		{'X', BTN_WEST},
-		{'<', BTN_DPAD_LEFT},
-		{'<', ABS_HAT0X, -1},
-		{'>', BTN_DPAD_RIGHT},
-		{'>', ABS_HAT0X, 1},
-		{'Y', BTN_NORTH},
-		{'A', BTN_EAST},
-		{'v', BTN_DPAD_DOWN},
-		{'v', ABS_HAT0Y, 1},
-		{'s', BTN_SELECT},
-		{'S', BTN_START},
-		{'B', BTN_SOUTH},
-	},
-	.layout = {
-		{" ^  LR  X "},
-		{"< >    Y A"},
-		{" v  sS  B "},
-	},
-}};
-
-struct controller_mapping mapping_snes[] = {
-	{'^', BTN_DPAD_UP},
-	{'^', ABS_HAT0Y, -1},
-	{'L', BTN_TL},
-	{'R', BTN_TR},
-	{'X', BTN_WEST},
-	{'<', BTN_DPAD_LEFT},
-	{'<', ABS_HAT0X, -1},
-	{'>', BTN_DPAD_RIGHT},
-	{'>', ABS_HAT0X, 1},
-	{'Y', BTN_NORTH},
-	{'A', BTN_EAST},
-	{'v', BTN_DPAD_DOWN},
-	{'v', ABS_HAT0Y, 1},
-	{'s', BTN_SELECT},
-	{'S', BTN_START},
-	{'B', BTN_SOUTH},
-};
-
-const char layout_snes[5][11] = {
-	{" ^  LR  X "},
-	{"< >    Y A"},
-	{" v  sS  B "},
+struct controller controllers[] = {
+	{
+		.device = "",
+		.mapping = {
+			{'^', BTN_DPAD_UP},
+			{'^', ABS_HAT0Y, -1},
+			{'L', BTN_TL},
+			{'R', BTN_TR},
+			{'X', BTN_WEST},
+			{'<', BTN_DPAD_LEFT},
+			{'<', ABS_HAT0X, -1},
+			{'>', BTN_DPAD_RIGHT},
+			{'>', ABS_HAT0X, 1},
+			{'Y', BTN_NORTH},
+			{'A', BTN_EAST},
+			{'v', BTN_DPAD_DOWN},
+			{'v', ABS_HAT0Y, 1},
+			{'s', BTN_SELECT},
+			{'S', BTN_START},
+			{'B', BTN_SOUTH},
+		},
+		.layout = {
+			{" ^  LR  X "},
+			{"< >    Y A"},
+			{" v  sS  B "},
+		},
+	}
 };
 
 int filter_event_files(const struct dirent *entry)
@@ -275,41 +252,44 @@ void hl_evdev_start() {
 }
 
 void key_press(uint key, int value) {
-	for (int i = 0; i < sizeof(layout_snes) / (sizeof(layout_snes[0])); i++) {
-		if (!strlen(layout_snes[i])) {
-			continue;
-		}
-
-		for (int j = 0; j < sizeof(layout_snes[0]); j++) {
-			int on = 0;
-
-			if (layout_snes[i][j] == ' ') {
-				printf(" ");
+	for (int a = 0; a < sizeof(controllers) / sizeof(struct controller); a++) {
+		for (int i = 0; i < sizeof(controllers[a].layout) / (sizeof(controllers[a].layout[0])); i++) {
+			if (!strlen(controllers[a].layout[i])) {
 				continue;
 			}
 
-			for (int k = 0; k < sizeof(mapping_snes) / sizeof(mapping_snes[0]); k++) {
-				if (layout_snes[i][j] == mapping_snes[k].button) {
-					if (key == mapping_snes[k].code) {
-						if (mapping_snes[k].triggervalue) {
-							mapping_snes[k].value = (value == mapping_snes[k].triggervalue);
-						} else {
-							mapping_snes[k].value = value;
-						}
-					}
+			for (int j = 0; j < sizeof(controllers[a].layout[i]); j++) {
+				int on = 0;
 
-					on = mapping_snes[k].value;
+				if (controllers[a].layout[i][j] == ' ' || controllers[a].layout[i][j] == '\0') {
+					printf(" ");
+					continue;
+				}
+
+				for (int k = 0; k < sizeof(controllers[a].mapping) / sizeof(struct controller_mapping); k++) {
+					if (controllers[a].layout[i][j] == controllers[a].mapping[k].button) {
+						if (key == controllers[a].mapping[k].code) {
+							if (controllers[a].mapping[k].triggervalue) {
+								controllers[a].mapping[k].value = (value == controllers[a].mapping[k].triggervalue);
+							} else {
+								controllers[a].mapping[k].value = value;
+							}
+						}
+
+						on = controllers[a].mapping[k].value;
+					}
+				}
+
+				if (on) {
+					printf("\x1b[31m");
+					printf("%c", controllers[a].layout[i][j]);
+					printf("\x1b[0m");
+				} else {
+					printf("%c", controllers[a].layout[i][j]);
 				}
 			}
-			if (on) {
-				printf("\x1b[31m");
-				printf("%c", layout_snes[i][j]);
-				printf("\x1b[0m");
-			} else {
-				printf("%c", layout_snes[i][j]);
-			}
+			printf("\n");
 		}
-		printf("\n");
 	}
 	return;
 }
