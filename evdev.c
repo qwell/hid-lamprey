@@ -32,6 +32,39 @@ struct controller_mapping {
 	int value;
 };
 
+struct controller {
+	char *device;
+	struct controller_mapping mapping[64];
+	char layout[5][11];
+};
+
+struct controller controllers[] = {{
+	.device = "",
+	.mapping = {
+		{'^', BTN_DPAD_UP},
+		{'^', ABS_HAT0Y, -1},
+		{'L', BTN_TL},
+		{'R', BTN_TR},
+		{'X', BTN_WEST},
+		{'<', BTN_DPAD_LEFT},
+		{'<', ABS_HAT0X, -1},
+		{'>', BTN_DPAD_RIGHT},
+		{'>', ABS_HAT0X, 1},
+		{'Y', BTN_NORTH},
+		{'A', BTN_EAST},
+		{'v', BTN_DPAD_DOWN},
+		{'v', ABS_HAT0Y, 1},
+		{'s', BTN_SELECT},
+		{'S', BTN_START},
+		{'B', BTN_SOUTH},
+	},
+	.layout = {
+		{" ^  LR  X "},
+		{"< >    Y A"},
+		{" v  sS  B "},
+	},
+}};
+
 struct controller_mapping mapping_snes[] = {
 	{'^', BTN_DPAD_UP},
 	{'^', ABS_HAT0Y, -1},
@@ -51,10 +84,10 @@ struct controller_mapping mapping_snes[] = {
 	{'B', BTN_SOUTH},
 };
 
-const char layout_snes[3][10] = {
-	{' ', '^', ' ', ' ', 'L', 'R', ' ', ' ', 'X', ' '},
-	{'<', ' ', '>', ' ', ' ', ' ', ' ', 'Y', ' ', 'A'},
-	{' ', 'v', ' ', ' ', 's', 'S', ' ', ' ', 'B', ' '},
+const char layout_snes[5][11] = {
+	{" ^  LR  X "},
+	{"< >    Y A"},
+	{" v  sS  B "},
 };
 
 int filter_event_files(const struct dirent *entry)
@@ -243,6 +276,10 @@ void hl_evdev_start() {
 
 void key_press(uint key, int value) {
 	for (int i = 0; i < sizeof(layout_snes) / (sizeof(layout_snes[0])); i++) {
+		if (!strlen(layout_snes[i])) {
+			continue;
+		}
+
 		for (int j = 0; j < sizeof(layout_snes[0]); j++) {
 			int on = 0;
 
