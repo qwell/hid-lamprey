@@ -25,6 +25,38 @@ struct hat_data {
 	int max;
 };
 
+struct controller_mapping {
+	char button;
+	int code;
+	int triggervalue;
+	int value;
+};
+
+struct controller_mapping mapping_snes[] = {
+	{'^', BTN_DPAD_UP},
+	{'^', ABS_HAT0Y, -1},
+	{'L', BTN_TL},
+	{'R', BTN_TR},
+	{'X', BTN_WEST},
+	{'<', BTN_DPAD_LEFT},
+	{'<', ABS_HAT0X, -1},
+	{'>', BTN_DPAD_RIGHT},
+	{'>', ABS_HAT0X, 1},
+	{'Y', BTN_NORTH},
+	{'A', BTN_EAST},
+	{'v', BTN_DPAD_DOWN},
+	{'v', ABS_HAT0Y, 1},
+	{'s', BTN_SELECT},
+	{'S', BTN_START},
+	{'B', BTN_SOUTH},
+};
+
+const char layout_snes[3][10] = {
+	{' ', '^', ' ', ' ', 'L', 'R', ' ', ' ', 'X', ' '},
+	{'<', ' ', '>', ' ', ' ', ' ', ' ', 'Y', ' ', 'A'},
+	{' ', 'v', ' ', ' ', 's', 'S', ' ', ' ', 'B', ' '},
+};
+
 int filter_event_files(const struct dirent *entry)
 {
    return strstr(entry->d_name, "-event") != NULL;
@@ -165,6 +197,7 @@ void hl_evdev_start() {
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
 						__attribute__((__unused__)) struct key_data key = key_map[ev.code - LOW_KEY];
 						printf("Key %s %s\n", libevdev_event_code_get_name(EV_KEY, ev.code), ev.value ? "pressed" : "released");
+						key_press(ev.code, ev.value);
 					}
 					break;
 				case EV_ABS:
@@ -180,6 +213,7 @@ void hl_evdev_start() {
 								value = (ev.value - (hat.min * HAT_DEADZONE)) / (1 - HAT_DEADZONE);
 							}
 							printf("Hat %s Value %d\n", libevdev_event_code_get_name(EV_ABS, ev.code), value);
+							key_press(ev.code, ev.value);
 						}
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
 						struct axis_data axis = abs_map[ev.code - LOW_AXIS];
@@ -207,7 +241,39 @@ void hl_evdev_start() {
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
 }
 
-void key_press(uint key, uint value) {
+void key_press(uint key, int value) {
+	for (int i = 0; i < sizeof(layout_snes) / (sizeof(layout_snes[0])); i++) {
+		for (int j = 0; j < sizeof(layout_snes[0]); j++) {
+			int on = 0;
+
+			if (layout_snes[i][j] == ' ') {
+				printf(" ");
+				continue;
+			}
+
+			for (int k = 0; k < sizeof(mapping_snes) / sizeof(mapping_snes[0]); k++) {
+				if (layout_snes[i][j] == mapping_snes[k].button) {
+					if (key == mapping_snes[k].code) {
+						if (mapping_snes[k].triggervalue) {
+							mapping_snes[k].value = (value == mapping_snes[k].triggervalue);
+						} else {
+							mapping_snes[k].value = value;
+						}
+					}
+
+					on = mapping_snes[k].value;
+				}
+			}
+			if (on) {
+				printf("\x1b[31m");
+				printf("%c", layout_snes[i][j]);
+				printf("\x1b[0m");
+			} else {
+				printf("%c", layout_snes[i][j]);
+			}
+		}
+		printf("\n");
+	}
 	return;
 }
 
