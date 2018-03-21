@@ -1,3 +1,4 @@
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -24,7 +25,15 @@ struct hat_data {
 	int max;
 };
 
+int filter_event_files(const struct dirent *entry)
+{
+   return strstr(entry->d_name, "-event") != NULL;
+}
+
 void hl_evdev_start() {
+	const char *filepath = "/dev/input/by-path/";
+	struct dirent **filelist;
+	int filecount = 0;
 	struct libevdev *dev_list[8];
 	struct pollfd fds[256];
 	int nfds = 0;
@@ -34,24 +43,29 @@ void hl_evdev_start() {
 	struct axis_data abs_map[HIGH_AXIS - LOW_AXIS];
 	struct hat_data hat_map[HIGH_HAT - LOW_HAT];
 
+	filecount = scandir(filepath, &filelist, filter_event_files, alphasort);
+	if (filecount < 0) {
+		printf("No input files found.  Cannot continue.\n");
+		exit(1);
+	}
+
 	memset(fds, 0, sizeof(fds));
 
-	for (int i = 0; i <= 1; ++i) {
-		char *path = DEVICE_PATH(i);
+	for (int i = 0; i < filecount; ++i) {
 		char fullpath[256];
 
 		struct libevdev *dev = dev_list[i];
 
-		printf("Opening event file %s\n", path);
+		printf("Opening event file %s\n", filelist[i]->d_name);
 
-		sprintf(fullpath, "/dev/input/by-path/%s", DEVICE_PATH(i));
+		snprintf(fullpath, sizeof(fullpath), "%s%s", filepath, filelist[i]->d_name);
 		fds[i].fd = open(fullpath, O_RDONLY|O_NONBLOCK);
 		fds[i].events = POLLIN;
 		nfds++;
 
 		rc = libevdev_new_from_fd(fds[i].fd, &dev);
 		if (rc < 0) {
-			fprintf(stderr, "Failed to init libevdev for %s (%s)\n", path, strerror(-rc));
+			fprintf(stderr, "Failed to init libevdev for %s (%s)\n", filelist[i]->d_name, strerror(-rc));
 			continue;
 		}
 
