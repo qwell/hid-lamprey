@@ -8,10 +8,13 @@ LIBS=
 LIBS+=$(shell pkg-config --libs libevdev)
 LIBS+=-lxdo
 
+APPS=lamprey
 SRC=$(wildcard *.c)
 OBJS=$(SRC:.c=.o)
 
-lamprey: $(OBJS)
+all: $(APPS)
+
+$(APPS): $(OBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 -include $(patsubst %.o,.%.o.d,$(OBJS))
@@ -20,6 +23,6 @@ lamprey: $(OBJS)
 	$(CC) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
 
 clean:
-	@rm -rf lamprey
+	@rm -rf $(APPS)
 	@rm -rf *.o
 	@rm -rf .*.o.d
