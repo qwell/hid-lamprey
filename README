@@ -1,0 +1,3 @@
+On Ubuntu, the following packages are required to build.
+	libevdev-dev
+	libxdo-dev
