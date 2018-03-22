@@ -37,7 +37,7 @@ struct hl_shortcut {
 	int keys[];
 };
 
-void key_press(const char *device, uint8_t type, uint16_t key, int value);
-void axis_move(uint axis, int value);
+void key_press(const char *device, uint8_t type, uint16_t key, int16_t value);
+void axis_move(const char *device, uint8_t type, uint8_t axis, int16_t value);
 
 #endif

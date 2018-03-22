@@ -28,13 +28,13 @@ struct hat_data {
 struct button_mapping {
 	uint8_t type;
 	uint16_t code;
-	int triggervalue;
+	int16_t triggervalue;
 };
 
 struct controller_mapping {
 	char display;
-	struct button_mapping buttons[64];
-	int value;
+	struct button_mapping buttons[8];
+	bool value;
 };
 
 struct controller {
@@ -257,7 +257,7 @@ void hl_evdev_start() {
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
 }
 
-void key_press(const char *device, uint8_t type, uint16_t key, int value) {
+void key_press(const char *device, uint8_t type, uint16_t key, int16_t value) {
 	for (int a = 0; a < sizeof(controllers) / sizeof(struct controller); a++) {
 		for (int i = 0; i < sizeof(controllers[a].layout) / (sizeof(controllers[a].layout[0])); i++) {
 			if (!strlen(controllers[a].layout[i])) {
@@ -308,6 +308,6 @@ void key_press(const char *device, uint8_t type, uint16_t key, int value) {
 	return;
 }
 
-void axis_move(uint axis, int value) {
+void axis_move(const char *device, uint8_t type, uint8_t axis, int16_t value) {
 	return;
 }
