@@ -13,25 +13,6 @@
 
 #include "include/evdev.h"
 
-struct button_mapping {
-	uint8_t type;
-	uint16_t code;
-	int16_t triggervalue;
-};
-
-struct controller_mapping {
-	char display;
-	struct button_mapping buttons[8];
-	bool value;
-};
-
-struct controller {
-	char *name;
-	char *device;
-	struct controller_mapping mapping[64];
-	char layout[8][32];
-};
-
 struct controller controllers[] = {
 	{
 		.name = "SNES",
