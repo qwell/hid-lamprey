@@ -1,4 +1,5 @@
 CC=gcc
+MAKE=make
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
 CFLAGS=-Wall -g -pthread -fPIC
@@ -20,8 +21,10 @@ OBJS=$(SRCS:.c=.o)
 
 all: $(APPS)
 
-$(APPS): $(SOS) main.o
+$(APPS): main.o
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+
+$(APPS): $(SOS)
 
 -include $(patsubst %.o,.%.o.d,$(OBJS))
 
