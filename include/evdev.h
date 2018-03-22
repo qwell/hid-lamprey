@@ -2,6 +2,7 @@
 #define _EVDEV_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #include <libevdev/libevdev.h>
 
@@ -36,7 +37,7 @@ struct hl_shortcut {
 	int keys[];
 };
 
-void key_press(uint key, int value);
+void key_press(const char *device, uint8_t type, uint16_t key, int value);
 void axis_move(uint axis, int value);
 
 #endif

@@ -25,44 +25,47 @@ struct hat_data {
 	int max;
 };
 
-struct controller_mapping {
-	char button;
-	int code;
+struct button_mapping {
+	uint8_t type;
+	uint16_t code;
 	int triggervalue;
+};
+
+struct controller_mapping {
+	char display;
+	struct button_mapping buttons[64];
 	int value;
 };
 
 struct controller {
+	char *name;
 	char *device;
 	struct controller_mapping mapping[64];
-	char layout[5][11];
+	char layout[8][32];
 };
 
 struct controller controllers[] = {
 	{
-		.device = "",
+		.name = "SNES",
+		.device = "pci-0000:03:00.0-usb-0:3:1.0-event-joystick",
 		.mapping = {
-			{'^', BTN_DPAD_UP},
-			{'^', ABS_HAT0Y, -1},
-			{'L', BTN_TL},
-			{'R', BTN_TR},
-			{'X', BTN_WEST},
-			{'<', BTN_DPAD_LEFT},
-			{'<', ABS_HAT0X, -1},
-			{'>', BTN_DPAD_RIGHT},
-			{'>', ABS_HAT0X, 1},
-			{'Y', BTN_NORTH},
-			{'A', BTN_EAST},
-			{'v', BTN_DPAD_DOWN},
-			{'v', ABS_HAT0Y, 1},
-			{'s', BTN_SELECT},
-			{'S', BTN_START},
-			{'B', BTN_SOUTH},
+			{'^', {{EV_KEY, BTN_DPAD_UP}, {EV_ABS, ABS_HAT0Y, -1}, {EV_ABS, ABS_Y, -16834}}},
+			{'L', {{EV_KEY, BTN_TL}}},
+			{'R', {{EV_KEY, BTN_TR}}},
+			{'X', {{EV_KEY, BTN_WEST}}},
+			{'<', {{EV_KEY, BTN_DPAD_LEFT}, {EV_ABS, ABS_HAT0X, -1}, {EV_ABS, ABS_X, -16834}}},
+			{'>', {{EV_KEY, BTN_DPAD_RIGHT}, {EV_ABS, ABS_HAT0X, 1}, {EV_ABS, ABS_X, 16834}}},
+			{'Y', {{EV_KEY, BTN_NORTH}}},
+			{'A', {{EV_KEY, BTN_EAST}}},
+			{'v', {{EV_KEY, BTN_DPAD_DOWN}, {EV_ABS, ABS_HAT0Y, 1}, {EV_ABS, ABS_Y, 16834}}},
+			{'s', {{EV_KEY, BTN_SELECT}}},
+			{'S', {{EV_KEY, BTN_START}}},
+			{'B', {{EV_KEY, BTN_SOUTH}}},
 		},
 		.layout = {
-			{" ^  LR  X "},
-			{"< >    Y A"},
-			{" v  sS  B "},
+			{" ^   LR   X "},
+			{"< >      Y A"},
+			{" v   sS   B "},
 		},
 	}
 };
@@ -110,6 +113,8 @@ void hl_evdev_start() {
 			fprintf(stderr, "Failed to init libevdev for %s (%s)\n", filelist[i]->d_name, strerror(-rc));
 			continue;
 		}
+		libevdev_set_uniq(dev, filelist[i]->d_name);
+
 		free(filelist[i]);
 
 		printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
@@ -206,8 +211,8 @@ void hl_evdev_start() {
 				case EV_KEY:
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
 						__attribute__((__unused__)) struct key_data key = key_map[ev.code - LOW_KEY];
-						printf("Key %s %s\n", libevdev_event_code_get_name(EV_KEY, ev.code), ev.value ? "pressed" : "released");
-						key_press(ev.code, ev.value);
+						printf("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
+						key_press(libevdev_get_uniq(dev), ev.type, ev.code, ev.value);
 					}
 					break;
 				case EV_ABS:
@@ -222,8 +227,8 @@ void hl_evdev_start() {
 							} else if (ev.value < 0) {
 								value = (ev.value - (hat.min * HAT_DEADZONE)) / (1 - HAT_DEADZONE);
 							}
-							printf("Hat %s Value %d\n", libevdev_event_code_get_name(EV_ABS, ev.code), value);
-							key_press(ev.code, ev.value);
+							printf("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
+							key_press(libevdev_get_uniq(dev), ev.type, ev.code, value);
 						}
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
 						struct axis_data axis = abs_map[ev.code - LOW_AXIS];
@@ -236,13 +241,14 @@ void hl_evdev_start() {
 							} else if (ev.value < 0) {
 								value = (ev.value - (axis.min * AXIS_DEADZONE)) / (1 - AXIS_DEADZONE);
 							}
-							printf("Axis %s Value %d\n", libevdev_event_code_get_name(EV_ABS, ev.code), value);
+							printf("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
+							key_press(libevdev_get_uniq(dev), ev.type, ev.code, value);
 						}
 					}
 					break;
 				case EV_REL:
 					if (ev.code >= LOW_REL && ev.code <= HIGH_REL) {
-						printf("Ball %s Value %d\n", libevdev_event_code_get_name(EV_REL, ev.code), ev.value);
+						printf("Ball %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value);
 					}
 					break;
 				}
@@ -251,7 +257,7 @@ void hl_evdev_start() {
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
 }
 
-void key_press(uint key, int value) {
+void key_press(const char *device, uint8_t type, uint16_t key, int value) {
 	for (int a = 0; a < sizeof(controllers) / sizeof(struct controller); a++) {
 		for (int i = 0; i < sizeof(controllers[a].layout) / (sizeof(controllers[a].layout[0])); i++) {
 			if (!strlen(controllers[a].layout[i])) {
@@ -261,18 +267,26 @@ void key_press(uint key, int value) {
 			for (int j = 0; j < sizeof(controllers[a].layout[i]); j++) {
 				int on = 0;
 
-				if (controllers[a].layout[i][j] == ' ' || controllers[a].layout[i][j] == '\0') {
+				if (controllers[a].layout[i][j] == '\0') {
+					break;
+				}
+
+				if (controllers[a].layout[i][j] == ' ') {
 					printf(" ");
 					continue;
 				}
 
 				for (int k = 0; k < sizeof(controllers[a].mapping) / sizeof(struct controller_mapping); k++) {
-					if (controllers[a].layout[i][j] == controllers[a].mapping[k].button) {
-						if (key == controllers[a].mapping[k].code) {
-							if (controllers[a].mapping[k].triggervalue) {
-								controllers[a].mapping[k].value = (value == controllers[a].mapping[k].triggervalue);
-							} else {
-								controllers[a].mapping[k].value = value;
+					if (controllers[a].layout[i][j] == controllers[a].mapping[k].display) {
+						for (int l = 0; l < sizeof(controllers[a].mapping[k].buttons) / sizeof(struct button_mapping); l++) {
+							if (key == controllers[a].mapping[k].buttons[l].code && type == controllers[a].mapping[k].buttons[l].type) {
+								if (controllers[a].mapping[k].buttons[l].triggervalue < 0) {
+									controllers[a].mapping[k].value = (value <= controllers[a].mapping[k].buttons[l].triggervalue);
+								} else if (controllers[a].mapping[k].buttons[l].triggervalue > 0) {
+									controllers[a].mapping[k].value = (value >= controllers[a].mapping[k].buttons[l].triggervalue);
+								} else {
+									controllers[a].mapping[k].value = value ? 1 : 0;
+								}
 							}
 						}
 
