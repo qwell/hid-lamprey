@@ -13,15 +13,6 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkImage" id="img_controller">
-            <property name="width_request">100</property>
-            <property name="height_request">80</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stock">gtk-missing-image</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkButton" id="btn_hello">
             <property name="label" translatable="yes">button</property>
             <property name="width_request">100</property>
@@ -31,6 +22,22 @@
             <property name="receives_default">True</property>
             <signal name="clicked" handler="print_hello" swapped="no"/>
           </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="lbl_controller">
+            <property name="width_request">100</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">label</property>
+            <attributes>
+              <attribute name="font-desc" value="Monospace 10"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">153</property>
+            <property name="y">88</property>
+          </packing>
         </child>
       </object>
     </child>
