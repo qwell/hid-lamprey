@@ -9,6 +9,7 @@ SO_LIBS=
 SO_LIBS+=$(shell pkg-config --libs libevdev)
 SO_LIBS+=$(shell pkg-config --libs gtk+-3.0) -export-dynamic
 SO_LIBS+=-lxdo
+SO_LIBS+=-lxml2
 
 LIBS=-L. -llamprey -Wl,-rpath=.
 
