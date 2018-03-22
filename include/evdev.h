@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <sys/poll.h>
 
 #include <libevdev/libevdev.h>
 
@@ -20,12 +21,34 @@
 #define LOW_REL REL_X
 #define HIGH_REL REL_MAX
 
-void hl_evdev_start();
-
 typedef enum {
 	simultaneous = 0,
 	consecutive = 1
 } hl_shortcut_type;
+
+struct key_data {
+};
+
+struct axis_data {
+	int min;
+	int max;
+};
+
+struct hat_data {
+	int min;
+	int max;
+};
+
+struct hl_evdev {
+	struct libevdev *dev_list[256];
+	struct pollfd fds[256];
+	int nfds;
+	struct maps {
+		struct key_data key_map[HIGH_KEY - LOW_KEY];
+		struct axis_data abs_map[HIGH_AXIS - LOW_AXIS];
+		struct hat_data hat_map[HIGH_HAT - LOW_HAT];
+	} maps;
+};
 
 struct hl_shortcut {
 	void (*function) ();
@@ -36,6 +59,9 @@ struct hl_shortcut {
 	 */
 	int keys[];
 };
+
+void *hl_evdev_init();
+void *hl_evdev_poll(void *hl_init);
 
 void key_press(const char *device, uint8_t type, uint16_t key, int16_t value);
 void axis_move(const char *device, uint8_t type, uint8_t axis, int16_t value);

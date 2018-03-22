@@ -1,4 +1,6 @@
+#include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "include/settings.h"
 
@@ -12,6 +14,17 @@
 int main () {
 //	hl_xdo_init();
 
-	// TODO: ...pthreads
-	hl_evdev_start();
+	pthread_t t_evdev;
+	struct hl_evdev *hl_init;
+
+	/* Initialize evdev data. */
+	hl_init = hl_evdev_init();
+
+	/* Spawn off a thread to handle evdev polling. */
+	pthread_create(&t_evdev, NULL, hl_evdev_poll, (void *)hl_init);
+
+	// Do...stuff.
+
+	pthread_join(t_evdev, NULL);
+	free(hl_init);
 }

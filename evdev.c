@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,19 +12,6 @@
 #include "include/settings.h"
 
 #include "include/evdev.h"
-
-struct key_data {
-};
-
-struct axis_data {
-	int min;
-	int max;
-};
-
-struct hat_data {
-	int min;
-	int max;
-};
 
 struct button_mapping {
 	uint8_t type;
@@ -75,18 +63,11 @@ int filter_event_files(const struct dirent *entry)
    return strstr(entry->d_name, "-event") != NULL;
 }
 
-void hl_evdev_start() {
+void *hl_evdev_init() {
 	const char *filepath = "/dev/input/by-path/";
 	struct dirent **filelist;
 	int filecount = 0;
-	struct libevdev *dev_list[8];
-	struct pollfd fds[256];
-	int nfds = 0;
-	int rc = 1;
-
-	struct key_data key_map[HIGH_KEY - LOW_KEY];
-	struct axis_data abs_map[HIGH_AXIS - LOW_AXIS];
-	struct hat_data hat_map[HIGH_HAT - LOW_HAT];
+	struct hl_evdev *hl_init = malloc(sizeof(struct hl_evdev));
 
 	filecount = scandir(filepath, &filelist, filter_event_files, alphasort);
 	if (filecount < 0) {
@@ -94,21 +75,22 @@ void hl_evdev_start() {
 		exit(1);
 	}
 
-	memset(fds, 0, sizeof(fds));
+	memset(hl_init->fds, 0, sizeof(hl_init->fds));
 
 	for (int i = 0; i < filecount; ++i) {
 		char fullpath[256];
+		int rc = 1;
 
-		struct libevdev *dev = dev_list[i];
+		struct libevdev *dev = hl_init->dev_list[i];
 
 		printf("Opening event file %s\n", filelist[i]->d_name);
 
 		snprintf(fullpath, sizeof(fullpath), "%s%s", filepath, filelist[i]->d_name);
-		fds[i].fd = open(fullpath, O_RDONLY|O_NONBLOCK);
-		fds[i].events = POLLIN;
-		nfds++;
+		hl_init->fds[i].fd = open(fullpath, O_RDONLY|O_NONBLOCK);
+		hl_init->fds[i].events = POLLIN;
+		hl_init->nfds++;
 
-		rc = libevdev_new_from_fd(fds[i].fd, &dev);
+		rc = libevdev_new_from_fd(hl_init->fds[i].fd, &dev);
 		if (rc < 0) {
 			fprintf(stderr, "Failed to init libevdev for %s (%s)\n", filelist[i]->d_name, strerror(-rc));
 			continue;
@@ -132,7 +114,7 @@ void hl_evdev_start() {
 				};
 				printf("Device %d has key: %s\n",
 					i, libevdev_event_code_get_name(EV_KEY, code));
-				key_map[code - LOW_KEY] = key;
+				hl_init->maps.key_map[code - LOW_KEY] = key;
 			}
 		}
 
@@ -149,7 +131,7 @@ void hl_evdev_start() {
 				printf("Device %d has absolute axis: %s { %d > %d }\n",
 				       i, libevdev_event_code_get_name(EV_ABS, code),
 				       absinfo->minimum, absinfo->maximum);
-				abs_map[code - LOW_AXIS] = axis;
+				hl_init->maps.abs_map[code - LOW_AXIS] = axis;
 			}
 		}
 
@@ -171,34 +153,41 @@ void hl_evdev_start() {
 				printf("Device %d has hat: %s { %d > %d }\n",
 				       i, libevdev_event_code_get_name(EV_ABS, code),
 				       absinfo->minimum, absinfo->maximum);
-				hat_map[code - LOW_HAT] = hat;
+				hl_init->maps.hat_map[code - LOW_HAT] = hat;
 			}
 		}
 
 		printf("\n");
 
-		dev_list[i] = dev;
+		hl_init->dev_list[i] = dev;
 	}
 
 	free(filelist);
 
+	return hl_init;
+}
+
+void *hl_evdev_poll(void *ptr) {
+	struct hl_evdev *hl_init = (struct hl_evdev *)ptr;
+	int rc = 1;
+
 	// Poll events
 	do {
-		rc = poll(fds, nfds, 1000);
+		rc = poll(hl_init->fds, hl_init->nfds, 1000);
 		if (rc < 0) {
 			break;
 		}
 		if (rc == 0) {
 			continue;
 		}
-		for (int i = 0; i <= nfds; i++) {
+		for (int i = 0; i <= hl_init->nfds; i++) {
 			struct libevdev *dev = NULL;
 
-			if (fds[i].revents != POLLIN) {
+			if (hl_init->fds[i].revents != POLLIN) {
 				continue;
 			}
 
-			dev = dev_list[i];
+			dev = hl_init->dev_list[i];
 
 			do {
 				struct input_event ev;
@@ -210,14 +199,14 @@ void hl_evdev_start() {
 				switch (ev.type) {
 				case EV_KEY:
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
-						__attribute__((__unused__)) struct key_data key = key_map[ev.code - LOW_KEY];
+						__attribute__((__unused__)) struct key_data key = hl_init->maps.key_map[ev.code - LOW_KEY];
 						printf("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
 						key_press(libevdev_get_uniq(dev), ev.type, ev.code, ev.value);
 					}
 					break;
 				case EV_ABS:
 					if (ev.code >= LOW_HAT && ev.code <= HIGH_HAT) {
-						struct hat_data hat = hat_map[ev.code - LOW_HAT];
+						struct hat_data hat = hl_init->maps.hat_map[ev.code - LOW_HAT];
 						// Only deal with values outside of the deadzone
 						if (abs(ev.value) >= abs(hat.max) * HAT_DEADZONE) {
 							// Smooth value with deadzone.
@@ -231,7 +220,7 @@ void hl_evdev_start() {
 							key_press(libevdev_get_uniq(dev), ev.type, ev.code, value);
 						}
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
-						struct axis_data axis = abs_map[ev.code - LOW_AXIS];
+						struct axis_data axis = hl_init->maps.abs_map[ev.code - LOW_AXIS];
 						// Only deal with values outside of the deadzone
 						if (abs(ev.value) >= abs(axis.max) * AXIS_DEADZONE) {
 							// Smooth value with deadzone.
@@ -255,6 +244,8 @@ void hl_evdev_start() {
 			} while (rc == 0);
 		}
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
+
+	pthread_exit(NULL);
 }
 
 void key_press(const char *device, uint8_t type, uint16_t key, int16_t value) {
@@ -295,9 +286,7 @@ void key_press(const char *device, uint8_t type, uint16_t key, int16_t value) {
 				}
 
 				if (on) {
-					printf("\x1b[31m");
-					printf("%c", controllers[a].layout[i][j]);
-					printf("\x1b[0m");
+					printf("\e[31m%c\e[39m", controllers[a].layout[i][j]);
 				} else {
 					printf("%c", controllers[a].layout[i][j]);
 				}

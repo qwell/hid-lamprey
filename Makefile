@@ -1,11 +1,13 @@
 CC=gcc
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
-CFLAGS=-Wall -g
+CFLAGS=-Wall -g -pthread
 CFLAGS+=$(shell pkg-config --cflags libevdev)
+CFLAGS+=$(shell pkg-config --cflags gtk+-3.0)
 
 LIBS=
 LIBS+=$(shell pkg-config --libs libevdev)
+LIBS+=$(shell pkg-config --libs gtk+-3.0)
 LIBS+=-lxdo
 
 APPS=lamprey
