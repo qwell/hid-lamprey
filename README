@@ -1,6 +1,7 @@
 On Ubuntu, the following packages are required to build.
 	libevdev-dev
 	libxdo-dev
+	libgtk-3-dev
 
 Various settings can be changed in include/settings.h.  Currently, only
 deadzones (AXIS_DEADZONE, HAT_DEADZONE) can be configured.
