@@ -38,6 +38,14 @@ struct controller controllers[] = {
 	}
 };
 
+struct joy2key {
+	struct button_mapping in;
+	struct button_mapping out;
+} test2key[] = {
+	{{EV_KEY, BTN_SELECT}, {EV_KEY, KEY_X}},
+	{{EV_KEY, BTN_START}, {EV_KEY, KEY_Y}},
+};
+
 struct keylookup keylookup[] = {
 	KEYTABLE,
 };
@@ -148,28 +156,19 @@ void *hl_evdev_init() {
 
 	free(filelist);
 
-/* Dummy code for testing uinput.
-	struct libevdev_uinput *uidev;
-	struct libevdev *dev = libevdev_new();
-	libevdev_set_name(dev, "Test device");
-	libevdev_enable_event_type(dev, EV_KEY);
+	/* Create emulated uinput device. */
+	hl_init->uinput.dev = libevdev_new();
+	libevdev_set_name(hl_init->uinput.dev, "Lamprey Emulated Device");
+	libevdev_enable_event_type(hl_init->uinput.dev, EV_KEY);
+	/* TODO Use the keytable instead. */
 	for (int i = LOW_KEY; i <= HIGH_KEY; i++) {
-		libevdev_enable_event_code(dev, EV_KEY, i, NULL);
+		libevdev_enable_event_code(hl_init->uinput.dev, EV_KEY, i, NULL);
 	}
-	int err = libevdev_uinput_create_from_device(dev, LIBEVDEV_UINPUT_OPEN_MANAGED, &uidev);
-	if (err != 0) {
+
+	if (libevdev_uinput_create_from_device(hl_init->uinput.dev, LIBEVDEV_UINPUT_OPEN_MANAGED, &hl_init->uinput.uidev)) {
+		libevdev_free(hl_init->uinput.dev);
 		printf("Error creating uinput device.\n");
 	}
-
-	libevdev_uinput_write_event(uidev, EV_KEY, KEY_Y, 1);
-	libevdev_uinput_write_event(uidev, EV_KEY, KEY_Y, 0);
-	libevdev_uinput_write_event(uidev, EV_KEY, KEY_X, 1);
-	libevdev_uinput_write_event(uidev, EV_KEY, KEY_X, 0);
-	libevdev_uinput_write_event(uidev, EV_SYN, SYN_REPORT, 0);
-
-	libevdev_uinput_destroy(uidev);
-	libevdev_free(dev);
-*/
 
 	return hl_init;
 }
@@ -208,7 +207,7 @@ void *hl_evdev_poll(void *ptr) {
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
 						__attribute__((__unused__)) struct key_data key = hl_init->maps.key_map[ev.code - LOW_KEY];
 						printf("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
-						key_press(libevdev_get_uniq(dev), ev.type, ev.code, ev.value);
+						key_press(hl_init, libevdev_get_uniq(dev), ev.type, ev.code, ev.value);
 					}
 					break;
 				case EV_ABS:
@@ -224,7 +223,7 @@ void *hl_evdev_poll(void *ptr) {
 								value = (ev.value - (hat.min * HAT_DEADZONE)) / (1 - HAT_DEADZONE);
 							}
 							printf("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							key_press(libevdev_get_uniq(dev), ev.type, ev.code, value);
+							key_press(hl_init, libevdev_get_uniq(dev), ev.type, ev.code, value);
 						}
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
 						struct axis_data axis = hl_init->maps.abs_map[ev.code - LOW_AXIS];
@@ -238,7 +237,7 @@ void *hl_evdev_poll(void *ptr) {
 								value = (ev.value - (axis.min * AXIS_DEADZONE)) / (1 - AXIS_DEADZONE);
 							}
 							printf("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							key_press(libevdev_get_uniq(dev), ev.type, ev.code, value);
+							key_press(hl_init, libevdev_get_uniq(dev), ev.type, ev.code, value);
 						}
 					}
 					break;
@@ -252,10 +251,17 @@ void *hl_evdev_poll(void *ptr) {
 		}
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
 
+	if (hl_init->uinput.uidev != NULL) {
+		libevdev_uinput_destroy(hl_init->uinput.uidev);
+	}
+	if (hl_init->uinput.dev != NULL) {
+		libevdev_free(hl_init->uinput.dev);
+	}
+
 	pthread_exit(NULL);
 }
 
-void key_press(const char *device, uint8_t type, uint16_t key, int16_t value) {
+void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint16_t key, int16_t value) {
 	for (int a = 0; a < sizeof(controllers) / sizeof(struct controller); a++) {
 		for (int i = 0; i < sizeof(controllers[a].layout) / (sizeof(controllers[a].layout[0])); i++) {
 			if (!strlen(controllers[a].layout[i])) {
@@ -301,9 +307,19 @@ void key_press(const char *device, uint8_t type, uint16_t key, int16_t value) {
 			printf("\n");
 		}
 	}
+
+	if (hl_init->uinput.uidev != NULL)
+	for (int i = 0; i <= sizeof(test2key) / sizeof(struct joy2key); i++) {
+		struct joy2key emu = test2key[i];
+		if (type == emu.in.type && key == emu.in.code) {
+			printf("Button %d, converted to %d\n", emu.in.code, emu.out.code);
+			libevdev_uinput_write_event(hl_init->uinput.uidev, emu.out.type, emu.out.code, value ? 1 : 0);
+			libevdev_uinput_write_event(hl_init->uinput.uidev, EV_SYN, SYN_REPORT, 0);
+		}
+	}
 	return;
 }
 
-void axis_move(const char *device, uint8_t type, uint8_t axis, int16_t value) {
+void axis_move(struct hl_evdev *hl_init, const char *device, uint8_t type, uint8_t axis, int16_t value) {
 	return;
 }

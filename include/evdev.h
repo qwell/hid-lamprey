@@ -10,11 +10,6 @@
 
 #include "evdev-keytable.h"
 
-struct keylookup {
-	char *name;
-	int key;
-};
-
 #define LOW_KEY KEY_ESC
 #define HIGH_KEY KEY_MAX
 
@@ -46,6 +41,11 @@ struct controller {
 	char layout[8][32];
 };
 
+struct keylookup {
+	char *name;
+	int key;
+};
+
 typedef enum {
 	simultaneous = 0,
 	consecutive = 1
@@ -65,6 +65,10 @@ struct hat_data {
 };
 
 struct hl_evdev {
+	struct uinput {
+		struct libevdev *dev;
+		struct libevdev_uinput *uidev;
+	} uinput;
 	struct libevdev *dev_list[256];
 	struct pollfd fds[256];
 	int nfds;
@@ -88,7 +92,7 @@ struct hl_shortcut {
 void *hl_evdev_init();
 void *hl_evdev_poll(void *hl_init);
 
-void key_press(const char *device, uint8_t type, uint16_t key, int16_t value);
-void axis_move(const char *device, uint8_t type, uint8_t axis, int16_t value);
+void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint16_t key, int16_t value);
+void axis_move(struct hl_evdev *hl_init, const char *device, uint8_t type, uint8_t axis, int16_t value);
 
 #endif
