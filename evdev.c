@@ -175,6 +175,7 @@ void *hl_evdev_init() {
 		switch (emu.type) {
 		case EV_ABS:
 			codedata = malloc(sizeof(struct input_absinfo));
+			((struct input_absinfo *)codedata)->value = 0;
 			((struct input_absinfo *)codedata)->minimum = -1;
 			((struct input_absinfo *)codedata)->maximum = 1;
 			((struct input_absinfo *)codedata)->fuzz = 0;
