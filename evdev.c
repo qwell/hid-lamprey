@@ -38,16 +38,21 @@ struct controller controllers[] = {
 	}
 };
 
-struct joy2key {
+struct codeswap {
 	struct button_mapping in;
 	struct button_mapping out;
-} test2key[] = {
-	{{EV_KEY, BTN_SELECT}, {EV_KEY, KEY_X}},
-	{{EV_KEY, BTN_START}, {EV_KEY, KEY_Y}},
+} codeswaps[] = {
+	{{EV_KEY, BTN_SELECT}, {EV_ABS, ABS_X, -1}},
+	{{EV_KEY, BTN_START}, {EV_ABS, ABS_X, 1}},
+	{{EV_KEY, BTN_MODE}, {EV_KEY, KEY_Y}},
+	{{EV_ABS, ABS_X, -16834}, {EV_KEY, KEY_A}},
+	{{EV_ABS, ABS_X, 16834}, {EV_KEY, KEY_D}},
+	{{EV_ABS, ABS_Y, -16834}, {EV_KEY, KEY_W}},
+	{{EV_ABS, ABS_Y, 16834}, {EV_KEY, KEY_S}},
 };
 
-struct keylookup keylookup[] = {
-	KEYTABLE,
+struct codelookup codelookup[] = {
+	CODETABLE
 };
 
 int filter_event_files(const struct dirent *entry)
@@ -160,9 +165,22 @@ void *hl_evdev_init() {
 	hl_init->uinput.dev = libevdev_new();
 	libevdev_set_name(hl_init->uinput.dev, "Lamprey Emulated Device");
 	libevdev_enable_event_type(hl_init->uinput.dev, EV_KEY);
-	/* TODO Use the keytable instead. */
-	for (int i = LOW_KEY; i <= HIGH_KEY; i++) {
-		libevdev_enable_event_code(hl_init->uinput.dev, EV_KEY, i, NULL);
+	libevdev_enable_event_type(hl_init->uinput.dev, EV_ABS);
+	libevdev_enable_event_type(hl_init->uinput.dev, EV_REL);
+
+	/* Emulate all keys in the code table. */
+	for (int i = 0; i <= sizeof(codelookup) / sizeof(struct codelookup); i++) {
+		struct codelookup emu = codelookup[i];
+		void *codedata = NULL;
+		switch (emu.type) {
+		case EV_ABS:
+			codedata = malloc(sizeof(struct input_absinfo));
+			((struct input_absinfo *)codedata)->minimum = -1;
+			((struct input_absinfo *)codedata)->maximum = 1;
+			((struct input_absinfo *)codedata)->fuzz = 0;
+			break;
+		}
+		libevdev_enable_event_code(hl_init->uinput.dev, emu.type, emu.code, codedata);
 	}
 
 	if (libevdev_uinput_create_from_device(hl_init->uinput.dev, LIBEVDEV_UINPUT_OPEN_MANAGED, &hl_init->uinput.uidev)) {
@@ -308,13 +326,26 @@ void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint1
 		}
 	}
 
-	if (hl_init->uinput.uidev != NULL)
-	for (int i = 0; i <= sizeof(test2key) / sizeof(struct joy2key); i++) {
-		struct joy2key emu = test2key[i];
-		if (type == emu.in.type && key == emu.in.code) {
-			printf("Button %d, converted to %d\n", emu.in.code, emu.out.code);
-			libevdev_uinput_write_event(hl_init->uinput.uidev, emu.out.type, emu.out.code, value ? 1 : 0);
-			libevdev_uinput_write_event(hl_init->uinput.uidev, EV_SYN, SYN_REPORT, 0);
+	if (hl_init->uinput.uidev != NULL) {
+		for (int i = 0; i <= sizeof(codeswaps) / sizeof(struct codeswap); i++) {
+			struct codeswap emu = codeswaps[i];
+			if (type == emu.in.type && key == emu.in.code) {
+				int emuvalue = 0;
+				if (emu.in.triggervalue < 0) {
+					emuvalue = (value <= emu.in.triggervalue);
+				} else if (emu.in.triggervalue > 0) {
+					emuvalue = (value >= emu.in.triggervalue);
+				} else {
+					emuvalue = value ? 1 : 0;
+				}
+				if (emuvalue && emu.out.triggervalue) {
+					emuvalue = emu.out.triggervalue;
+				}
+
+				printf("Code %d (%d) converted to %d (%d)\n", emu.in.code, value, emu.out.code, emuvalue);
+				libevdev_uinput_write_event(hl_init->uinput.uidev, emu.out.type, emu.out.code, emuvalue);
+				libevdev_uinput_write_event(hl_init->uinput.uidev, EV_SYN, SYN_REPORT, 0);
+			}
 		}
 	}
 	return;

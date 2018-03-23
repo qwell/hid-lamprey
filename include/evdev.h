@@ -8,7 +8,7 @@
 #include <libevdev/libevdev.h>
 #include <libevdev/libevdev-uinput.h>
 
-#include "evdev-keytable.h"
+#include "evdev-codetable.h"
 
 #define LOW_KEY KEY_ESC
 #define HIGH_KEY KEY_MAX
@@ -41,9 +41,10 @@ struct controller {
 	char layout[8][32];
 };
 
-struct keylookup {
+struct codelookup {
 	char *name;
-	int key;
+	uint8_t type;
+	uint16_t code;
 };
 
 typedef enum {
@@ -83,10 +84,10 @@ struct hl_shortcut {
 	void (*function) ();
 	hl_shortcut_type type;
 	bool multi_device;
-	/* List of keys that trigger the shortcut.
+	/* List of codes that trigger the shortcut.
 	 * See https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
 	 */
-	int keys[];
+	int codes[];
 };
 
 void *hl_evdev_init();
