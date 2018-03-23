@@ -38,7 +38,7 @@ struct controller {
 	char *name;
 	char *device;
 	struct controller_mapping mapping[64];
-	char layout[8][32];
+	char layout[256];
 };
 
 struct codelookup {

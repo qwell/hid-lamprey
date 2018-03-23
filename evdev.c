@@ -31,9 +31,9 @@ struct controller controllers[] = {
 			{'B', {{EV_KEY, BTN_SOUTH}}},
 		},
 		.layout = {
-			{" ^   LR   X "},
-			{"< >      Y A"},
-			{" v   sS   B "},
+			" ^   LR   X \n"
+			"< >      Y A\n"
+			" v   sS   B \n"
 		},
 	}
 };
@@ -282,49 +282,47 @@ void *hl_evdev_poll(void *ptr) {
 
 void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint16_t key, int16_t value) {
 	for (int a = 0; a < sizeof(controllers) / sizeof(struct controller); a++) {
-		for (int i = 0; i < sizeof(controllers[a].layout) / (sizeof(controllers[a].layout[0])); i++) {
-			if (!strlen(controllers[a].layout[i])) {
+		if (strcmp(device, controllers[a].device)) {
+			continue;
+		}
+
+		for (int j = 0; j < sizeof(controllers[a].layout); j++) {
+			int on = 0;
+
+			if (controllers[a].layout[j] == '\0') {
+				break;
+			}
+
+			if (controllers[a].layout[j] == ' ') {
+				printf(" ");
 				continue;
 			}
 
-			for (int j = 0; j < sizeof(controllers[a].layout[i]); j++) {
-				int on = 0;
-
-				if (controllers[a].layout[i][j] == '\0') {
-					break;
-				}
-
-				if (controllers[a].layout[i][j] == ' ') {
-					printf(" ");
-					continue;
-				}
-
-				for (int k = 0; k < sizeof(controllers[a].mapping) / sizeof(struct controller_mapping); k++) {
-					if (controllers[a].layout[i][j] == controllers[a].mapping[k].display) {
-						for (int l = 0; l < sizeof(controllers[a].mapping[k].buttons) / sizeof(struct button_mapping); l++) {
-							if (key == controllers[a].mapping[k].buttons[l].code && type == controllers[a].mapping[k].buttons[l].type) {
-								if (controllers[a].mapping[k].buttons[l].triggervalue < 0) {
-									controllers[a].mapping[k].value = (value <= controllers[a].mapping[k].buttons[l].triggervalue);
-								} else if (controllers[a].mapping[k].buttons[l].triggervalue > 0) {
-									controllers[a].mapping[k].value = (value >= controllers[a].mapping[k].buttons[l].triggervalue);
-								} else {
-									controllers[a].mapping[k].value = value ? 1 : 0;
-								}
+			for (int k = 0; k < sizeof(controllers[a].mapping) / sizeof(struct controller_mapping); k++) {
+				if (controllers[a].layout[j] == controllers[a].mapping[k].display) {
+					for (int l = 0; l < sizeof(controllers[a].mapping[k].buttons) / sizeof(struct button_mapping); l++) {
+						if (key == controllers[a].mapping[k].buttons[l].code && type == controllers[a].mapping[k].buttons[l].type) {
+							if (controllers[a].mapping[k].buttons[l].triggervalue < 0) {
+								controllers[a].mapping[k].value = (value <= controllers[a].mapping[k].buttons[l].triggervalue);
+							} else if (controllers[a].mapping[k].buttons[l].triggervalue > 0) {
+								controllers[a].mapping[k].value = (value >= controllers[a].mapping[k].buttons[l].triggervalue);
+							} else {
+								controllers[a].mapping[k].value = value ? 1 : 0;
 							}
 						}
-
-						on = controllers[a].mapping[k].value;
 					}
-				}
 
-				if (on) {
-					printf("\e[31m%c\e[39m", controllers[a].layout[i][j]);
-				} else {
-					printf("%c", controllers[a].layout[i][j]);
+					on = controllers[a].mapping[k].value;
 				}
 			}
-			printf("\n");
+
+			if (on) {
+				printf("\e[31m%c\e[39m", controllers[a].layout[j]);
+			} else {
+				printf("%c", controllers[a].layout[j]);
+			}
 		}
+		printf("\n");
 	}
 
 	if (hl_init->uinput.uidev != NULL) {
