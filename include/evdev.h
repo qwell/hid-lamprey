@@ -6,9 +6,15 @@
 #include <sys/poll.h>
 
 #include <libevdev/libevdev.h>
+#include <libevdev/libevdev-uinput.h>
 
-//#define LOW_KEY BTN_MISC
-//#define HIGH_KEY BTN_THUMBR
+#include "evdev-keytable.h"
+
+struct keylookup {
+	char *name;
+	int key;
+};
+
 #define LOW_KEY KEY_ESC
 #define HIGH_KEY KEY_MAX
 

@@ -6,8 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/poll.h>
-
-#include <libevdev/libevdev.h>
+#include <unistd.h>
 
 #include "include/settings.h"
 
@@ -37,6 +36,10 @@ struct controller controllers[] = {
 			{" v   sS   B "},
 		},
 	}
+};
+
+struct keylookup keylookup[] = {
+	KEYTABLE,
 };
 
 int filter_event_files(const struct dirent *entry)
@@ -144,6 +147,29 @@ void *hl_evdev_init() {
 	}
 
 	free(filelist);
+
+/* Dummy code for testing uinput.
+	struct libevdev_uinput *uidev;
+	struct libevdev *dev = libevdev_new();
+	libevdev_set_name(dev, "Test device");
+	libevdev_enable_event_type(dev, EV_KEY);
+	for (int i = LOW_KEY; i <= HIGH_KEY; i++) {
+		libevdev_enable_event_code(dev, EV_KEY, i, NULL);
+	}
+	int err = libevdev_uinput_create_from_device(dev, LIBEVDEV_UINPUT_OPEN_MANAGED, &uidev);
+	if (err != 0) {
+		printf("Error creating uinput device.\n");
+	}
+
+	libevdev_uinput_write_event(uidev, EV_KEY, KEY_Y, 1);
+	libevdev_uinput_write_event(uidev, EV_KEY, KEY_Y, 0);
+	libevdev_uinput_write_event(uidev, EV_KEY, KEY_X, 1);
+	libevdev_uinput_write_event(uidev, EV_KEY, KEY_X, 0);
+	libevdev_uinput_write_event(uidev, EV_SYN, SYN_REPORT, 0);
+
+	libevdev_uinput_destroy(uidev);
+	libevdev_free(dev);
+*/
 
 	return hl_init;
 }

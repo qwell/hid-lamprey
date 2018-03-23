@@ -4,5 +4,12 @@ On Ubuntu, the following packages are required to build.
 	libxdo-dev
 	libxml2-dev
 
+On some systems, only the root user can create the uinput devices used for
+device emulation.  To grant permission to create devices, create a uinput group
+(`groupadd uinput`), add a user to it (`gpasswd -a username uinput`), and add
+a rules file to udev by adding the following line to
+/etc/udev/rules.d/99-uinput.rules
+	KERNEL==”uinput”, GROUP=”uinput”, MODE:=”0660″
+
 Various settings can be changed in include/settings.h.  Currently, only
 deadzones (AXIS_DEADZONE, HAT_DEADZONE) can be configured.

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
-#include <xdo.h>
 
 #include "include/xdo.h"
 
