@@ -2,7 +2,8 @@ CC=gcc
 MAKE=make
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
-#USE_GTK=1
+USE_GTK=
+USE_XDO=1
 
 CFLAGS=-Wall -g -pthread -fPIC
 ifdef DEBUG
@@ -13,13 +14,18 @@ ifdef USE_GTK
 CFLAGS+=$(shell pkg-config --cflags gtk+-3.0)
 CFLAGS+=-DUSE_GTK
 endif
+ifdef USE_XDO
+CFLAGS+=-DUSE_XDO
+endif
 
 SO_LIBS=
 SO_LIBS+=$(shell pkg-config --libs libevdev)
 ifdef USE_GTK
 SO_LIBS+=$(shell pkg-config --libs gtk+-3.0) -export-dynamic
 endif
+ifdef USE_XDO
 SO_LIBS+=-lxdo
+endif
 SO_LIBS+=-lxml2
 
 LIBS=-L. -llamprey -Wl,-rpath=.
@@ -30,6 +36,9 @@ FILTER_C=main.c
 
 ifndef USE_GTK
 FILTER_C+=display-gtk.c
+endif
+ifndef USE_XDO
+FILTER_C+=xdo.c
 endif
 
 SRCS=$(filter-out $(FILTER_C),$(wildcard *.c))

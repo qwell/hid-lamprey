@@ -21,15 +21,19 @@ int main (int argc, char **argv) {
 	struct gtk_args args = {argc, argv};
 #endif
 
+#ifdef USE_XDO
 	struct hl_xdo *hl_xdo;
+#endif
 
 	printf("Lamprey Version: %s\n", HL_VERSION);
 
 	/* Initialize evdev data. */
 	hl_evdev = hl_evdev_init();
 
+#ifdef USE_XDO
 	/* Initialize xdo data. */
 	hl_xdo = hl_xdo_init();
+#endif
 
 	/* Spawn off a thread to handle evdev polling. */
 	pthread_create(&t_evdev, NULL, hl_evdev_poll, (void *)hl_evdev);
@@ -46,5 +50,7 @@ int main (int argc, char **argv) {
 	pthread_join(t_gtk, NULL);
 #endif
 	free(hl_evdev);
+#ifdef USE_XDO
 	free(hl_xdo);
+#endif
 }
