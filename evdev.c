@@ -31,9 +31,9 @@ struct controller controllers[] = {
 			{'B', {{EV_KEY, BTN_SOUTH}}},
 		},
 		.layout = {
-			" ^   LR   X \n"
-			"< >      Y A\n"
-			" v   sS   B \n"
+			" _|^|_ [L][R]  (X)  \n"
+			"|<   >|      (Y) (A)\n"
+			" ‾|v|‾ [s][S]  (B)  \n"
 		},
 	}
 };
@@ -45,10 +45,12 @@ struct codeswap {
 	{{EV_KEY, BTN_SELECT}, {EV_ABS, ABS_X, -1}},
 	{{EV_KEY, BTN_START}, {EV_ABS, ABS_X, 1}},
 	{{EV_KEY, BTN_MODE}, {EV_KEY, KEY_Y}},
+/*
 	{{EV_ABS, ABS_X, -16834}, {EV_KEY, KEY_A}},
 	{{EV_ABS, ABS_X, 16834}, {EV_KEY, KEY_D}},
 	{{EV_ABS, ABS_Y, -16834}, {EV_KEY, KEY_W}},
 	{{EV_ABS, ABS_Y, 16834}, {EV_KEY, KEY_S}},
+*/
 };
 
 const struct codelookup codelookup[] = {
