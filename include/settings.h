@@ -12,18 +12,34 @@
 		/*.device = "pci-0000:00:06.0-usb-0:2:1.0-event-joystick",*/\
 		.device = "pci-0000:03:00.0-usb-0:3:1.0-event-joystick",\
 		.mapping = {\
-			{'^', {{EV_KEY, BTN_DPAD_UP}, {EV_ABS, ABS_HAT0Y, -1}, {EV_ABS, ABS_Y, -16834}}},\
+			{'^', {\
+				{EV_KEY, BTN_DPAD_UP},\
+				{EV_ABS, ABS_HAT0Y, -1},\
+				{EV_ABS, ABS_Y, -16834}\
+			}},\
+			{'v', {\
+				{EV_KEY, BTN_DPAD_DOWN},\
+				{EV_ABS, ABS_HAT0Y, 1},\
+				{EV_ABS, ABS_Y, 16834}\
+			}},\
+			{'<', {\
+				{EV_KEY, BTN_DPAD_LEFT},\
+				{EV_ABS, ABS_HAT0X, -1},\
+				{EV_ABS, ABS_X, -16834}\
+			}},\
+			{'>', {\
+				{EV_KEY, BTN_DPAD_RIGHT},\
+				{EV_ABS, ABS_HAT0X, 1},\
+				{EV_ABS, ABS_X, 16834}\
+			}},\
 			{'L', {{EV_KEY, BTN_TL}}},\
 			{'R', {{EV_KEY, BTN_TR}}},\
-			{'X', {{EV_KEY, BTN_WEST}}},\
-			{'<', {{EV_KEY, BTN_DPAD_LEFT}, {EV_ABS, ABS_HAT0X, -1}, {EV_ABS, ABS_X, -16834}}},\
-			{'>', {{EV_KEY, BTN_DPAD_RIGHT}, {EV_ABS, ABS_HAT0X, 1}, {EV_ABS, ABS_X, 16834}}},\
 			{'Y', {{EV_KEY, BTN_NORTH}}},\
+			{'B', {{EV_KEY, BTN_SOUTH}}},\
+			{'X', {{EV_KEY, BTN_WEST}}},\
 			{'A', {{EV_KEY, BTN_EAST}}},\
-			{'v', {{EV_KEY, BTN_DPAD_DOWN}, {EV_ABS, ABS_HAT0Y, 1}, {EV_ABS, ABS_Y, 16834}}},\
 			{'s', {{EV_KEY, BTN_SELECT}}},\
 			{'S', {{EV_KEY, BTN_START}}},\
-			{'B', {{EV_KEY, BTN_SOUTH}}},\
 		},\
 		.layout = {\
 			" _|^|_ [L][R]  (X)  \n"\
