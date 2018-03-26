@@ -5,13 +5,13 @@ On Ubuntu, the following packages are required to build.
 	libxml2-dev
 
 On some systems, only the root user can create the uinput devices used for
-device emulation.  To grant permission to create devices, create a uinput group
-(`groupadd uinput`), add a user to it (`gpasswd -a username uinput`), and
+device emulation.  To grant permission to create devices, create a 'uinput'
+group (`groupadd uinput`), add a user to it (`gpasswd -a username uinput`), and
 create a udev rule by adding the following line to
 /etc/udev/rules.d/99-uinput.rules
 	KERNEL=="uinput", GROUP="uinput", MODE:="0660"
-The same is also true of reading some input devices.  If necessary, create the
-group as above, add a user to it, and add the following line to
+The same is also true of reading some input devices.  If necessary, create an
+'input' group as above, add a user to it, and add the following line to
 /etc/udev/rules.d/99-input.rules
 	KERNEL=="input", GROUP="input", MODE:="0660"
 A reboot is recommended to properly apply the new groups and udev rules.
