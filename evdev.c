@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <math.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,7 +16,10 @@
 struct controller controllers[] = {
 	{
 		.name = "SNES",
+		.device = "pci-0000:00:06.0-usb-0:2:1.0-event-joystick",
+		/*
 		.device = "pci-0000:03:00.0-usb-0:3:1.0-event-joystick",
+		*/
 		.mapping = {
 			{'^', {{EV_KEY, BTN_DPAD_UP}, {EV_ABS, ABS_HAT0Y, -1}, {EV_ABS, ABS_Y, -16834}}},
 			{'L', {{EV_KEY, BTN_TL}}},
@@ -33,7 +37,7 @@ struct controller controllers[] = {
 		.layout = {
 			" _|^|_ [L][R]  (X)  \n"
 			"|<   >|      (Y) (A)\n"
-			" ‾|v|‾ [s][S]  (B)  \n"
+			" ‾|v|‾ [s][S]  (B)  "
 		},
 	}
 };
@@ -252,7 +256,33 @@ void *hl_evdev_poll(void *ptr) {
 						}
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
 						struct axis_data axis = hl_init->maps.abs_map[ev.code - LOW_AXIS];
-						// Only deal with values outside of the deadzone
+//						/* Find midpoint of possible range.
+//						 * 0 -> 255 = 128
+//						 * -32768 -> 32767 = 0
+//						 */
+//						int zeroish = axis.min + axis.max;
+//						/* Make it even. */
+//						zeroish = zeroish % 2 ? zeroish : zeroish + 1;
+//						/* Div 2 to get the midpoint. */
+//						int relzero = zeroish ? round(zeroish / 2) : zeroish;
+//
+//						int rangesize = (axis.max - axis.min);
+//						int deadsize = (rangesize % 2 ? rangesize : rangesize +1) * AXIS_DEADZONE;
+//
+//						if (ev.value > relzero + deadsize || ev.value < relzero - deadsize) {
+//							int value = 0;
+//							//TODO Math sucks.  Smooth from min > relzero +/- deadsize > max.
+//							if (ev.value > relzero + deadsize) {
+//								value = (ev.value - (axis.max * AXIS_DEADZONE)) / (1 - AXIS_DEADZONE);
+//							} else if (ev.value < relzero - deadsize) {
+//								value = (ev.value - (axis.min * AXIS_DEADZONE)) / (1 - AXIS_DEADZONE);
+//							}
+//							printf("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
+//							key_press(hl_init, libevdev_get_uniq(dev), ev.type, ev.code, value);
+//						} else {
+//							//TODO Do we just never send a zero event?
+//						}
+						//TODO Remove this after math above works.
 						if (abs(ev.value) >= abs(axis.max) * AXIS_DEADZONE) {
 							// Smooth value with deadzone.
 							int value = 0;
