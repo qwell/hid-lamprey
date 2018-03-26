@@ -225,12 +225,12 @@ void *hl_evdev_poll(void *ptr) {
 						int rangesize = (hat.max - hat.min);
 						int deadsize = ((rangesize % 2 ? rangesize : rangesize + 1) / 2) * HAT_DEADZONE;
 
-						if (ev.value >= relzero + deadsize || ev.value < relzero - deadsize) {
+						if (ev.value >= relzero + deadsize || ev.value <= relzero - deadsize) {
 							int value = 0;
 							//Scale from min > relzero +/- deadsize > max.
 							if (ev.value >= relzero + deadsize) {
 								value = (hat.max - relzero) * (ev.value - (relzero + deadsize)) / (hat.max - (relzero + deadsize)) + relzero;
-							} else if (ev.value < relzero - deadsize) {
+							} else if (ev.value <= relzero - deadsize) {
 								value = (relzero - hat.min) * (ev.value - hat.min) / ((relzero - deadsize) - hat.min) + hat.min;
 							}
 							debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
@@ -253,12 +253,12 @@ void *hl_evdev_poll(void *ptr) {
 						int rangesize = (axis.max - axis.min);
 						int deadsize = ((rangesize % 2 ? rangesize : rangesize + 1) / 2) * AXIS_DEADZONE;
 
-						if (ev.value > relzero + deadsize || ev.value < relzero - deadsize) {
+						if (ev.value >= relzero + deadsize || ev.value <= relzero - deadsize) {
 							int value = 0;
 							//Scale from min > relzero +/- deadsize > max.
-							if (ev.value > relzero + deadsize) {
+							if (ev.value >= relzero + deadsize) {
 								value = (axis.max - relzero) * (ev.value - (relzero + deadsize)) / (axis.max - (relzero + deadsize)) + relzero;
-							} else if (ev.value < relzero - deadsize) {
+							} else if (ev.value <= relzero - deadsize) {
 								value = (relzero - axis.min) * (ev.value - axis.min) / ((relzero - deadsize) - axis.min) + axis.min;
 							}
 							debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
