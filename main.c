@@ -23,6 +23,8 @@ int main (int argc, char **argv) {
 
 	struct hl_xdo *hl_xdo;
 
+	printf("Lamprey Version: %s\n", HL_VERSION);
+
 	/* Initialize evdev data. */
 	hl_evdev = hl_evdev_init();
 

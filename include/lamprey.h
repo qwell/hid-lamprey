@@ -1,3 +1,4 @@
+#include "version.h"
 #include "settings.h"
 #include "defaults.h"
 
