@@ -344,7 +344,7 @@ void key_press(struct hl_evdev *hl_evdev, const char *device, uint8_t type, uint
 					emuvalue = emu.out.triggervalue;
 				}
 
-				printf("Code %s (%d) converted to %s (%d)\n",
+				debug_print("Code %s (%d) converted to %s (%d)\n",
 					libevdev_event_code_get_name(emu.in.type, emu.in.code), value,
 					libevdev_event_code_get_name(emu.out.type, emu.out.code), emuvalue);
 				libevdev_uinput_write_event(hl_evdev->uinput.uidev, emu.out.type, emu.out.code, emuvalue);
