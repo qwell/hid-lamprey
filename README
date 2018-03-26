@@ -1,7 +1,7 @@
 On Ubuntu, the following packages are required to build.
 	libevdev-dev
 	libgtk-3-dev (with USE_GTK)
-	libxdo-dev
+	libxdo-dev (with USE_XDO)
 	libxml2-dev
 
 On some systems, only the root user can create the uinput devices used for
@@ -19,5 +19,10 @@ A reboot is recommended to properly apply the new groups and udev rules.
 Various settings can be changed in include/settings.h.
 
 Makefile flags:
-	GTK support can be added with `make USE_GTK=1`.
-	Debugging can be added with `make DEBUG=1`
+	GTK support (default disabled) can be enabled or disabled with
+		`make USE_GTK=1`; or
+		`make USE_GTK=`
+	XDO support (default enabled) can be enabled or disabled with
+		`make USE_XDO=1`; or
+		`make USE_XDO=`
+	Debugging can be enabled with `make DEBUG=1`
