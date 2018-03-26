@@ -51,9 +51,11 @@ struct codeswap {
 	{{EV_ABS, ABS_Y, 16834}, {EV_KEY, KEY_S}},
 };
 
-struct codelookup codelookup[] = {
+const struct codelookup codelookup[] = {
 	CODETABLE
 };
+
+void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint16_t key, int16_t value);
 
 int filter_event_files(const struct dirent *entry)
 {
@@ -347,9 +349,5 @@ void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint1
 			}
 		}
 	}
-	return;
-}
-
-void axis_move(struct hl_evdev *hl_init, const char *device, uint8_t type, uint8_t axis, int16_t value) {
 	return;
 }

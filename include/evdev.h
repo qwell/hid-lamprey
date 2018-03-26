@@ -93,7 +93,4 @@ struct hl_shortcut {
 void *hl_evdev_init();
 void *hl_evdev_poll(void *hl_init);
 
-void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint16_t key, int16_t value);
-void axis_move(struct hl_evdev *hl_init, const char *device, uint8_t type, uint8_t axis, int16_t value);
-
 #endif
