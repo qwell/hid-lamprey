@@ -19,6 +19,8 @@
 
 #include "evdev-codetable.h"
 
+extern pthread_mutex_t mutex_evdev;
+
 #define LOW_KEY KEY_ESC
 #define HIGH_KEY KEY_MAX
 
@@ -81,7 +83,6 @@ struct hl_evdev {
 	} uinput;
 	struct libevdev *dev_list[256];
 	struct pollfd fds[256];
-	int nfds;
 	struct maps {
 		struct key_data key_map[HIGH_KEY - LOW_KEY];
 		struct axis_data abs_map[HIGH_AXIS - LOW_AXIS];

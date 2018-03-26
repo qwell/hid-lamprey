@@ -7,6 +7,8 @@
  * (at your option) any later version.
  */
 
+extern pthread_mutex_t mutex_gtk;
+
 struct gtk_args {
 	int argc;
 	char **argv;

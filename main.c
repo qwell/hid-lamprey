@@ -17,10 +17,6 @@
 #include "include/evdev.h"
 #include "include/xdo.h"
 
-#ifndef __linux__
-#error "No.  Go get a real OS and try again."
-#endif
-
 int main (int argc, char **argv) {
 	pthread_t t_evdev;
 	struct hl_evdev *hl_evdev;
@@ -36,8 +32,10 @@ int main (int argc, char **argv) {
 
 	printf("Lamprey Version: %s\n", HL_VERSION);
 
+	pthread_mutex_lock(&mutex_evdev);
 	/* Initialize evdev data. */
 	hl_evdev = hl_evdev_init();
+	pthread_mutex_unlock(&mutex_evdev);
 
 #ifdef USE_XDO
 	/* Initialize xdo data. */

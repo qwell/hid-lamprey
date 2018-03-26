@@ -11,6 +11,10 @@
 #include "settings.h"
 #include "defaults.h"
 
+#ifndef __linux__
+#error "No.  Go get a real OS and try again."
+#endif
+
 #ifdef DEBUG
 #define debug_print(...) printf(__VA_ARGS__)
 #else

@@ -13,10 +13,13 @@
 
 #include <gtk/gtk.h>
 
+pthread_mutex_t mutex_gtk = PTHREAD_MUTEX_INITIALIZER;
+
 void print_hello(GtkWidget *widget, gpointer data) {
 	g_print("Hello World\n");
 }
 void *hl_display_gtk(void *ptr) {
+	//TODO Add locking.
 	struct gtk_args *args = ptr;
 
 	GtkBuilder *builder;

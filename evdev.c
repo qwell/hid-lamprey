@@ -22,6 +22,8 @@
 
 #include "include/evdev.h"
 
+pthread_mutex_t mutex_evdev = PTHREAD_MUTEX_INITIALIZER;
+
 struct controller controllers[] = {
 	CONTROLLERS
 };
@@ -69,7 +71,6 @@ void *hl_evdev_init() {
 		snprintf(fullpath, sizeof(fullpath), "%s%s", filepath, filelist[i]->d_name);
 		hl_evdev->fds[i].fd = open(fullpath, O_RDONLY|O_NONBLOCK);
 		hl_evdev->fds[i].events = POLLIN;
-		hl_evdev->nfds++;
 
 		rc = libevdev_new_from_fd(hl_evdev->fds[i].fd, &dev);
 		if (rc < 0) {
@@ -187,14 +188,19 @@ void *hl_evdev_poll(void *ptr) {
 
 	// Poll events
 	do {
-		rc = poll(hl_evdev->fds, hl_evdev->nfds, 1000);
+		//TODO Avoid locking around the poll.  This is gross.
+		pthread_mutex_lock(&mutex_evdev);
+		rc = poll(hl_evdev->fds, sizeof(hl_evdev->fds) / sizeof(struct pollfd), 1000);
+		pthread_mutex_unlock(&mutex_evdev);
 		if (rc < 0) {
 			break;
 		}
 		if (rc == 0) {
 			continue;
 		}
-		for (int i = 0; i <= hl_evdev->nfds; i++) {
+
+		pthread_mutex_lock(&mutex_evdev);
+		for (int i = 0; i <= sizeof(hl_evdev->fds) / sizeof(struct pollfd); i++) {
 			struct libevdev *dev = NULL;
 
 			if (hl_evdev->fds[i].revents != POLLIN) {
@@ -285,14 +291,17 @@ void *hl_evdev_poll(void *ptr) {
 				}
 			} while (rc == 0);
 		}
+		pthread_mutex_unlock(&mutex_evdev);
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
 
+	pthread_mutex_lock(&mutex_evdev);
 	if (hl_evdev->uinput.uidev != NULL) {
 		libevdev_uinput_destroy(hl_evdev->uinput.uidev);
 	}
 	if (hl_evdev->uinput.dev != NULL) {
 		libevdev_free(hl_evdev->uinput.dev);
 	}
+	pthread_mutex_unlock(&mutex_evdev);
 
 	pthread_exit(NULL);
 }
