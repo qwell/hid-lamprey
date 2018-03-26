@@ -77,58 +77,61 @@ void *hl_evdev_init() {
 			libevdev_get_id_vendor(dev),
 			libevdev_get_id_product(dev));
 
-		printf("\n");
 
-		// Get info about keys
-		for (int code = LOW_KEY; code <= HIGH_KEY; ++code) {
-			if (libevdev_has_event_code(dev, EV_KEY, code)) {
-				struct key_data key = {
-				};
-				printf("Device %d has key: %s\n",
-					i, libevdev_event_code_get_name(EV_KEY, code));
-				hl_evdev->maps.key_map[code - LOW_KEY] = key;
-			}
-		}
-
-		printf("\n");
-
-		// Get info about axes
-		for (int code = LOW_AXIS; code <= HIGH_AXIS; ++code) {
-			if (libevdev_has_event_code(dev, EV_ABS, code)) {
-				const struct input_absinfo *absinfo = libevdev_get_abs_info(dev, code);
-				struct axis_data axis = {
-					.min = absinfo->minimum,
-					.max = absinfo->maximum,
-				};
-				printf("Device %d has absolute axis: %s { %d > %d }\n",
-				       i, libevdev_event_code_get_name(EV_ABS, code),
-				       absinfo->minimum, absinfo->maximum);
-				hl_evdev->maps.abs_map[code - LOW_AXIS] = axis;
-			}
-		}
-
-		printf("\n");
-
-		// Get info about hats
-		for (int code = LOW_HAT; code <= HIGH_HAT; code++) {
-			if (libevdev_has_event_code(dev, EV_ABS, code)) {
-				const struct input_absinfo *absinfo = libevdev_get_abs_info(dev, code);
-				struct hat_data hat;
-
-				if (absinfo == NULL) {
-					continue;
+		if (libevdev_has_event_type(dev, EV_KEY)) {
+			// Get info about keys
+			for (int code = LOW_KEY; code <= HIGH_KEY; ++code) {
+				if (libevdev_has_event_code(dev, EV_KEY, code)) {
+					struct key_data key = {
+					};
+					printf("Device %d has key: %s\n",
+						i, libevdev_event_code_get_name(EV_KEY, code));
+					hl_evdev->maps.key_map[code - LOW_KEY] = key;
 				}
-
-				hat.min = absinfo->minimum;
-				hat.max = absinfo->maximum;
-
-				printf("Device %d has hat: %s { %d > %d }\n",
-				       i, libevdev_event_code_get_name(EV_ABS, code),
-				       absinfo->minimum, absinfo->maximum);
-				hl_evdev->maps.hat_map[code - LOW_HAT] = hat;
 			}
 		}
 
+		if (libevdev_has_event_type(dev, EV_ABS)) {
+			// Get info about axes
+			for (int code = LOW_AXIS; code <= HIGH_AXIS; ++code) {
+				if (libevdev_has_event_code(dev, EV_ABS, code)) {
+					const struct input_absinfo *absinfo = libevdev_get_abs_info(dev, code);
+					struct axis_data axis;
+
+					if (absinfo == NULL) {
+						continue;
+					}
+
+					axis.min = absinfo->minimum,
+					axis.max = absinfo->maximum,
+
+					printf("Device %d has absolute axis: %s { %d > %d }\n",
+					       i, libevdev_event_code_get_name(EV_ABS, code),
+					       absinfo->minimum, absinfo->maximum);
+					hl_evdev->maps.abs_map[code - LOW_AXIS] = axis;
+				}
+			}
+
+			// Get info about hats
+			for (int code = LOW_HAT; code <= HIGH_HAT; code++) {
+				if (libevdev_has_event_code(dev, EV_ABS, code)) {
+					const struct input_absinfo *absinfo = libevdev_get_abs_info(dev, code);
+					struct hat_data hat;
+
+					if (absinfo == NULL) {
+						continue;
+					}
+
+					hat.min = absinfo->minimum;
+					hat.max = absinfo->maximum;
+
+					printf("Device %d has hat: %s { %d > %d }\n",
+					       i, libevdev_event_code_get_name(EV_ABS, code),
+					       absinfo->minimum, absinfo->maximum);
+					hl_evdev->maps.hat_map[code - LOW_HAT] = hat;
+				}
+			}
+		}
 		printf("\n");
 
 		hl_evdev->dev_list[i] = dev;
