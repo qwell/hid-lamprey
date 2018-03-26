@@ -64,6 +64,4 @@ static struct hl_shortcut konami = {
 	}
 };
 */
-
-#include "defaults.h"
 #endif

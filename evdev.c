@@ -9,7 +9,7 @@
 #include <sys/poll.h>
 #include <unistd.h>
 
-#include "include/settings.h"
+#include "include/lamprey.h"
 
 #include "include/evdev.h"
 
@@ -202,7 +202,7 @@ void *hl_evdev_poll(void *ptr) {
 				case EV_KEY:
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
 						__attribute__((__unused__)) struct key_data key = hl_evdev->maps.key_map[ev.code - LOW_KEY];
-						printf("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
+						debug_print("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
 						key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, ev.value);
 					}
 					break;
@@ -218,7 +218,7 @@ void *hl_evdev_poll(void *ptr) {
 							} else if (ev.value < 0) {
 								value = (ev.value - (hat.min * HAT_DEADZONE)) / (1 - HAT_DEADZONE);
 							}
-							printf("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
+							debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
 							key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, value);
 						}
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
@@ -244,7 +244,7 @@ void *hl_evdev_poll(void *ptr) {
 //							} else if (ev.value < relzero - deadsize) {
 //								value = (ev.value - (axis.min * AXIS_DEADZONE)) / (1 - AXIS_DEADZONE);
 //							}
-//							printf("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
+//							debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
 //							key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, value);
 //						} else {
 //							//TODO Do we just never send a zero event?
@@ -258,14 +258,14 @@ void *hl_evdev_poll(void *ptr) {
 							} else if (ev.value < 0) {
 								value = (ev.value - (axis.min * AXIS_DEADZONE)) / (1 - AXIS_DEADZONE);
 							}
-							printf("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
+							debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
 							key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, value);
 						}
 					}
 					break;
 				case EV_REL:
 					if (ev.code >= LOW_REL && ev.code <= HIGH_REL) {
-						printf("Ball %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value);
+						debug_print("Ball %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value);
 					}
 					break;
 				}

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/settings.h"
+#include "include/lamprey.h"
 
 #include "include/display.h"
 #include "include/evdev.h"

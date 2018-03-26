@@ -1,3 +1,5 @@
+#include "include/lamprey.h"
+
 #include "include/display.h"
 
 #include <gtk/gtk.h>

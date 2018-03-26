@@ -3,6 +3,8 @@
 #include <string.h>
 #include <sys/time.h>
 
+#include "include/lamprey.h"
+
 #include "include/xdo.h"
 
 void *hl_xdo_init() {

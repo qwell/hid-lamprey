@@ -5,6 +5,9 @@ MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 #USE_GTK=1
 
 CFLAGS=-Wall -g -pthread -fPIC
+ifdef DEBUG
+CFLAGS+=-DDEBUG
+endif
 CFLAGS+=$(shell pkg-config --cflags libevdev)
 ifdef USE_GTK
 CFLAGS+=$(shell pkg-config --cflags gtk+-3.0)
