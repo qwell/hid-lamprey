@@ -91,6 +91,6 @@ struct hl_shortcut {
 };
 
 void *hl_evdev_init();
-void *hl_evdev_poll(void *hl_init);
+void *hl_evdev_poll(void *hl_evdev);
 
 #endif

@@ -28,7 +28,7 @@ const struct codelookup codelookup[] = {
 	CODETABLE
 };
 
-void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint16_t key, int16_t value);
+void key_press(struct hl_evdev *hl_evdev, const char *device, uint8_t type, uint16_t key, int16_t value);
 
 int filter_event_files(const struct dirent *entry)
 {
@@ -39,7 +39,7 @@ void *hl_evdev_init() {
 	const char *filepath = "/dev/input/by-path/";
 	struct dirent **filelist;
 	int filecount = 0;
-	struct hl_evdev *hl_init = malloc(sizeof(struct hl_evdev));
+	struct hl_evdev *hl_evdev = malloc(sizeof(struct hl_evdev));
 
 	filecount = scandir(filepath, &filelist, filter_event_files, alphasort);
 	if (filecount < 0) {
@@ -47,22 +47,22 @@ void *hl_evdev_init() {
 		exit(1);
 	}
 
-	memset(hl_init->fds, 0, sizeof(hl_init->fds));
+	memset(hl_evdev->fds, 0, sizeof(hl_evdev->fds));
 
 	for (int i = 0; i < filecount; ++i) {
 		char fullpath[256];
 		int rc = 1;
 
-		struct libevdev *dev = hl_init->dev_list[i];
+		struct libevdev *dev = hl_evdev->dev_list[i];
 
 		printf("Opening event file %s\n", filelist[i]->d_name);
 
 		snprintf(fullpath, sizeof(fullpath), "%s%s", filepath, filelist[i]->d_name);
-		hl_init->fds[i].fd = open(fullpath, O_RDONLY|O_NONBLOCK);
-		hl_init->fds[i].events = POLLIN;
-		hl_init->nfds++;
+		hl_evdev->fds[i].fd = open(fullpath, O_RDONLY|O_NONBLOCK);
+		hl_evdev->fds[i].events = POLLIN;
+		hl_evdev->nfds++;
 
-		rc = libevdev_new_from_fd(hl_init->fds[i].fd, &dev);
+		rc = libevdev_new_from_fd(hl_evdev->fds[i].fd, &dev);
 		if (rc < 0) {
 			fprintf(stderr, "Failed to init libevdev for %s (%s)\n", filelist[i]->d_name, strerror(-rc));
 			continue;
@@ -86,7 +86,7 @@ void *hl_evdev_init() {
 				};
 				printf("Device %d has key: %s\n",
 					i, libevdev_event_code_get_name(EV_KEY, code));
-				hl_init->maps.key_map[code - LOW_KEY] = key;
+				hl_evdev->maps.key_map[code - LOW_KEY] = key;
 			}
 		}
 
@@ -103,7 +103,7 @@ void *hl_evdev_init() {
 				printf("Device %d has absolute axis: %s { %d > %d }\n",
 				       i, libevdev_event_code_get_name(EV_ABS, code),
 				       absinfo->minimum, absinfo->maximum);
-				hl_init->maps.abs_map[code - LOW_AXIS] = axis;
+				hl_evdev->maps.abs_map[code - LOW_AXIS] = axis;
 			}
 		}
 
@@ -125,23 +125,23 @@ void *hl_evdev_init() {
 				printf("Device %d has hat: %s { %d > %d }\n",
 				       i, libevdev_event_code_get_name(EV_ABS, code),
 				       absinfo->minimum, absinfo->maximum);
-				hl_init->maps.hat_map[code - LOW_HAT] = hat;
+				hl_evdev->maps.hat_map[code - LOW_HAT] = hat;
 			}
 		}
 
 		printf("\n");
 
-		hl_init->dev_list[i] = dev;
+		hl_evdev->dev_list[i] = dev;
 	}
 
 	free(filelist);
 
 	/* Create emulated uinput device. */
-	hl_init->uinput.dev = libevdev_new();
-	libevdev_set_name(hl_init->uinput.dev, "Lamprey Emulated Device");
-	libevdev_enable_event_type(hl_init->uinput.dev, EV_KEY);
-	libevdev_enable_event_type(hl_init->uinput.dev, EV_ABS);
-	libevdev_enable_event_type(hl_init->uinput.dev, EV_REL);
+	hl_evdev->uinput.dev = libevdev_new();
+	libevdev_set_name(hl_evdev->uinput.dev, "Lamprey Emulated Device");
+	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_KEY);
+	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_ABS);
+	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_REL);
 
 	/* Emulate all keys in the code table. */
 	for (int i = 0; i <= sizeof(codelookup) / sizeof(struct codelookup); i++) {
@@ -158,38 +158,38 @@ void *hl_evdev_init() {
 			((struct input_absinfo *)codedata)->resolution = 0;
 			break;
 		}
-		libevdev_enable_event_code(hl_init->uinput.dev, emu.type, emu.code, codedata);
+		libevdev_enable_event_code(hl_evdev->uinput.dev, emu.type, emu.code, codedata);
 	}
 
-	if (libevdev_uinput_create_from_device(hl_init->uinput.dev, LIBEVDEV_UINPUT_OPEN_MANAGED, &hl_init->uinput.uidev)) {
-		libevdev_free(hl_init->uinput.dev);
+	if (libevdev_uinput_create_from_device(hl_evdev->uinput.dev, LIBEVDEV_UINPUT_OPEN_MANAGED, &hl_evdev->uinput.uidev)) {
+		libevdev_free(hl_evdev->uinput.dev);
 		printf("Error creating uinput device.\n");
 	}
 
-	return hl_init;
+	return hl_evdev;
 }
 
 void *hl_evdev_poll(void *ptr) {
-	struct hl_evdev *hl_init = (struct hl_evdev *)ptr;
+	struct hl_evdev *hl_evdev = (struct hl_evdev *)ptr;
 	int rc = 1;
 
 	// Poll events
 	do {
-		rc = poll(hl_init->fds, hl_init->nfds, 1000);
+		rc = poll(hl_evdev->fds, hl_evdev->nfds, 1000);
 		if (rc < 0) {
 			break;
 		}
 		if (rc == 0) {
 			continue;
 		}
-		for (int i = 0; i <= hl_init->nfds; i++) {
+		for (int i = 0; i <= hl_evdev->nfds; i++) {
 			struct libevdev *dev = NULL;
 
-			if (hl_init->fds[i].revents != POLLIN) {
+			if (hl_evdev->fds[i].revents != POLLIN) {
 				continue;
 			}
 
-			dev = hl_init->dev_list[i];
+			dev = hl_evdev->dev_list[i];
 
 			do {
 				struct input_event ev;
@@ -201,14 +201,14 @@ void *hl_evdev_poll(void *ptr) {
 				switch (ev.type) {
 				case EV_KEY:
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
-						__attribute__((__unused__)) struct key_data key = hl_init->maps.key_map[ev.code - LOW_KEY];
+						__attribute__((__unused__)) struct key_data key = hl_evdev->maps.key_map[ev.code - LOW_KEY];
 						printf("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
-						key_press(hl_init, libevdev_get_uniq(dev), ev.type, ev.code, ev.value);
+						key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, ev.value);
 					}
 					break;
 				case EV_ABS:
 					if (ev.code >= LOW_HAT && ev.code <= HIGH_HAT) {
-						struct hat_data hat = hl_init->maps.hat_map[ev.code - LOW_HAT];
+						struct hat_data hat = hl_evdev->maps.hat_map[ev.code - LOW_HAT];
 						// Only deal with values outside of the deadzone
 						if (abs(ev.value) >= abs(hat.max) * HAT_DEADZONE) {
 							// Smooth value with deadzone.
@@ -219,10 +219,10 @@ void *hl_evdev_poll(void *ptr) {
 								value = (ev.value - (hat.min * HAT_DEADZONE)) / (1 - HAT_DEADZONE);
 							}
 							printf("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							key_press(hl_init, libevdev_get_uniq(dev), ev.type, ev.code, value);
+							key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, value);
 						}
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
-						struct axis_data axis = hl_init->maps.abs_map[ev.code - LOW_AXIS];
+						struct axis_data axis = hl_evdev->maps.abs_map[ev.code - LOW_AXIS];
 //						/* Find midpoint of possible range.
 //						 * 0 -> 255 = 128
 //						 * -32768 -> 32767 = 0
@@ -245,7 +245,7 @@ void *hl_evdev_poll(void *ptr) {
 //								value = (ev.value - (axis.min * AXIS_DEADZONE)) / (1 - AXIS_DEADZONE);
 //							}
 //							printf("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-//							key_press(hl_init, libevdev_get_uniq(dev), ev.type, ev.code, value);
+//							key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, value);
 //						} else {
 //							//TODO Do we just never send a zero event?
 //						}
@@ -259,7 +259,7 @@ void *hl_evdev_poll(void *ptr) {
 								value = (ev.value - (axis.min * AXIS_DEADZONE)) / (1 - AXIS_DEADZONE);
 							}
 							printf("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							key_press(hl_init, libevdev_get_uniq(dev), ev.type, ev.code, value);
+							key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, value);
 						}
 					}
 					break;
@@ -273,17 +273,17 @@ void *hl_evdev_poll(void *ptr) {
 		}
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
 
-	if (hl_init->uinput.uidev != NULL) {
-		libevdev_uinput_destroy(hl_init->uinput.uidev);
+	if (hl_evdev->uinput.uidev != NULL) {
+		libevdev_uinput_destroy(hl_evdev->uinput.uidev);
 	}
-	if (hl_init->uinput.dev != NULL) {
-		libevdev_free(hl_init->uinput.dev);
+	if (hl_evdev->uinput.dev != NULL) {
+		libevdev_free(hl_evdev->uinput.dev);
 	}
 
 	pthread_exit(NULL);
 }
 
-void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint16_t key, int16_t value) {
+void key_press(struct hl_evdev *hl_evdev, const char *device, uint8_t type, uint16_t key, int16_t value) {
 	for (int a = 0; a < sizeof(controllers) / sizeof(struct controller); a++) {
 		if (strcmp(device, controllers[a].device)) {
 			continue;
@@ -328,7 +328,7 @@ void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint1
 		printf("\n");
 	}
 
-	if (hl_init->uinput.uidev != NULL) {
+	if (hl_evdev->uinput.uidev != NULL) {
 		for (int i = 0; i <= sizeof(codeswaps) / sizeof(struct codeswap); i++) {
 			struct codeswap emu = codeswaps[i];
 			if (type == emu.in.type && key == emu.in.code) {
@@ -347,8 +347,8 @@ void key_press(struct hl_evdev *hl_init, const char *device, uint8_t type, uint1
 				printf("Code %s (%d) converted to %s (%d)\n",
 					libevdev_event_code_get_name(emu.in.type, emu.in.code), value,
 					libevdev_event_code_get_name(emu.out.type, emu.out.code), emuvalue);
-				libevdev_uinput_write_event(hl_init->uinput.uidev, emu.out.type, emu.out.code, emuvalue);
-				libevdev_uinput_write_event(hl_init->uinput.uidev, EV_SYN, SYN_REPORT, 0);
+				libevdev_uinput_write_event(hl_evdev->uinput.uidev, emu.out.type, emu.out.code, emuvalue);
+				libevdev_uinput_write_event(hl_evdev->uinput.uidev, EV_SYN, SYN_REPORT, 0);
 			}
 		}
 	}

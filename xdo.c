@@ -1,33 +1,38 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
 
 #include "include/xdo.h"
 
-void hl_xdo_init() {
-	xdo_t* xdo = NULL;
+void *hl_xdo_init() {
+	struct hl_xdo *hl_xdo = malloc(sizeof(struct hl_xdo));
+
+	printf("libxdo module version: %s\n", xdo_version());
+
+	hl_xdo->xdo = xdo_new(NULL);
+
+	return hl_xdo;
+}
+
+void hl_xdo_dostuff(struct hl_xdo *hl_xdo) {
 	Window activewindow = 0;
 	Window *searchwindow = NULL;
 	unsigned int nwindows;
 	char *test_window_name = "LiveSplit";
 
-	printf("libxdo module version: %s\n", xdo_version());
-
-	xdo = xdo_new(NULL);
-	hl_xdo_getactive(xdo, &activewindow);
+	hl_xdo_getactive(hl_xdo->xdo, &activewindow);
 	printf("Active Window: %ld\n", activewindow);
 
-	hl_xdo_search(xdo, test_window_name, &searchwindow, &nwindows);
+	hl_xdo_search(hl_xdo->xdo, test_window_name, &searchwindow, &nwindows);
 	if (nwindows > 0) {
 		printf("%s Window: %ld\n", test_window_name, searchwindow[0]);
-		if (!hl_xdo_activate(xdo, searchwindow[0])) {
+		if (!hl_xdo_activate(hl_xdo->xdo, searchwindow[0])) {
 
-			hl_xdo_keys(xdo, searchwindow[0], "1");
+			hl_xdo_keys(hl_xdo->xdo, searchwindow[0], "1");
 		}
 	}
-	hl_xdo_activate(xdo, activewindow);
-
-	xdo_free(xdo);
+	hl_xdo_activate(hl_xdo->xdo, activewindow);
 }
 
 int hl_xdo_getactive(xdo_t *xdo, Window *window_ret) {
