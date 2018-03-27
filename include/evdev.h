@@ -21,6 +21,10 @@
 
 extern pthread_mutex_t mutex_evdev;
 
+/* For list of codes, see
+ * https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
+ */
+
 #define LOW_KEY KEY_ESC
 #define HIGH_KEY KEY_MAX
 
@@ -58,10 +62,10 @@ struct codelookup {
 	uint16_t code;
 };
 
-typedef enum {
+enum shortcut_type {
 	simultaneous = 0,
 	consecutive = 1
-} hl_shortcut_type;
+};
 
 struct key_data {
 };
@@ -93,14 +97,14 @@ struct hl_evdev {
 	} maps;
 };
 
-struct hl_shortcut {
+struct shortcut {
+	const char *name;
 	void (*function) ();
-	hl_shortcut_type type;
+	enum shortcut_type type;
 	bool multi_device;
-	/* List of codes that trigger the shortcut.
-	 * See https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
-	 */
-	int codes[];
+	struct button {
+		struct button_mapping buttons[8];
+	} button_list[16];
 };
 
 void *hl_evdev_init();

@@ -39,6 +39,10 @@ const struct codelookup codelookup[] = {
 	CODETABLE
 };
 
+struct shortcut shortcuts[] = {
+	SHORTCUTS
+};
+
 void key_press(struct hl_evdev *hl_evdev, int id, uint8_t type, uint16_t key, int16_t value);
 
 int filter_event_files(const struct dirent *entry)

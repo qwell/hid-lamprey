@@ -24,22 +24,22 @@
 			{'^', {\
 				{EV_KEY, BTN_DPAD_UP},\
 				{EV_ABS, ABS_HAT0Y, -1},\
-				{EV_ABS, ABS_Y, -16834}\
+				{EV_ABS, ABS_Y, -16834},\
 			}},\
 			{'v', {\
 				{EV_KEY, BTN_DPAD_DOWN},\
 				{EV_ABS, ABS_HAT0Y, 1},\
-				{EV_ABS, ABS_Y, 16834}\
+				{EV_ABS, ABS_Y, 16834},\
 			}},\
 			{'<', {\
 				{EV_KEY, BTN_DPAD_LEFT},\
 				{EV_ABS, ABS_HAT0X, -1},\
-				{EV_ABS, ABS_X, -16834}\
+				{EV_ABS, ABS_X, -16834},\
 			}},\
 			{'>', {\
 				{EV_KEY, BTN_DPAD_RIGHT},\
 				{EV_ABS, ABS_HAT0X, 1},\
-				{EV_ABS, ABS_X, 16834}\
+				{EV_ABS, ABS_X, 16834},\
 			}},\
 			{'L', {{EV_KEY, BTN_TL}}},\
 			{'R', {{EV_KEY, BTN_TR}}},\
@@ -70,23 +70,56 @@
 	{{EV_ABS, ABS_Y, 16834}, {EV_KEY, KEY_S}},\
 	*/
 
-/* TODO Move this somewhere useful, outside of a header.
-static struct hl_shortcut konami = {
-	.function = NULL,
-	.multi_device = false,
-	.type = consecutive,
-	.keys = {
-		BTN_DPAD_UP,
-		BTN_DPAD_UP,
-		BTN_DPAD_DOWN,
-		BTN_DPAD_DOWN,
-		BTN_DPAD_LEFT,
-		BTN_DPAD_RIGHT,
-		BTN_DPAD_LEFT,
-		BTN_DPAD_RIGHT,
-		BTN_WEST,
-		BTN_EAST,
-	}
-};
-*/
+#define SHORTCUTS \
+	{\
+		.name = "konami",\
+		.function = NULL,\
+		.multi_device = false,\
+		.type = consecutive,\
+		.button_list = {\
+			{{\
+				{EV_KEY, BTN_DPAD_UP},\
+				{EV_ABS, ABS_HAT0Y, -1},\
+				{EV_ABS, ABS_Y, -16834},\
+			}},\
+			{{\
+				{EV_KEY, BTN_DPAD_UP},\
+				{EV_ABS, ABS_HAT0Y, -1},\
+				{EV_ABS, ABS_Y, -16834},\
+			}},\
+			{{\
+				{EV_KEY, BTN_DPAD_DOWN},\
+				{EV_ABS, ABS_HAT0Y, 1},\
+				{EV_ABS, ABS_Y, 16834},\
+			}},\
+			{{\
+				{EV_KEY, BTN_DPAD_DOWN},\
+				{EV_ABS, ABS_HAT0Y, 1},\
+				{EV_ABS, ABS_Y, 16834},\
+			}},\
+			{{\
+				{EV_KEY, BTN_DPAD_LEFT},\
+				{EV_ABS, ABS_HAT0X, -1},\
+				{EV_ABS, ABS_X, -16834},\
+			}},\
+			{{\
+				{EV_KEY, BTN_DPAD_RIGHT},\
+				{EV_ABS, ABS_HAT0X, 1},\
+				{EV_ABS, ABS_X, 16834},\
+			}},\
+			{{\
+				{EV_KEY, BTN_DPAD_LEFT},\
+				{EV_ABS, ABS_HAT0X, -1},\
+				{EV_ABS, ABS_X, -16834},\
+			}},\
+			{{\
+				{EV_KEY, BTN_DPAD_RIGHT},\
+				{EV_ABS, ABS_HAT0X, 1},\
+				{EV_ABS, ABS_X, 16834},\
+			}},\
+			{{{EV_KEY, BTN_WEST}}},\
+			{{{EV_KEY, BTN_EAST}}},\
+		},\
+	},
+
 #endif
