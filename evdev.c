@@ -24,11 +24,11 @@
 
 pthread_mutex_t mutex_evdev = PTHREAD_MUTEX_INITIALIZER;
 
-struct controller controllers[] = {
+const struct controller controllers[] = {
 	CONTROLLERS
 };
 
-struct codeswap {
+const struct codeswap {
 	struct button_mapping in;
 	struct button_mapping out;
 } codeswaps[] = {
@@ -39,7 +39,7 @@ const struct codelookup codelookup[] = {
 	CODETABLE
 };
 
-struct shortcut shortcuts[] = {
+const struct shortcut shortcuts[] = {
 	SHORTCUTS
 };
 
@@ -54,14 +54,15 @@ void *hl_evdev_init() {
 	const char *filepath = "/dev/input/by-path/";
 	struct dirent **filelist;
 	int filecount = 0;
-	struct hl_evdev *hl_evdev = malloc(sizeof(struct hl_evdev));
+	struct hl_evdev *hl_evdev;
 
 	filecount = scandir(filepath, &filelist, filter_event_files, alphasort);
 	if (filecount < 0) {
 		printf("No input files found.  Cannot continue.\n");
-		exit(1);
+		return NULL;
 	}
 
+	hl_evdev = malloc(sizeof(struct hl_evdev));
 	memset(hl_evdev->fds, 0, sizeof(hl_evdev->fds));
 
 	for (int i = 0; i < filecount; ++i) {
@@ -223,7 +224,7 @@ void *hl_evdev_poll(void *ptr) {
 		}
 
 		pthread_mutex_lock(&mutex_evdev);
-		for (int i = 0; i <= sizeof(hl_evdev->fds) / sizeof(struct pollfd); i++) {
+		for (int i = 0; i <= sizeof(hl_evdev->devices) / sizeof(*hl_evdev->devices); i++) {
 			struct libevdev *dev = NULL;
 
 			if (hl_evdev->fds[i].revents != POLLIN) {
@@ -317,16 +318,27 @@ void *hl_evdev_poll(void *ptr) {
 		pthread_mutex_unlock(&mutex_evdev);
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
 
-	pthread_mutex_lock(&mutex_evdev);
+	pthread_exit(NULL);
+}
+
+void hl_evdev_destroy(struct hl_evdev *hl_evdev) {
+	if (hl_evdev == NULL) {
+		return;
+	}
+
+	for (int i = 0; i <= sizeof(hl_evdev->devices) / sizeof(*hl_evdev->devices); i++) {
+		libevdev_free(hl_evdev->devices[i].dev);
+	}
+
 	if (hl_evdev->uinput.uidev != NULL) {
 		libevdev_uinput_destroy(hl_evdev->uinput.uidev);
 	}
+
 	if (hl_evdev->uinput.dev != NULL) {
 		libevdev_free(hl_evdev->uinput.dev);
 	}
-	pthread_mutex_unlock(&mutex_evdev);
 
-	pthread_exit(NULL);
+	free(hl_evdev);
 }
 
 void key_press(struct hl_evdev *hl_evdev, int id, uint8_t type, uint16_t key, int16_t value) {

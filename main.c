@@ -19,7 +19,7 @@
 
 int main (int argc, char **argv) {
 	pthread_t t_evdev;
-	struct hl_evdev *hl_evdev;
+	struct hl_evdev *hl_evdev = NULL;
 
 #ifdef USE_GTK
 	pthread_t t_gtk;
@@ -27,23 +27,23 @@ int main (int argc, char **argv) {
 #endif
 
 #ifdef USE_XDO
-	struct hl_xdo *hl_xdo;
+	struct hl_xdo *hl_xdo = NULL;
 #endif
 
 	printf("Lamprey Version: %s\n", HL_VERSION);
 
 	pthread_mutex_lock(&mutex_evdev);
 	/* Initialize evdev data. */
-	hl_evdev = hl_evdev_init();
+	if ((hl_evdev = hl_evdev_init())) {
+		/* Spawn off a thread to handle evdev polling. */
+		pthread_create(&t_evdev, NULL, hl_evdev_poll, (void *)hl_evdev);
+	}
 	pthread_mutex_unlock(&mutex_evdev);
 
 #ifdef USE_XDO
 	/* Initialize xdo data. */
 	hl_xdo = hl_xdo_init();
 #endif
-
-	/* Spawn off a thread to handle evdev polling. */
-	pthread_create(&t_evdev, NULL, hl_evdev_poll, (void *)hl_evdev);
 
 #ifdef USE_GTK
 	/* Spawn another thread for gtk window handling. */
@@ -52,11 +52,19 @@ int main (int argc, char **argv) {
 
 	// Do...stuff.
 
-	pthread_join(t_evdev, NULL);
+	if (hl_evdev) {
+		pthread_join(t_evdev, NULL);
+
+		pthread_mutex_lock(&mutex_evdev);
+		hl_evdev_destroy(hl_evdev);
+		hl_evdev = NULL;
+		pthread_mutex_unlock(&mutex_evdev);
+	}
+
 #ifdef USE_GTK
 	pthread_join(t_gtk, NULL);
 #endif
-	free(hl_evdev);
+
 #ifdef USE_XDO
 	free(hl_xdo);
 #endif
