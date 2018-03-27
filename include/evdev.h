@@ -20,6 +20,7 @@
 #include "evdev-codetable.h"
 
 extern pthread_mutex_t mutex_evdev;
+extern struct hl_evdev *hl_evdev;
 
 /* For list of codes, see
  * https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
@@ -106,7 +107,7 @@ struct shortcut {
 };
 
 void *hl_evdev_init();
-void hl_evdev_destroy(struct hl_evdev *hl_evdev);
-void *hl_evdev_poll(void *hl_evdev);
+void hl_evdev_destroy();
+void *hl_evdev_poll();
 
 #endif

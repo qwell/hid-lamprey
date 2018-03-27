@@ -23,6 +23,7 @@
 #include "include/evdev.h"
 
 pthread_mutex_t mutex_evdev = PTHREAD_MUTEX_INITIALIZER;
+struct hl_evdev *hl_evdev = NULL;
 
 const struct controller controllers[] = {
 	CONTROLLERS
@@ -43,7 +44,7 @@ const struct shortcut shortcuts[] = {
 	SHORTCUTS
 };
 
-void key_press(struct hl_evdev *hl_evdev, int id, uint8_t type, uint16_t key, int16_t value);
+void key_press(int id, uint8_t type, uint16_t key, int16_t value);
 
 int filter_event_files(const struct dirent *entry)
 {
@@ -54,7 +55,6 @@ void *hl_evdev_init() {
 	const char *filepath = "/dev/input/by-path/";
 	struct dirent **filelist;
 	int filecount = 0;
-	struct hl_evdev *hl_evdev;
 
 	filecount = scandir(filepath, &filelist, filter_event_files, alphasort);
 	if (filecount < 0) {
@@ -207,8 +207,7 @@ void *hl_evdev_init() {
 	return hl_evdev;
 }
 
-void *hl_evdev_poll(void *ptr) {
-	struct hl_evdev *hl_evdev = (struct hl_evdev *)ptr;
+void *hl_evdev_poll() {
 	int rc = 1;
 
 	// Poll events
@@ -246,7 +245,7 @@ void *hl_evdev_poll(void *ptr) {
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
 						__attribute__((__unused__)) struct key_data key = hl_evdev->maps.key_map[ev.code - LOW_KEY];
 						debug_print("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
-						key_press(hl_evdev, i, ev.type, ev.code, ev.value);
+						key_press(i, ev.type, ev.code, ev.value);
 					}
 					break;
 				case EV_ABS:
@@ -274,7 +273,7 @@ void *hl_evdev_poll(void *ptr) {
 								value = (relzero - hat.min) * (ev.value - hat.min) / ((relzero - deadsize) - hat.min) + hat.min;
 							}
 							debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							key_press(hl_evdev, i, ev.type, ev.code, value);
+							key_press(i, ev.type, ev.code, value);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -302,7 +301,7 @@ void *hl_evdev_poll(void *ptr) {
 								value = (relzero - axis.min) * (ev.value - axis.min) / ((relzero - deadsize) - axis.min) + axis.min;
 							}
 							debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							key_press(hl_evdev, i, ev.type, ev.code, value);
+							key_press(i, ev.type, ev.code, value);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -322,7 +321,7 @@ void *hl_evdev_poll(void *ptr) {
 	pthread_exit(NULL);
 }
 
-void hl_evdev_destroy(struct hl_evdev *hl_evdev) {
+void hl_evdev_destroy() {
 	if (hl_evdev == NULL) {
 		return;
 	}
@@ -342,9 +341,10 @@ void hl_evdev_destroy(struct hl_evdev *hl_evdev) {
 	}
 
 	free(hl_evdev);
+	hl_evdev = NULL;
 }
 
-void key_press(struct hl_evdev *hl_evdev, int id, uint8_t type, uint16_t key, int16_t value) {
+void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 	const char *device = libevdev_get_uniq(hl_evdev->devices[id].dev);
 	for (int i = 0; i < sizeof(controllers) / sizeof(*controllers); i++) {
 		struct controller controller = controllers[i];

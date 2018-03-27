@@ -19,7 +19,6 @@
 
 int main (int argc, char **argv) {
 	pthread_t t_evdev;
-	struct hl_evdev *hl_evdev = NULL;
 
 #ifdef USE_GTK
 	pthread_t t_gtk;
@@ -34,9 +33,9 @@ int main (int argc, char **argv) {
 
 	pthread_mutex_lock(&mutex_evdev);
 	/* Initialize evdev data. */
-	if ((hl_evdev = hl_evdev_init())) {
+	if (hl_evdev_init()) {
 		/* Spawn off a thread to handle evdev polling. */
-		pthread_create(&t_evdev, NULL, hl_evdev_poll, (void *)hl_evdev);
+		pthread_create(&t_evdev, NULL, hl_evdev_poll, NULL);
 	}
 	pthread_mutex_unlock(&mutex_evdev);
 
@@ -57,7 +56,6 @@ int main (int argc, char **argv) {
 
 		pthread_mutex_lock(&mutex_evdev);
 		hl_evdev_destroy(hl_evdev);
-		hl_evdev = NULL;
 		pthread_mutex_unlock(&mutex_evdev);
 	}
 

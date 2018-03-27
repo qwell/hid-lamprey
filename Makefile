@@ -47,7 +47,7 @@ OBJS=$(SRCS:.c=.o)
 all: $(APPS)
 
 $(APPS): main.o
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(SO_LIBS)
 
 $(APPS): $(SOS)
 
