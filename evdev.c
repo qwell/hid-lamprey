@@ -64,6 +64,7 @@ void *hl_evdev_init() {
 
 	hl_evdev = malloc(sizeof(struct hl_evdev));
 	memset(hl_evdev->fds, 0, sizeof(hl_evdev->fds));
+	memset(hl_evdev->devices, 0, sizeof(hl_evdev->devices));
 
 	for (int i = 0; i < filecount; ++i) {
 		char fullpath[256];
@@ -181,7 +182,7 @@ void *hl_evdev_init() {
 	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_REL);
 
 	/* Emulate all keys in the code table. */
-	for (int i = 0; i <= sizeof(codelookup) / sizeof(*codelookup); i++) {
+	for (int i = 0; i < sizeof(codelookup) / sizeof(*codelookup); i++) {
 		struct codelookup emu = codelookup[i];
 		void *codedata = NULL;
 		switch (emu.type) {
@@ -224,7 +225,7 @@ void *hl_evdev_poll(void *ptr) {
 		}
 
 		pthread_mutex_lock(&mutex_evdev);
-		for (int i = 0; i <= sizeof(hl_evdev->devices) / sizeof(*hl_evdev->devices); i++) {
+		for (int i = 0; i < sizeof(hl_evdev->devices) / sizeof(*hl_evdev->devices); i++) {
 			struct libevdev *dev = NULL;
 
 			if (hl_evdev->fds[i].revents != POLLIN) {
@@ -326,8 +327,10 @@ void hl_evdev_destroy(struct hl_evdev *hl_evdev) {
 		return;
 	}
 
-	for (int i = 0; i <= sizeof(hl_evdev->devices) / sizeof(*hl_evdev->devices); i++) {
-		libevdev_free(hl_evdev->devices[i].dev);
+	for (int i = 0; i < sizeof(hl_evdev->devices) / sizeof(*hl_evdev->devices); i++) {
+		if (hl_evdev->devices[i].dev != NULL) {
+			libevdev_free(hl_evdev->devices[i].dev);
+		}
 	}
 
 	if (hl_evdev->uinput.uidev != NULL) {
@@ -413,7 +416,7 @@ void key_press(struct hl_evdev *hl_evdev, int id, uint8_t type, uint16_t key, in
 */
 
 	if (hl_evdev->uinput.uidev != NULL) {
-		for (int i = 0; i <= sizeof(codeswaps) / sizeof(*codeswaps); i++) {
+		for (int i = 0; i < sizeof(codeswaps) / sizeof(*codeswaps); i++) {
 			struct codeswap emu = codeswaps[i];
 			if (type == emu.in.type && key == emu.in.code) {
 				int emuvalue = 0;
