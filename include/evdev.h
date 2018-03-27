@@ -62,11 +62,6 @@ struct codelookup {
 	uint16_t code;
 };
 
-enum shortcut_type {
-	simultaneous = 0,
-	consecutive = 1
-};
-
 struct key_data {
 };
 
@@ -100,7 +95,10 @@ struct hl_evdev {
 struct shortcut {
 	const char *name;
 	void (*function) ();
-	enum shortcut_type type;
+	enum shortcut_type {
+		simultaneous = 0,
+		consecutive = 1
+	} type;
 	const char *device;
 	struct button {
 		struct button_mapping buttons[8];
