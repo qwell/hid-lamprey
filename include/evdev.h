@@ -81,7 +81,10 @@ struct hl_evdev {
 		struct libevdev *dev;
 		struct libevdev_uinput *uidev;
 	} uinput;
-	struct libevdev *dev_list[256];
+	struct devices {
+		struct libevdev *dev;
+		int16_t ff_id;
+	} devices[256];
 	struct pollfd fds[256];
 	struct maps {
 		struct key_data key_map[HIGH_KEY - LOW_KEY];

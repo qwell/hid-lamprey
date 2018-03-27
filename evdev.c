@@ -39,7 +39,7 @@ const struct codelookup codelookup[] = {
 	CODETABLE
 };
 
-void key_press(struct hl_evdev *hl_evdev, const char *device, uint8_t type, uint16_t key, int16_t value);
+void key_press(struct hl_evdev *hl_evdev, int id, uint8_t type, uint16_t key, int16_t value);
 
 int filter_event_files(const struct dirent *entry)
 {
@@ -64,12 +64,12 @@ void *hl_evdev_init() {
 		char fullpath[256];
 		int rc = 1;
 
-		struct libevdev *dev = hl_evdev->dev_list[i];
+		struct libevdev *dev = hl_evdev->devices[i].dev;
 
 		printf("Opening event file %s\n", filelist[i]->d_name);
 
 		snprintf(fullpath, sizeof(fullpath), "%s%s", filepath, filelist[i]->d_name);
-		hl_evdev->fds[i].fd = open(fullpath, O_RDONLY|O_NONBLOCK);
+		hl_evdev->fds[i].fd = open(fullpath, O_RDWR|O_NONBLOCK);
 		hl_evdev->fds[i].events = POLLIN;
 
 		rc = libevdev_new_from_fd(hl_evdev->fds[i].fd, &dev);
@@ -80,6 +80,8 @@ void *hl_evdev_init() {
 		libevdev_set_uniq(dev, filelist[i]->d_name);
 
 		free(filelist[i]);
+
+		hl_evdev->devices[i].ff_id = -1;
 
 		printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
 		printf("Input device ID: bus %#x vendor %#x product %#x\n",
@@ -142,9 +144,26 @@ void *hl_evdev_init() {
 				}
 			}
 		}
+
+		if (libevdev_has_event_type(dev, EV_FF)) {
+			if (libevdev_has_event_code(dev, EV_FF, FF_PERIODIC)) {
+				struct ff_effect effect = {
+					.id = -1,
+					.type = FF_PERIODIC,
+					.u.periodic.waveform = FF_SINE,
+					.u.periodic.magnitude = 0x4000,
+					.direction = 0x4000,
+					.replay.length = 100,
+				};
+				printf("Device %d has FF: %s\n", i, libevdev_event_code_get_name(EV_FF, FF_PERIODIC));
+
+				ioctl(hl_evdev->fds[i].fd, EVIOCSFF, &effect);
+				hl_evdev->devices[i].ff_id = effect.id;
+			}
+		}
 		printf("\n");
 
-		hl_evdev->dev_list[i] = dev;
+		hl_evdev->devices[i].dev = dev;
 	}
 
 	free(filelist);
@@ -207,7 +226,7 @@ void *hl_evdev_poll(void *ptr) {
 				continue;
 			}
 
-			dev = hl_evdev->dev_list[i];
+			dev = hl_evdev->devices[i].dev;
 
 			do {
 				struct input_event ev;
@@ -221,7 +240,7 @@ void *hl_evdev_poll(void *ptr) {
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
 						__attribute__((__unused__)) struct key_data key = hl_evdev->maps.key_map[ev.code - LOW_KEY];
 						debug_print("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
-						key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, ev.value);
+						key_press(hl_evdev, i, ev.type, ev.code, ev.value);
 					}
 					break;
 				case EV_ABS:
@@ -249,7 +268,7 @@ void *hl_evdev_poll(void *ptr) {
 								value = (relzero - hat.min) * (ev.value - hat.min) / ((relzero - deadsize) - hat.min) + hat.min;
 							}
 							debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, value);
+							key_press(hl_evdev, i, ev.type, ev.code, value);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -277,7 +296,7 @@ void *hl_evdev_poll(void *ptr) {
 								value = (relzero - axis.min) * (ev.value - axis.min) / ((relzero - deadsize) - axis.min) + axis.min;
 							}
 							debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							key_press(hl_evdev, libevdev_get_uniq(dev), ev.type, ev.code, value);
+							key_press(hl_evdev, i, ev.type, ev.code, value);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -306,7 +325,8 @@ void *hl_evdev_poll(void *ptr) {
 	pthread_exit(NULL);
 }
 
-void key_press(struct hl_evdev *hl_evdev, const char *device, uint8_t type, uint16_t key, int16_t value) {
+void key_press(struct hl_evdev *hl_evdev, int id, uint8_t type, uint16_t key, int16_t value) {
+	const char *device = libevdev_get_uniq(hl_evdev->devices[id].dev);
 	for (int a = 0; a < sizeof(controllers) / sizeof(struct controller); a++) {
 		if (strcmp(device, controllers[a].device)) {
 			continue;
@@ -372,6 +392,16 @@ void key_press(struct hl_evdev *hl_evdev, const char *device, uint8_t type, uint
 					libevdev_event_code_get_name(emu.out.type, emu.out.code), emuvalue);
 				libevdev_uinput_write_event(hl_evdev->uinput.uidev, emu.out.type, emu.out.code, emuvalue);
 				libevdev_uinput_write_event(hl_evdev->uinput.uidev, EV_SYN, SYN_REPORT, 0);
+
+				if (hl_evdev->devices[id].ff_id != -1) {
+					struct input_event play = {
+						.type = EV_FF,
+						.value = 1,
+						.code = hl_evdev->devices[id].ff_id,
+					};
+
+					write(hl_evdev->fds[id].fd, &play, sizeof(play));
+				}
 			}
 		}
 	}
