@@ -101,7 +101,7 @@ struct shortcut {
 	const char *name;
 	void (*function) ();
 	enum shortcut_type type;
-	bool multi_device;
+	const char *device;
 	struct button {
 		struct button_mapping buttons[8];
 	} button_list[16];

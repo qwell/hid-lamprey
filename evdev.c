@@ -180,7 +180,7 @@ void *hl_evdev_init() {
 	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_REL);
 
 	/* Emulate all keys in the code table. */
-	for (int i = 0; i <= sizeof(codelookup) / sizeof(struct codelookup); i++) {
+	for (int i = 0; i <= sizeof(codelookup) / sizeof(*codelookup); i++) {
 		struct codelookup emu = codelookup[i];
 		void *codedata = NULL;
 		switch (emu.type) {
@@ -331,52 +331,77 @@ void *hl_evdev_poll(void *ptr) {
 
 void key_press(struct hl_evdev *hl_evdev, int id, uint8_t type, uint16_t key, int16_t value) {
 	const char *device = libevdev_get_uniq(hl_evdev->devices[id].dev);
-	for (int a = 0; a < sizeof(controllers) / sizeof(struct controller); a++) {
-		if (strcmp(device, controllers[a].device)) {
+	for (int i = 0; i < sizeof(controllers) / sizeof(*controllers); i++) {
+		struct controller controller = controllers[i];
+		if (strcmp(device, controller.device)) {
 			continue;
 		}
 
-		for (int j = 0; j < sizeof(controllers[a].layout); j++) {
+		for (int j = 0; j < sizeof(controller.layout); j++) {
+			char layout_char = controller.layout[j];
 			int on = 0;
 
-			if (controllers[a].layout[j] == '\0') {
+			if (layout_char == '\0') {
 				break;
 			}
 
-			if (controllers[a].layout[j] == ' ') {
+			if (layout_char == ' ') {
 				printf(" ");
 				continue;
 			}
 
-			for (int k = 0; k < sizeof(controllers[a].mapping) / sizeof(struct controller_mapping); k++) {
-				if (controllers[a].layout[j] == controllers[a].mapping[k].display) {
-					for (int l = 0; l < sizeof(controllers[a].mapping[k].buttons) / sizeof(struct button_mapping); l++) {
-						if (key == controllers[a].mapping[k].buttons[l].code && type == controllers[a].mapping[k].buttons[l].type) {
-							if (controllers[a].mapping[k].buttons[l].triggervalue < 0) {
-								controllers[a].mapping[k].value = (value <= controllers[a].mapping[k].buttons[l].triggervalue);
-							} else if (controllers[a].mapping[k].buttons[l].triggervalue > 0) {
-								controllers[a].mapping[k].value = (value >= controllers[a].mapping[k].buttons[l].triggervalue);
+			for (int k = 0; k < sizeof(controller.mapping) / sizeof(*controller.mapping); k++) {
+				struct controller_mapping mapping = controller.mapping[k];
+				if (layout_char == mapping.display) {
+					for (int l = 0; l < sizeof(mapping.buttons) / sizeof(*mapping.buttons); l++) {
+						struct button_mapping button = mapping.buttons[l];
+						if (key == button.code && type == button.type) {
+							if (button.triggervalue < 0) {
+								on = (value <= button.triggervalue);
+							} else if (button.triggervalue > 0) {
+								on = (value >= button.triggervalue);
 							} else {
-								controllers[a].mapping[k].value = value ? 1 : 0;
+								on = value ? 1 : 0;
 							}
 						}
-					}
 
-					on = controllers[a].mapping[k].value;
+						if (on) {
+							break;
+						}
+					}
+				}
+
+				if (on) {
+					break;
 				}
 			}
 
 			if (on) {
-				printf("\e[31m%c\e[39m", controllers[a].layout[j]);
+				printf("\e[31m%c\e[39m", layout_char);
 			} else {
-				printf("%c", controllers[a].layout[j]);
+				printf("%c", layout_char);
 			}
 		}
 		printf("\n");
 	}
 
+/* TODO Do something with the shortcuts.
+	for (int i = 0; i < sizeof(shortcuts) / sizeof(*shortcuts); i++) {
+		struct shortcut shortcut = shortcuts[i];
+		for (int j = 0; j < sizeof(shortcut.button_list) / sizeof(*shortcut.button_list); j++) {
+			struct button button = shortcut.button_list[j];
+			for (int k = 0; k < sizeof(button.buttons) / sizeof(*button.buttons); k++) {
+				struct button_mapping map = button.buttons[k];
+				if (map.type != 0) {
+					printf("Button %d (%d) [%d]\n", map.code, map.type, map.triggervalue);
+				}
+			}
+		}
+	}
+*/
+
 	if (hl_evdev->uinput.uidev != NULL) {
-		for (int i = 0; i <= sizeof(codeswaps) / sizeof(struct codeswap); i++) {
+		for (int i = 0; i <= sizeof(codeswaps) / sizeof(*codeswaps); i++) {
 			struct codeswap emu = codeswaps[i];
 			if (type == emu.in.type && key == emu.in.code) {
 				int emuvalue = 0;

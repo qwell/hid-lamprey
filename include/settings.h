@@ -15,11 +15,13 @@
 // #define AXIS_DEADZONE .2
 // #define HAT_DEADZONE 0
 
+//#define DEVICE_ROCKCANDY "pci-0000:00:06.0-usb-0:2:1.0-event-joystick"
+#define DEVICE_ROCKCANDY "pci-0000:03:00.0-usb-0:3:1.0-event-joystick"
+
 #define CONTROLLERS \
 	{\
 		.name = "SNES",\
-		/*.device = "pci-0000:00:06.0-usb-0:2:1.0-event-joystick",*/\
-		.device = "pci-0000:03:00.0-usb-0:3:1.0-event-joystick",\
+		.device = DEVICE_ROCKCANDY,\
 		.mapping = {\
 			{'^', {\
 				{EV_KEY, BTN_DPAD_UP},\
@@ -74,7 +76,7 @@
 	{\
 		.name = "konami",\
 		.function = NULL,\
-		.multi_device = false,\
+		.device = DEVICE_ROCKCANDY,\
 		.type = consecutive,\
 		.button_list = {\
 			{{\
