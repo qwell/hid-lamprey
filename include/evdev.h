@@ -101,6 +101,7 @@ struct shortcut {
 		consecutive = 1
 	} type;
 	const char *device;
+	// I really, really hate this.
 	struct button {
 		struct button_mapping buttons[8];
 	} button_list[16];

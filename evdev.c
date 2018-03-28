@@ -362,7 +362,7 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 			struct controller_mapping *mapping = &controller->mapping[j];
 
 			for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
-				struct button_mapping *button = &mapping->buttons[k];
+				const struct button_mapping *button = &mapping->buttons[k];
 
 				if (key == button->code && type == button->type) {
 					if (button->triggervalue < 0) {
@@ -387,11 +387,6 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 				break;
 			}
 
-			if (layout_char == ' ') {
-				printf(" ");
-				continue;
-			}
-
 			if (strstr(pressed, &layout_char)) {
 				printf("\e[31m%c\e[39m", layout_char);
 			} else {
@@ -403,13 +398,13 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 
 /* TODO Do something with the shortcuts.
 	for (int i = 0; i < sizeof(shortcuts) / sizeof(*shortcuts); i++) {
-		struct shortcut shortcut = shortcuts[i];
-		for (int j = 0; j < sizeof(shortcut.button_list) / sizeof(*shortcut.button_list); j++) {
-			struct button button = shortcut.button_list[j];
-			for (int k = 0; k < sizeof(button.buttons) / sizeof(*button.buttons); k++) {
-				struct button_mapping map = button.buttons[k];
-				if (map.type != 0) {
-					printf("Button %d (%d) [%d]\n", map.code, map.type, map.triggervalue);
+		const struct shortcut *shortcut = &shortcuts[i];
+		for (int j = 0; j < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); j++) {
+			const struct button *button = &shortcut->button_list[j];
+			for (int k = 0; k < sizeof(button->buttons) / sizeof(*button->buttons); k++) {
+				const struct button_mapping *map = &button->buttons[k];
+				if (map->type != 0) {
+					printf("Button %d (%d) [%d]\n", map->code, map->type, map->triggervalue);
 				}
 			}
 		}
