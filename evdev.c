@@ -385,6 +385,9 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 				const struct button_trigger *button = &mapping->buttons[k];
 
 				if (key == button->code && type == button->type) {
+					/* Things may not work properly if you have multiple buttons
+					 * assigned to a mapping that are concurrently triggered.
+					 */
 					if (button->triggervalue < 0) {
 						mapping->value = (value <= button->triggervalue);
 					} else if (button->triggervalue > 0) {
@@ -394,9 +397,10 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 					}
 				}
 
-				if (mapping->value && !strchr(pressed, mapping->display)) {
-					strncat(pressed, &mapping->display, 1);
-				}
+			}
+
+			if (mapping->value && !strchr(pressed, mapping->display)) {
+				strncat(pressed, &mapping->display, 1);
 			}
 		}
 
