@@ -18,7 +18,7 @@
 #define DEVICE_XBOX "3/45e-2a1:Xbox 360 Wireless Receiver (XBOX)"
 #define DEVICE_KEYBOARD "11/1-1:AT Translated Set 2 keyboard"
 
-#define CONTROLLERS \
+#define CONTROLLER_DISPLAYS \
 	{\
 		.name = "SNES",\
 		.device = DEVICE_XBOX,\

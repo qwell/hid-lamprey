@@ -25,13 +25,13 @@
 pthread_mutex_t mutex_evdev = PTHREAD_MUTEX_INITIALIZER;
 struct hl_evdev *hl_evdev = NULL;
 
-struct controller controllers[] = {
-	CONTROLLERS
+struct controller_display controller_displays[] = {
+	CONTROLLER_DISPLAYS
 };
 
 const struct codeswap {
-	struct button_mapping in;
-	struct button_mapping out;
+	struct button_trigger in;
+	struct button_trigger out;
 } codeswaps[] = {
 	CODESWAPS
 };
@@ -349,8 +349,8 @@ void hl_evdev_destroy() {
 void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 	const char *device = libevdev_get_uniq(hl_evdev->devices[id].dev);
 
-	for (int i = 0; i < sizeof(controllers) / sizeof(*controllers); i++) {
-		struct controller *controller = &controllers[i];
+	for (int i = 0; i < sizeof(controller_displays) / sizeof(*controller_displays); i++) {
+		struct controller_display *controller = &controller_displays[i];
 
 		char pressed[256] = {0};
 
@@ -359,10 +359,10 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 		}
 
 		for (int j = 0; j < sizeof(controller->mapping) / sizeof(*controller->mapping); j++) {
-			struct controller_mapping *mapping = &controller->mapping[j];
+			struct controller_display_mapping *mapping = &controller->mapping[j];
 
 			for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
-				const struct button_mapping *button = &mapping->buttons[k];
+				const struct button_trigger *button = &mapping->buttons[k];
 
 				if (key == button->code && type == button->type) {
 					if (button->triggervalue < 0) {
@@ -402,7 +402,7 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 		for (int j = 0; j < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); j++) {
 			const struct button *button = &shortcut->button_list[j];
 			for (int k = 0; k < sizeof(button->buttons) / sizeof(*button->buttons); k++) {
-				const struct button_mapping *map = &button->buttons[k];
+				const struct button_trigger *map = &button->buttons[k];
 				if (map->type != 0) {
 					printf("Button %d (%d) [%d]\n", map->code, map->type, map->triggervalue);
 				}

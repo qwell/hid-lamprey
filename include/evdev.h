@@ -38,22 +38,22 @@ extern struct hl_evdev *hl_evdev;
 #define LOW_REL REL_X
 #define HIGH_REL REL_MAX
 
-struct button_mapping {
+struct button_trigger {
 	uint8_t type;
 	uint16_t code;
 	int16_t triggervalue;
 };
 
-struct controller_mapping {
+struct controller_display_mapping {
 	char display;
-	struct button_mapping buttons[8];
+	struct button_trigger buttons[8];
 	bool value;
 };
 
-struct controller {
+struct controller_display {
 	char *name;
 	char *device;
-	struct controller_mapping mapping[64];
+	struct controller_display_mapping mapping[64];
 	char layout[256];
 };
 
@@ -103,7 +103,7 @@ struct shortcut {
 	const char *device;
 	// I really, really hate this.
 	struct button {
-		struct button_mapping buttons[8];
+		struct button_trigger buttons[8];
 	} button_list[16];
 };
 
