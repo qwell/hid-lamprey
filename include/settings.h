@@ -57,6 +57,20 @@
 			"|<   >|        (Y) (A)\n"\
 			" ‾|v|‾  /s//S/   (B)  "\
 		},\
+	},\
+	{\
+		.name = "keyboard",\
+		.device = DEVICE_KEYBOARD,\
+		.mapping = {\
+			{'W', {{EV_KEY, KEY_W}}},\
+			{'A', {{EV_KEY, KEY_A}}},\
+			{'S', {{EV_KEY, KEY_S}}},\
+			{'D', {{EV_KEY, KEY_D}}},\
+		},\
+		.layout = {\
+			"   [W]   \n"\
+			"[A][S][D]"\
+		},\
 	},
 
 #define CODESWAPS \
