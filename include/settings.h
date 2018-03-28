@@ -15,13 +15,15 @@
 // #define AXIS_DEADZONE .2
 // #define HAT_DEADZONE 0
 
+#define DEVICE_ROCKCANDY "3/e6f-11f:Rock Candy Gamepad Wired Controller"
 #define DEVICE_XBOX "3/45e-2a1:Xbox 360 Wireless Receiver (XBOX)"
 #define DEVICE_KEYBOARD "11/1-1:AT Translated Set 2 keyboard"
+#define DEVICE_KEYBOARD2 "3/258a-1:SINO WEALTH USB KEYBOARD"
 
 #define CONTROLLER_DISPLAYS \
 	{\
 		.name = "SNES",\
-		.device = DEVICE_XBOX,\
+		.devices = {DEVICE_XBOX,DEVICE_ROCKCANDY},\
 		.mapping = {\
 			{'^', {\
 				{EV_KEY, BTN_DPAD_UP},\
@@ -60,7 +62,7 @@
 	},\
 	{\
 		.name = "keyboard",\
-		.device = DEVICE_KEYBOARD,\
+		.devices = {DEVICE_KEYBOARD, DEVICE_KEYBOARD2},\
 		.mapping = {\
 			{'W', {{EV_KEY, KEY_W}}},\
 			{'A', {{EV_KEY, KEY_A}}},\
@@ -90,7 +92,7 @@
 	{\
 		.name = "konami",\
 		.function = NULL,\
-		.device = DEVICE_XBOX,\
+		.devices = {DEVICE_XBOX,DEVICE_ROCKCANDY},\
 		.type = consecutive,\
 		.button_list = {\
 			{{\

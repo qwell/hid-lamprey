@@ -371,10 +371,23 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 
 	for (int i = 0; i < sizeof(controller_displays) / sizeof(*controller_displays); i++) {
 		struct controller_display *controller = &controller_displays[i];
+		int usedevice = 0;
 
 		char pressed[256] = {0};
 
-		if (controller->device && strcmp(device, controller->device)) {
+		for (int j = 0; j < sizeof(controller->devices) / sizeof(*controller->devices); j++) {
+			if (!controller->devices[j]) {
+				if (j == 0) {
+					usedevice = 1;
+				}
+				break;
+			}
+			if (!strcmp(device, controller->devices[j])) {
+				usedevice = 1;
+				break;
+			}
+		}
+		if (!usedevice) {
 			continue;
 		}
 

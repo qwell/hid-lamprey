@@ -46,22 +46,22 @@ struct button_trigger {
 };
 
 struct controller_display_mapping {
-	char display;
+	const char display;
 	struct button_trigger buttons[8];
 	bool value;
 };
 
 struct controller_display {
-	char *name;
-	char *device;
+	const char *name;
+	const char *devices[8];
 	struct controller_display_mapping mapping[64];
-	char layout[256];
+	const char layout[256];
 };
 
 struct codelookup {
-	char *name;
-	uint8_t type;
-	uint16_t code;
+	const char *name;
+	const uint8_t type;
+	const uint16_t code;
 };
 
 struct key_data {
@@ -101,7 +101,7 @@ struct shortcut {
 		simultaneous = 0,
 		consecutive = 1
 	} type;
-	const char *device;
+	const char *devices[8];
 	// I really, really hate this.
 	struct button {
 		struct button_trigger buttons[8];
