@@ -3,7 +3,7 @@ MAKE=make
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
 USE_GTK=
-USE_XDO=1
+USE_XDO=
 
 CFLAGS=-Wall -g -pthread -fPIC
 ifdef DEBUG

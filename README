@@ -22,7 +22,7 @@ Makefile flags:
 	GTK support (default disabled) can be enabled or disabled with
 		`make USE_GTK=1`; or
 		`make USE_GTK=`
-	XDO support (default enabled) can be enabled or disabled with
+	XDO support (default disabled) can be enabled or disabled with
 		`make USE_XDO=1`; or
 		`make USE_XDO=`
 	Debugging can be enabled with `make DEBUG=1`
