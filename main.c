@@ -41,17 +41,14 @@ int main (int argc, char **argv) {
 
 	// Do...stuff.
 
-/*
 	if (hl_evdev) {
 		pthread_join(t_evdev, NULL);
 	}
-*/
 
-/*
+
 #ifdef USE_GTK
 	pthread_join(t_gtk, NULL);
 #endif
-*/
 
 #ifdef USE_XDO
 	free(hl_xdo);
