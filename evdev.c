@@ -25,7 +25,7 @@
 pthread_mutex_t mutex_evdev = PTHREAD_MUTEX_INITIALIZER;
 struct hl_evdev *hl_evdev = NULL;
 
-const struct controller controllers[] = {
+struct controller controllers[] = {
 	CONTROLLERS
 };
 
@@ -346,15 +346,40 @@ void hl_evdev_destroy() {
 
 void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 	const char *device = libevdev_get_uniq(hl_evdev->devices[id].dev);
+
 	for (int i = 0; i < sizeof(controllers) / sizeof(*controllers); i++) {
-		struct controller controller = controllers[i];
-		if (strcmp(device, controller.device)) {
+		struct controller *controller = &controllers[i];
+
+		char pressed[256] = {0};
+
+		if (controller->device && strcmp(device, controller->device)) {
 			continue;
 		}
 
-		for (int j = 0; j < sizeof(controller.layout); j++) {
-			char layout_char = controller.layout[j];
-			int on = 0;
+		for (int j = 0; j < sizeof(controller->mapping) / sizeof(*controller->mapping); j++) {
+			struct controller_mapping *mapping = &controller->mapping[j];
+
+			for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
+				struct button_mapping *button = &mapping->buttons[k];
+
+				if (key == button->code && type == button->type) {
+					if (button->triggervalue < 0) {
+						mapping->value = (value <= button->triggervalue);
+					} else if (button->triggervalue > 0) {
+						mapping->value = (value >= button->triggervalue);
+					} else {
+						mapping->value = value ? 1 : 0;
+					}
+				}
+
+				if (mapping->value && !strchr(pressed, mapping->display)) {
+					strncat(pressed, &mapping->display, 1);
+				}
+			}
+		}
+
+		for (int j = 0; j < sizeof(controller->layout); j++) {
+			char layout_char = controller->layout[j];
 
 			if (layout_char == '\0') {
 				break;
@@ -365,33 +390,7 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 				continue;
 			}
 
-			for (int k = 0; k < sizeof(controller.mapping) / sizeof(*controller.mapping); k++) {
-				struct controller_mapping mapping = controller.mapping[k];
-				if (layout_char == mapping.display) {
-					for (int l = 0; l < sizeof(mapping.buttons) / sizeof(*mapping.buttons); l++) {
-						struct button_mapping button = mapping.buttons[l];
-						if (key == button.code && type == button.type) {
-							if (button.triggervalue < 0) {
-								on = (value <= button.triggervalue);
-							} else if (button.triggervalue > 0) {
-								on = (value >= button.triggervalue);
-							} else {
-								on = value ? 1 : 0;
-							}
-						}
-
-						if (on) {
-							break;
-						}
-					}
-				}
-
-				if (on) {
-					break;
-				}
-			}
-
-			if (on) {
+			if (strstr(pressed, &layout_char)) {
 				printf("\e[31m%c\e[39m", layout_char);
 			} else {
 				printf("%c", layout_char);
