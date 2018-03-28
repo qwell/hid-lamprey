@@ -19,6 +19,7 @@
 
 #include "evdev-codetable.h"
 
+extern pthread_t t_evdev;
 extern pthread_mutex_t mutex_evdev;
 extern struct hl_evdev *hl_evdev;
 
@@ -107,7 +108,7 @@ struct shortcut {
 	} button_list[16];
 };
 
-void *hl_evdev_init();
+void hl_evdev_init();
 void hl_evdev_destroy();
 void *hl_evdev_poll();
 

@@ -22,6 +22,7 @@
 
 #include "include/evdev.h"
 
+pthread_t t_evdev;
 pthread_mutex_t mutex_evdev = PTHREAD_MUTEX_INITIALIZER;
 struct hl_evdev *hl_evdev = NULL;
 
@@ -51,7 +52,7 @@ int filter_event_files(const struct dirent *entry)
 	return !strncmp(entry->d_name, "event", 5);
 }
 
-void *hl_evdev_init() {
+void hl_evdev_init() {
 	const char *filepath = "/dev/input/";
 	struct dirent **filelist;
 	int filecount = 0;
@@ -59,9 +60,14 @@ void *hl_evdev_init() {
 	filecount = scandir(filepath, &filelist, filter_event_files, alphasort);
 	if (filecount < 0) {
 		printf("No input files found.  Cannot continue.\n");
-		return NULL;
+		return;
 	}
 
+	pthread_mutex_lock(&mutex_evdev);
+	if (hl_evdev) {
+		pthread_mutex_unlock(&mutex_evdev);
+		return;
+	}
 	hl_evdev = malloc(sizeof(struct hl_evdev));
 	memset(hl_evdev->fds, 0, sizeof(hl_evdev->fds));
 	memset(hl_evdev->devices, 0, sizeof(hl_evdev->devices));
@@ -206,7 +212,12 @@ void *hl_evdev_init() {
 		printf("Error creating uinput device.\n");
 	}
 
-	return hl_evdev;
+	/* Spawn off a thread to handle evdev polling. */
+	pthread_create(&t_evdev, NULL, hl_evdev_poll, NULL);
+
+	pthread_mutex_unlock(&mutex_evdev);
+
+	return;
 }
 
 void *hl_evdev_poll() {
@@ -320,11 +331,16 @@ void *hl_evdev_poll() {
 		pthread_mutex_unlock(&mutex_evdev);
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
 
-	pthread_exit(NULL);
+	hl_evdev_destroy();
+
+	return NULL;
 }
 
 void hl_evdev_destroy() {
+	pthread_mutex_lock(&mutex_evdev);
+
 	if (hl_evdev == NULL) {
+		pthread_mutex_unlock(&mutex_evdev);
 		return;
 	}
 
@@ -344,6 +360,10 @@ void hl_evdev_destroy() {
 
 	free(hl_evdev);
 	hl_evdev = NULL;
+
+	pthread_mutex_unlock(&mutex_evdev);
+
+	pthread_exit(NULL);
 }
 
 void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
