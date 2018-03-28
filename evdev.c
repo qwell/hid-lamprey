@@ -412,23 +412,32 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 
 			}
 
-			if (mapping->value && !strchr(pressed, mapping->display)) {
-				strncat(pressed, &mapping->display, 1);
+			if (mapping->value && !strstr(pressed, mapping->display)) {
+				strcat(pressed, mapping->display);
 			}
 		}
 
 		printf("\n");
 		for (int j = 0; j < sizeof(controller->layout); j++) {
-			char layout_char = controller->layout[j];
+			char layout_char[5];
+			char *ptr = layout_char;
+			*ptr = controller->layout[j];
 
-			if (layout_char == '\0') {
+			/* Deal with UTF-8 characters. */
+			while ((controller->layout[j + 1] & 0xC0) == 0x80) {
+				*++ptr = controller->layout[++j];
+			}
+
+			*++ptr = '\0';
+
+			if (strlen(layout_char) == 0) {
 				break;
 			}
 
-			if (strstr(pressed, &layout_char)) {
-				printf("\e[31m%c\e[39m", layout_char);
+			if (strstr(pressed, layout_char)) {
+				printf("\e[31m%s\e[39m", layout_char);
 			} else {
-				printf("%c", layout_char);
+				printf("%s", layout_char);
 			}
 		}
 		printf("\n");

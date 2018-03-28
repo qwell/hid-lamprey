@@ -25,34 +25,34 @@
 		.name = "SNES",\
 		.devices = {DEVICE_XBOX,DEVICE_ROCKCANDY},\
 		.mapping = {\
-			{'^', {\
+			{"^", {\
 				{EV_KEY, BTN_DPAD_UP},\
 				{EV_ABS, ABS_HAT0Y, -1},\
 				{EV_ABS, ABS_Y, -16834},\
 			}},\
-			{'v', {\
+			{"v", {\
 				{EV_KEY, BTN_DPAD_DOWN},\
 				{EV_ABS, ABS_HAT0Y, 1},\
 				{EV_ABS, ABS_Y, 16834},\
 			}},\
-			{'<', {\
+			{"<", {\
 				{EV_KEY, BTN_DPAD_LEFT},\
 				{EV_ABS, ABS_HAT0X, -1},\
 				{EV_ABS, ABS_X, -16834},\
 			}},\
-			{'>', {\
+			{">", {\
 				{EV_KEY, BTN_DPAD_RIGHT},\
 				{EV_ABS, ABS_HAT0X, 1},\
 				{EV_ABS, ABS_X, 16834},\
 			}},\
-			{'L', {{EV_KEY, BTN_TL}}},\
-			{'R', {{EV_KEY, BTN_TR}}},\
-			{'Y', {{EV_KEY, BTN_NORTH}}},\
-			{'B', {{EV_KEY, BTN_SOUTH}}},\
-			{'X', {{EV_KEY, BTN_WEST}}},\
-			{'A', {{EV_KEY, BTN_EAST}}},\
-			{'s', {{EV_KEY, BTN_SELECT}}},\
-			{'S', {{EV_KEY, BTN_START}}},\
+			{"L", {{EV_KEY, BTN_TL}}},\
+			{"R", {{EV_KEY, BTN_TR}}},\
+			{"Y", {{EV_KEY, BTN_NORTH}}},\
+			{"B", {{EV_KEY, BTN_SOUTH}}},\
+			{"X", {{EV_KEY, BTN_WEST}}},\
+			{"A", {{EV_KEY, BTN_EAST}}},\
+			{"s", {{EV_KEY, BTN_SELECT}}},\
+			{"S", {{EV_KEY, BTN_START}}},\
 		},\
 		.layout = {\
 			" _|^|_  [L][R]   (X)  \n"\
@@ -64,10 +64,10 @@
 		.name = "keyboard",\
 		.devices = {DEVICE_KEYBOARD, DEVICE_KEYBOARD2},\
 		.mapping = {\
-			{'W', {{EV_KEY, KEY_W}}},\
-			{'A', {{EV_KEY, KEY_A}}},\
-			{'S', {{EV_KEY, KEY_S}}},\
-			{'D', {{EV_KEY, KEY_D}}},\
+			{"W", {{EV_KEY, KEY_W}}},\
+			{"A", {{EV_KEY, KEY_A}}},\
+			{"S", {{EV_KEY, KEY_S}}},\
+			{"D", {{EV_KEY, KEY_D}}},\
 		},\
 		.layout = {\
 			"   [W]   \n"\

@@ -46,7 +46,7 @@ struct button_trigger {
 };
 
 struct controller_display_mapping {
-	const char display;
+	const char *display;
 	struct button_trigger buttons[8];
 	bool value;
 };

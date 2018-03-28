@@ -7,6 +7,7 @@
  * (at your option) any later version.
  */
 
+#include <locale.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +19,8 @@
 #include "include/xdo.h"
 
 int main (int argc, char **argv) {
+	setlocale(LC_ALL, "");
+
 #ifdef USE_GTK
 	pthread_t t_gtk;
 	struct gtk_args args = {argc, argv};
