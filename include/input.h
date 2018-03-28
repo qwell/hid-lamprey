@@ -7,7 +7,7 @@
  * (at your option) any later version.
  */
 
-#ifdef __linux__
+#ifdef USE_EVDEV
 #include "input-evdev.h"
 
 #define hl_input_init(...) hl_evdev_init(__VA_ARGS__)

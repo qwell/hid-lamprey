@@ -17,6 +17,7 @@ CFLAGS+=-DDEBUG
 endif
 ifdef USE_EVDEV
 CFLAGS+=$(shell pkg-config --cflags libevdev)
+CFLAGS+=-DUSE_EVDEV
 endif
 ifdef USE_GTK
 CFLAGS+=$(shell pkg-config --cflags gtk+-3.0)
