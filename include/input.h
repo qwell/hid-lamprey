@@ -8,7 +8,7 @@
  */
 
 #ifdef __linux__
-#include "evdev.h"
+#include "input-evdev.h"
 
 #define hl_input_init(...) hl_evdev_init(__VA_ARGS__)
 #else
