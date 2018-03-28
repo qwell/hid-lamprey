@@ -11,4 +11,6 @@
 #include "evdev.h"
 
 #define hl_input_init(...) hl_evdev_init(__VA_ARGS__)
+#else
+#define hl_input_init(...)
 #endif

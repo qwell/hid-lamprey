@@ -7,16 +7,32 @@
  * (at your option) any later version.
  */
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "include/lamprey.h"
 
 #include "include/display.h"
 
+pthread_t t_gtk;
 pthread_mutex_t mutex_gtk = PTHREAD_MUTEX_INITIALIZER;
 
 void print_hello(GtkWidget *widget, gpointer data) {
 	g_print("Hello World\n");
 }
-void *hl_display_gtk(void *ptr) {
+
+void hl_gtk_init(int argc, char **argv) {
+	struct gtk_args *args = malloc(sizeof(*args));
+	args->argc = argc;
+	memcpy(args->argv, argv, sizeof(*args->argv));
+
+	/* Spawn another thread for gtk window handling. */
+	pthread_mutex_lock(&mutex_gtk);
+	pthread_create(&t_gtk, NULL, hl_gtk_show, args);
+	pthread_mutex_unlock(&mutex_gtk);
+}
+
+void *hl_gtk_show(void *ptr) {
 	//TODO Add locking.
 	struct gtk_args *args = ptr;
 
@@ -31,5 +47,8 @@ void *hl_display_gtk(void *ptr) {
 	g_object_unref(builder);
 	gtk_widget_show(window);
 	gtk_main();
+
+	free(args);
+
 	return NULL;
 }

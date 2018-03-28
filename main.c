@@ -21,11 +21,6 @@
 int main (int argc, char **argv) {
 	setlocale(LC_ALL, "");
 
-#ifdef USE_GTK
-	pthread_t t_gtk;
-	struct gtk_args args = {argc, argv};
-#endif
-
 #ifdef USE_XDO
 	struct hl_xdo *hl_xdo = NULL;
 #endif
@@ -40,20 +35,23 @@ int main (int argc, char **argv) {
 	hl_xdo = hl_xdo_init();
 #endif
 
+	hl_display_init(argc, argv);
 #ifdef USE_GTK
-	/* Spawn another thread for gtk window handling. */
-	pthread_create(&t_gtk, NULL, hl_display_gtk, (void*)&args);
 #endif
 
 	// Do...stuff.
 
+/*
 	if (hl_evdev) {
 		pthread_join(t_evdev, NULL);
 	}
+*/
 
+/*
 #ifdef USE_GTK
 	pthread_join(t_gtk, NULL);
 #endif
+*/
 
 #ifdef USE_XDO
 	free(hl_xdo);

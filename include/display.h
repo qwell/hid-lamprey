@@ -12,5 +12,9 @@
 
 #ifdef USE_GTK
 #include "display-gtk.h"
+
+#define hl_display_init(...) hl_gtk_init(__VA_ARGS__)
+#else
+#define hl_display_init(...)
 #endif
 #endif
