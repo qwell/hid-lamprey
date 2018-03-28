@@ -380,6 +380,7 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
 			}
 		}
 
+		printf("\n");
 		for (int j = 0; j < sizeof(controller->layout); j++) {
 			char layout_char = controller->layout[j];
 
