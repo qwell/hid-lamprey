@@ -7,21 +7,13 @@
  * (at your option) any later version.
  */
 
-#ifndef _LAMPREY_H
-#define _LAMPREY_H
+#include <gtk/gtk.h>
 
-#include "version.h"
-#include "settings.h"
-#include "defaults.h"
+extern pthread_mutex_t mutex_gtk;
 
-#ifndef __linux__
-#error "No.  Go get a real OS and try again."
-#endif
+struct gtk_args {
+	int argc;
+	char **argv;
+};
 
-#ifdef DEBUG
-#define debug_print(...) printf(__VA_ARGS__)
-#else
-#define debug_print(...)
-#endif
-
-#endif
+void *hl_display_gtk(void *ptr);

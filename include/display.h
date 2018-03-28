@@ -7,11 +7,10 @@
  * (at your option) any later version.
  */
 
-extern pthread_mutex_t mutex_gtk;
+#ifdef __linux__
+#include "display-cli.h"
 
-struct gtk_args {
-	int argc;
-	char **argv;
-};
-
-void *hl_display_gtk(void *ptr);
+#ifdef USE_GTK
+#include "display-gtk.h"
+#endif
+#endif

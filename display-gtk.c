@@ -11,8 +11,6 @@
 
 #include "include/display.h"
 
-#include <gtk/gtk.h>
-
 pthread_mutex_t mutex_gtk = PTHREAD_MUTEX_INITIALIZER;
 
 void print_hello(GtkWidget *widget, gpointer data) {

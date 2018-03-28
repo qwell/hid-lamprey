@@ -10,8 +10,6 @@
 #ifndef _SETTINGS_H
 #define _SETTINGS_H
 
-#include "evdev.h"
-
 // #define AXIS_DEADZONE .2
 // #define HAT_DEADZONE 0
 

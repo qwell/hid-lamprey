@@ -7,7 +7,7 @@
  * (at your option) any later version.
  */
 
-#include <libevdev/libevdev.h>
+//#include <libevdev/libevdev.h>
 
 #define CODELOOKUP(type, key) { #key, type, key }
 #define KEYLOOKUP(key) CODELOOKUP(EV_KEY, key)

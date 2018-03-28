@@ -39,31 +39,6 @@ extern struct hl_evdev *hl_evdev;
 #define LOW_REL REL_X
 #define HIGH_REL REL_MAX
 
-struct button_trigger {
-	uint8_t type;
-	uint16_t code;
-	int16_t triggervalue;
-};
-
-struct controller_display_mapping {
-	const char *display;
-	struct button_trigger buttons[8];
-	bool value;
-};
-
-struct controller_display {
-	const char *name;
-	const char *devices[8];
-	struct controller_display_mapping mapping[64];
-	const char layout[256];
-};
-
-struct codelookup {
-	const char *name;
-	const uint8_t type;
-	const uint16_t code;
-};
-
 struct key_data {
 };
 
@@ -75,6 +50,12 @@ struct axis_data {
 struct hat_data {
 	int min;
 	int max;
+};
+
+struct codelookup {
+	const char *name;
+	const uint8_t type;
+	const uint16_t code;
 };
 
 struct hl_evdev {
@@ -94,22 +75,9 @@ struct hl_evdev {
 	} maps;
 };
 
-struct shortcut {
-	const char *name;
-	void (*function) ();
-	enum shortcut_type {
-		simultaneous = 0,
-		consecutive = 1
-	} type;
-	const char *devices[8];
-	// I really, really hate this.
-	struct button {
-		struct button_trigger buttons[8];
-	} button_list[16];
-};
-
 void hl_evdev_init();
 void hl_evdev_destroy();
 void *hl_evdev_poll();
+void hl_ev_inject(int id, uint8_t type, uint16_t code, int16_t value);
 
 #endif

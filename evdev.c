@@ -20,32 +20,16 @@
 
 #include "include/lamprey.h"
 
-#include "include/evdev.h"
+#include "include/controller.h"
+#include "include/input.h"
 
 pthread_t t_evdev;
 pthread_mutex_t mutex_evdev = PTHREAD_MUTEX_INITIALIZER;
 struct hl_evdev *hl_evdev = NULL;
 
-struct controller_display controller_displays[] = {
-	CONTROLLER_DISPLAYS
-};
-
-const struct codeswap {
-	struct button_trigger in;
-	struct button_trigger out;
-} codeswaps[] = {
-	CODESWAPS
-};
-
 const struct codelookup codelookup[] = {
 	CODETABLE
 };
-
-const struct shortcut shortcuts[] = {
-	SHORTCUTS
-};
-
-void key_press(int id, uint8_t type, uint16_t key, int16_t value);
 
 int filter_event_files(const struct dirent *entry)
 {
@@ -258,7 +242,7 @@ void *hl_evdev_poll() {
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
 						__attribute__((__unused__)) struct key_data key = hl_evdev->maps.key_map[ev.code - LOW_KEY];
 						debug_print("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
-						key_press(i, ev.type, ev.code, ev.value);
+						hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, ev.value);
 					}
 					break;
 				case EV_ABS:
@@ -286,7 +270,7 @@ void *hl_evdev_poll() {
 								value = (relzero - hat.min) * (ev.value - hat.min) / ((relzero - deadsize) - hat.min) + hat.min;
 							}
 							debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							key_press(i, ev.type, ev.code, value);
+							hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -314,7 +298,7 @@ void *hl_evdev_poll() {
 								value = (relzero - axis.min) * (ev.value - axis.min) / ((relzero - deadsize) - axis.min) + axis.min;
 							}
 							debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							key_press(i, ev.type, ev.code, value);
+							hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -366,131 +350,19 @@ void hl_evdev_destroy() {
 	pthread_exit(NULL);
 }
 
-void key_press(int id, uint8_t type, uint16_t key, int16_t value) {
-	const char *device = libevdev_get_uniq(hl_evdev->devices[id].dev);
-
-	for (int i = 0; i < sizeof(controller_displays) / sizeof(*controller_displays); i++) {
-		struct controller_display *controller = &controller_displays[i];
-		int usedevice = 0;
-
-		char pressed[256] = {0};
-
-		for (int j = 0; j < sizeof(controller->devices) / sizeof(*controller->devices); j++) {
-			if (!controller->devices[j]) {
-				if (j == 0) {
-					usedevice = 1;
-				}
-				break;
-			}
-			if (!strcmp(device, controller->devices[j])) {
-				usedevice = 1;
-				break;
-			}
-		}
-		if (!usedevice) {
-			continue;
-		}
-
-		for (int j = 0; j < sizeof(controller->mapping) / sizeof(*controller->mapping); j++) {
-			struct controller_display_mapping *mapping = &controller->mapping[j];
-
-			for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
-				const struct button_trigger *button = &mapping->buttons[k];
-
-				if (key == button->code && type == button->type) {
-					/* Things may not work properly if you have multiple buttons
-					 * assigned to a mapping that are concurrently triggered.
-					 */
-					if (button->triggervalue < 0) {
-						mapping->value = (value <= button->triggervalue);
-					} else if (button->triggervalue > 0) {
-						mapping->value = (value >= button->triggervalue);
-					} else {
-						mapping->value = value ? 1 : 0;
-					}
-				}
-
-			}
-
-			if (mapping->value && !strstr(pressed, mapping->display)) {
-				strcat(pressed, mapping->display);
-			}
-		}
-
-		printf("\n");
-		for (int j = 0; j < sizeof(controller->layout); j++) {
-			char layout_char[5];
-			char *ptr = layout_char;
-			*ptr = controller->layout[j];
-
-			/* Deal with UTF-8 characters. */
-			while ((controller->layout[j + 1] & 0xC0) == 0x80) {
-				*++ptr = controller->layout[++j];
-			}
-
-			*++ptr = '\0';
-
-			if (strlen(layout_char) == 0) {
-				break;
-			}
-
-			if (strstr(pressed, layout_char)) {
-				printf("\e[31m%s\e[39m", layout_char);
-			} else {
-				printf("%s", layout_char);
-			}
-		}
-		printf("\n");
-	}
-
-/* TODO Do something with the shortcuts.
-	for (int i = 0; i < sizeof(shortcuts) / sizeof(*shortcuts); i++) {
-		const struct shortcut *shortcut = &shortcuts[i];
-		for (int j = 0; j < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); j++) {
-			const struct button *button = &shortcut->button_list[j];
-			for (int k = 0; k < sizeof(button->buttons) / sizeof(*button->buttons); k++) {
-				const struct button_trigger *map = &button->buttons[k];
-				if (map->type != 0) {
-					printf("Button %d (%d) [%d]\n", map->code, map->type, map->triggervalue);
-				}
-			}
-		}
-	}
-*/
-
+void hl_ev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
 	if (hl_evdev->uinput.uidev != NULL) {
-		for (int i = 0; i < sizeof(codeswaps) / sizeof(*codeswaps); i++) {
-			struct codeswap emu = codeswaps[i];
-			if (type == emu.in.type && key == emu.in.code) {
-				int emuvalue = 0;
-				if (emu.in.triggervalue < 0) {
-					emuvalue = (value <= emu.in.triggervalue);
-				} else if (emu.in.triggervalue > 0) {
-					emuvalue = (value >= emu.in.triggervalue);
-				} else {
-					emuvalue = value ? 1 : 0;
-				}
-				if (emuvalue && emu.out.triggervalue) {
-					emuvalue = emu.out.triggervalue;
-				}
+		libevdev_uinput_write_event(hl_evdev->uinput.uidev, type, code, value);
+		libevdev_uinput_write_event(hl_evdev->uinput.uidev, EV_SYN, SYN_REPORT, 0);
 
-				debug_print("Code %s (%d) converted to %s (%d)\n",
-					libevdev_event_code_get_name(emu.in.type, emu.in.code), value,
-					libevdev_event_code_get_name(emu.out.type, emu.out.code), emuvalue);
-				libevdev_uinput_write_event(hl_evdev->uinput.uidev, emu.out.type, emu.out.code, emuvalue);
-				libevdev_uinput_write_event(hl_evdev->uinput.uidev, EV_SYN, SYN_REPORT, 0);
+		if (hl_evdev->devices[id].ff_id != -1) {
+			struct input_event play = {
+				.type = EV_FF,
+				.value = 1,
+				.code = hl_evdev->devices[id].ff_id,
+			};
 
-				if (hl_evdev->devices[id].ff_id != -1) {
-					struct input_event play = {
-						.type = EV_FF,
-						.value = 1,
-						.code = hl_evdev->devices[id].ff_id,
-					};
-
-					write(hl_evdev->fds[id].fd, &play, sizeof(play));
-				}
-			}
+			write(hl_evdev->fds[id].fd, &play, sizeof(play));
 		}
 	}
-	return;
 }

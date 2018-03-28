@@ -7,21 +7,3 @@
  * (at your option) any later version.
  */
 
-#ifndef _LAMPREY_H
-#define _LAMPREY_H
-
-#include "version.h"
-#include "settings.h"
-#include "defaults.h"
-
-#ifndef __linux__
-#error "No.  Go get a real OS and try again."
-#endif
-
-#ifdef DEBUG
-#define debug_print(...) printf(__VA_ARGS__)
-#else
-#define debug_print(...)
-#endif
-
-#endif

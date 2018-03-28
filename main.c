@@ -15,7 +15,7 @@
 #include "include/lamprey.h"
 
 #include "include/display.h"
-#include "include/evdev.h"
+#include "include/input.h"
 #include "include/xdo.h"
 
 int main (int argc, char **argv) {
@@ -32,8 +32,8 @@ int main (int argc, char **argv) {
 
 	printf("Lamprey Version: %s\n", HL_VERSION);
 
-	/* Initialize evdev data. */
-	hl_evdev_init();
+	/* Initialize input data. */
+	hl_input_init();
 
 #ifdef USE_XDO
 	/* Initialize xdo data. */
@@ -49,8 +49,6 @@ int main (int argc, char **argv) {
 
 	if (hl_evdev) {
 		pthread_join(t_evdev, NULL);
-
-		hl_evdev_destroy();
 	}
 
 #ifdef USE_GTK
