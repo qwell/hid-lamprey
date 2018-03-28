@@ -48,11 +48,11 @@ void key_press(int id, uint8_t type, uint16_t key, int16_t value);
 
 int filter_event_files(const struct dirent *entry)
 {
-   return strstr(entry->d_name, "-event") != NULL;
+	return !strncmp(entry->d_name, "event", 5);
 }
 
 void *hl_evdev_init() {
-	const char *filepath = "/dev/input/by-path/";
+	const char *filepath = "/dev/input/";
 	struct dirent **filelist;
 	int filecount = 0;
 
