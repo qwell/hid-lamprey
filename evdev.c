@@ -68,6 +68,7 @@ void *hl_evdev_init() {
 
 	for (int i = 0; i < filecount; ++i) {
 		char fullpath[256];
+		char uniq[256];
 		int rc = 1;
 
 		struct libevdev *dev = hl_evdev->devices[i].dev;
@@ -83,18 +84,19 @@ void *hl_evdev_init() {
 			fprintf(stderr, "Failed to init libevdev for %s (%s)\n", filelist[i]->d_name, strerror(-rc));
 			continue;
 		}
-		libevdev_set_uniq(dev, filelist[i]->d_name);
+
+		snprintf(uniq, sizeof(uniq), "%x/%x-%x:%s",
+			libevdev_get_id_bustype(dev),
+			libevdev_get_id_vendor(dev),
+			libevdev_get_id_product(dev),
+			libevdev_get_name(dev));
+
+		libevdev_set_uniq(dev, uniq);
+		printf("Input device: \"%s\"\n", uniq);
 
 		free(filelist[i]);
 
 		hl_evdev->devices[i].ff_id = -1;
-
-		printf("Input device name: \"%s\"\n", libevdev_get_name(dev));
-		printf("Input device ID: bus %#x vendor %#x product %#x\n",
-			libevdev_get_id_bustype(dev),
-			libevdev_get_id_vendor(dev),
-			libevdev_get_id_product(dev));
-
 
 		if (libevdev_has_event_type(dev, EV_KEY)) {
 			// Get info about keys

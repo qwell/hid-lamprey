@@ -15,13 +15,13 @@
 // #define AXIS_DEADZONE .2
 // #define HAT_DEADZONE 0
 
-//#define DEVICE_ROCKCANDY "pci-0000:00:06.0-usb-0:2:1.0-event-joystick"
-#define DEVICE_ROCKCANDY "pci-0000:03:00.0-usb-0:3:1.0-event-joystick"
+#define DEVICE_XBOX "3/45e-2a1:Xbox 360 Wireless Receiver (XBOX)"
+#define DEVICE_KEYBOARD "11/1-1:AT Translated Set 2 keyboard"
 
 #define CONTROLLERS \
 	{\
 		.name = "SNES",\
-		.device = DEVICE_ROCKCANDY,\
+		.device = DEVICE_XBOX,\
 		.mapping = {\
 			{'^', {\
 				{EV_KEY, BTN_DPAD_UP},\
@@ -76,7 +76,7 @@
 	{\
 		.name = "konami",\
 		.function = NULL,\
-		.device = DEVICE_ROCKCANDY,\
+		.device = DEVICE_XBOX,\
 		.type = consecutive,\
 		.button_list = {\
 			{{\
