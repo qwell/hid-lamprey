@@ -39,9 +39,11 @@ int main (int argc, char **argv) {
 
 	// Do...stuff.
 
+#ifdef USE_EVDEV
 	if (hl_evdev) {
 		pthread_join(t_evdev, NULL);
 	}
+#endif
 
 
 #ifdef USE_GTK
