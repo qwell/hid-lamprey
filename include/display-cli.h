@@ -7,3 +7,4 @@
  * (at your option) any later version.
  */
 
+void hl_cli_init(int argc, char **argv);

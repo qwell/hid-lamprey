@@ -10,3 +10,7 @@
 #include "include/lamprey.h"
 
 #include "include/display.h"
+
+void hl_cli_init(int argc, char **argv) {
+	printf("CLI Initialized.\n");
+}

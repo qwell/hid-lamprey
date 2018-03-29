@@ -36,8 +36,6 @@ int main (int argc, char **argv) {
 #endif
 
 	hl_display_init(argc, argv);
-#ifdef USE_GTK
-#endif
 
 	// Do...stuff.
 

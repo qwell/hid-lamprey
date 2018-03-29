@@ -5,53 +5,46 @@ OS:=$(shell uname)
 
 ifeq ($(OS),Linux)
 USE_EVDEV=1
-else
-USE_EVDEV=
-endif
-USE_GTK=
-USE_XDO=
-
-CFLAGS=-Wall -g -pthread -fPIC
-ifdef DEBUG
-CFLAGS+=-DDEBUG
-endif
-ifdef USE_EVDEV
-CFLAGS+=$(shell pkg-config --cflags libevdev)
-CFLAGS+=-DUSE_EVDEV
-endif
-ifdef USE_GTK
-CFLAGS+=$(shell pkg-config --cflags gtk+-3.0)
-CFLAGS+=-DUSE_GTK
-endif
-ifdef USE_XDO
-CFLAGS+=-DUSE_XDO
 endif
 
-SO_LIBS=
-ifdef USE_EVDEV
-SO_LIBS+=$(shell pkg-config --libs libevdev)
-endif
-ifdef USE_GTK
-SO_LIBS+=$(shell pkg-config --libs gtk+-3.0) -export-dynamic
-endif
-ifdef USE_XDO
-SO_LIBS+=-lxdo
-endif
-SO_LIBS+=-lxml2
-
-LIBS=-L. -llamprey -Wl,-rpath=.
+USE_CLI=1
 
 APPS=lamprey
 SOS=liblamprey.so
+
+CFLAGS=-Wall -g -pthread -fPIC
+SO_LIBS=
+LIBS=-L. -llamprey -Wl,-rpath=.
 FILTER_C=main.c
 
-ifndef USE_EVDEV
+SO_LIBS+=-lxml2
+
+ifeq ($(DEBUG),1)
+CFLAGS+=-DDEBUG
+endif
+ifeq ($(USE_EVDEV),1)
+CFLAGS+=-DUSE_EVDEV
+CFLAGS+=$(shell pkg-config --cflags libevdev)
+SO_LIBS+=$(shell pkg-config --libs libevdev)
+else
 FILTER_C+=input-evdev.c
 endif
-ifndef USE_GTK
+ifeq ($(USE_CLI),1)
+CFLAGS+=-DUSE_CLI
+else
+FILTER_C+=display-cli.c
+endif
+ifeq ($(USE_GTK),1)
+CFLAGS+=-DUSE_GTK
+CFLAGS+=$(shell pkg-config --cflags gtk+-3.0)
+SO_LIBS+=$(shell pkg-config --libs gtk+-3.0) -export-dynamic
+else
 FILTER_C+=display-gtk.c
 endif
-ifndef USE_XDO
+ifeq ($(USE_XDO),1)
+CFLAGS+=-DUSE_XDO
+SO_LIBS+=-lxdo
+else
 FILTER_C+=xdo.c
 endif
 

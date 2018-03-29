@@ -7,14 +7,23 @@
  * (at your option) any later version.
  */
 
-#ifdef __linux__
+#if defined(USE_CLI) && defined(USE_GTK)
+#include "display-cli.h"
+#include "display-gtk.h"
+
+#define hl_display_init(...) {\
+	hl_cli_init(__VA_ARGS__);\
+	hl_gtk_init(__VA_ARGS__);\
+}
+
+#elif defined(USE_CLI)
 #include "display-cli.h"
 
-#ifdef USE_GTK
+#define hl_display_init(...) hl_cli_init(__VA_ARGS__)
+#elif defined(USE_GTK)
 #include "display-gtk.h"
 
 #define hl_display_init(...) hl_gtk_init(__VA_ARGS__)
 #else
 #define hl_display_init(...)
-#endif
 #endif
