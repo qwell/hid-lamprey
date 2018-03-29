@@ -28,6 +28,8 @@
 #include "display-gtk.h"
 
 #define hl_display_init(...) hl_gtk_init(__VA_ARGS__)
+#define hl_display_output_controller(controller) hl_gtk_output_controller(controller);
 #else
 #define hl_display_init(...)
+#define hl_display_output_controller(controller)
 #endif

@@ -9,6 +9,8 @@
 
 #include <gtk/gtk.h>
 
+#include "controller.h"
+
 extern pthread_t t_gtk;
 extern pthread_mutex_t mutex_gtk;
 

@@ -12,6 +12,7 @@
 
 #include "include/lamprey.h"
 
+#include "include/controller.h"
 #include "include/display.h"
 
 pthread_t t_gtk;
