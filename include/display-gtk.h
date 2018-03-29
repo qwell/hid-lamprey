@@ -12,10 +12,6 @@
 extern pthread_t t_gtk;
 extern pthread_mutex_t mutex_gtk;
 
-struct gtk_args {
-	int argc;
-	char **argv;
-};
-
 void hl_gtk_init(int argc, char **argv);
 void *hl_gtk_show(void *ptr);
+void hl_gtk_destroy();

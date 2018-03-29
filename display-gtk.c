@@ -22,24 +22,20 @@ void print_hello(GtkWidget *widget, gpointer data) {
 }
 
 void hl_gtk_init(int argc, char **argv) {
-	struct gtk_args *args = malloc(sizeof(*args));
-	args->argc = argc;
-	memcpy(args->argv, argv, sizeof(*args->argv));
+	gtk_init(&argc, &argv);
 
 	/* Spawn another thread for gtk window handling. */
 	pthread_mutex_lock(&mutex_gtk);
-	pthread_create(&t_gtk, NULL, hl_gtk_show, args);
+	pthread_create(&t_gtk, NULL, hl_gtk_show, NULL);
 	pthread_mutex_unlock(&mutex_gtk);
 }
 
 void *hl_gtk_show(void *ptr) {
-	//TODO Add locking.
-	struct gtk_args *args = ptr;
+	//TODO Add locking?
 
 	GtkBuilder *builder;
 	GtkWidget *window;
 
-	gtk_init(&args->argc, &args->argv);
 	builder = gtk_builder_new();
 	gtk_builder_add_from_file (builder, "glade/display.glade", NULL);
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window_display"));
@@ -48,7 +44,11 @@ void *hl_gtk_show(void *ptr) {
 	gtk_widget_show(window);
 	gtk_main();
 
-	free(args);
+	hl_gtk_destroy();
 
 	return NULL;
+}
+
+void hl_gtk_destroy() {
+	pthread_exit(NULL);
 }
