@@ -52,3 +52,6 @@ void *hl_gtk_show(void *ptr) {
 void hl_gtk_destroy() {
 	pthread_exit(NULL);
 }
+
+void hl_gtk_output_controller(struct controller_display *controller) {
+}

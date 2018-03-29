@@ -7,4 +7,7 @@
  * (at your option) any later version.
  */
 
+#include "controller.h"
+
 void hl_cli_init(int argc, char **argv);
+void hl_cli_output_controller(struct controller_display *controller);

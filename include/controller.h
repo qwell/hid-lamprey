@@ -7,6 +7,9 @@
  * (at your option) any later version.
  */
 
+#ifndef _CONTROLLER_H
+#define _CONTROLLER_H
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -45,3 +48,4 @@ struct shortcut {
 	} button_list[16];
 };
 
+#endif

@@ -15,11 +15,15 @@
 	hl_cli_init(__VA_ARGS__);\
 	hl_gtk_init(__VA_ARGS__);\
 }
-
+#define hl_display_output_controller(controller) {\
+	hl_cli_output_controller(controller);\
+	hl_gtk_output_controller(controller);\
+}
 #elif defined(USE_CLI)
 #include "display-cli.h"
 
 #define hl_display_init(...) hl_cli_init(__VA_ARGS__)
+#define hl_display_output_controller(controller) hl_cli_output_controller(controller);
 #elif defined(USE_GTK)
 #include "display-gtk.h"
 

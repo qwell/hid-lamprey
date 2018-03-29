@@ -14,6 +14,7 @@
 #include "include/lamprey.h"
 
 #include "include/controller.h"
+#include "include/display.h"
 #include "include/input.h"
 
 struct controller_display controller_displays[] = {
@@ -35,8 +36,6 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 	for (int i = 0; i < sizeof(controller_displays) / sizeof(*controller_displays); i++) {
 		struct controller_display *controller = &controller_displays[i];
 		int usedevice = 0;
-
-		char pressed[256] = {0};
 
 		for (int j = 0; j < sizeof(controller->devices) / sizeof(*controller->devices); j++) {
 			if (!controller->devices[j]) {
@@ -74,36 +73,9 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 				}
 
 			}
-
-			if (mapping->value && !strstr(pressed, mapping->display)) {
-				strcat(pressed, mapping->display);
-			}
 		}
 
-		printf("\n");
-		for (int j = 0; j < sizeof(controller->layout); j++) {
-			char layout_char[5];
-			char *ptr = layout_char;
-			*ptr = controller->layout[j];
-
-			/* Deal with UTF-8 characters. */
-			while ((controller->layout[j + 1] & 0xC0) == 0x80) {
-				*++ptr = controller->layout[++j];
-			}
-
-			*++ptr = '\0';
-
-			if (strlen(layout_char) == 0) {
-				break;
-			}
-
-			if (strstr(pressed, layout_char)) {
-				printf("\e[31m%s\e[39m", layout_char);
-			} else {
-				printf("%s", layout_char);
-			}
-		}
-		printf("\n");
+		hl_display_output_controller(controller);
 	}
 
 /* TODO Do something with the shortcuts.
@@ -114,7 +86,7 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 			for (int k = 0; k < sizeof(button->buttons) / sizeof(*button->buttons); k++) {
 				const struct button_trigger *map = &button->buttons[k];
 				if (map->type != 0) {
-					printf("Button %d (%d) [%d]\n", map->code, map->type, map->triggervalue);
+					debug_print("Button %d (%d) [%d]\n", map->code, map->type, map->triggervalue);
 				}
 			}
 		}
