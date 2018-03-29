@@ -28,28 +28,31 @@ const struct codeswap {
 	CODESWAPS
 };
 
-const struct shortcut shortcuts[] = {
+struct shortcut shortcuts[] = {
 	SHORTCUTS
 };
+
+int controller_check_device(const char *device, const char *device_list[], int count) {
+	for (int j = 0; j < count; j++) {
+		if (!device_list[j]) {
+			if (j == 0) {
+				return 1;
+			}
+			break;
+		}
+		if (!strcmp(device, device_list[j])) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
 
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value) {
 	for (int i = 0; i < sizeof(controller_displays) / sizeof(*controller_displays); i++) {
 		struct controller_display *controller = &controller_displays[i];
-		int usedevice = 0;
 
-		for (int j = 0; j < sizeof(controller->devices) / sizeof(*controller->devices); j++) {
-			if (!controller->devices[j]) {
-				if (j == 0) {
-					usedevice = 1;
-				}
-				break;
-			}
-			if (!strcmp(device, controller->devices[j])) {
-				usedevice = 1;
-				break;
-			}
-		}
-		if (!usedevice) {
+		if (!controller_check_device(device, controller->devices, sizeof(controller->devices) / sizeof(*controller->devices))) {
 			continue;
 		}
 
@@ -78,20 +81,32 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 		hl_display_output_controller(controller);
 	}
 
-/* TODO Do something with the shortcuts.
 	for (int i = 0; i < sizeof(shortcuts) / sizeof(*shortcuts); i++) {
-		const struct shortcut *shortcut = &shortcuts[i];
+		struct shortcut *shortcut = &shortcuts[i];
+
+		if (!controller_check_device(device, shortcut->devices, sizeof(shortcut->devices) / sizeof(*shortcut->devices))) {
+			continue;
+		}
 		for (int j = 0; j < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); j++) {
-			const struct button *button = &shortcut->button_list[j];
+			struct button *button = &shortcut->button_list[j];
 			for (int k = 0; k < sizeof(button->buttons) / sizeof(*button->buttons); k++) {
 				const struct button_trigger *map = &button->buttons[k];
 				if (map->type != 0) {
+/*
+					if (map->triggervalue < 0) {
+						button->state = (value <= map->triggervalue);
+					} else if (map->triggervalue > 0) {
+						button->state = (value >= map->triggervalue);
+					} else {
+						button->state = value ? 1 : 0;
+					}
+*/
+
 					debug_print("Button %d (%d) [%d]\n", map->code, map->type, map->triggervalue);
 				}
 			}
 		}
 	}
-*/
 
 	for (int i = 0; i < sizeof(codeswaps) / sizeof(*codeswaps); i++) {
 		struct codeswap emu = codeswaps[i];

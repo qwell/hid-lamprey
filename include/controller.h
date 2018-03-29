@@ -29,7 +29,7 @@ struct controller_display_mapping {
 
 struct controller_display {
 	const char *name;
-	const char *devices[8];
+	const char *devices[18];
 	struct controller_display_mapping mapping[64];
 	const char layout[256];
 };
@@ -44,7 +44,8 @@ struct shortcut {
 	const char *devices[8];
 	// I really, really hate this.
 	struct button {
-		struct button_trigger buttons[8];
+		const struct button_trigger buttons[8];
+		int state;
 	} button_list[16];
 };
 

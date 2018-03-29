@@ -90,7 +90,7 @@
 	{\
 		.name = "konami",\
 		.function = NULL,\
-		.devices = {DEVICE_XBOX, DEVICE_ROCKCANDY},\
+		/*.devices = {DEVICE_XBOX, DEVICE_ROCKCANDY},*/\
 		.type = consecutive,\
 		.button_list = {\
 			{{\
