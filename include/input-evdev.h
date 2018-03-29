@@ -78,6 +78,6 @@ struct hl_evdev {
 void hl_evdev_init();
 void hl_evdev_destroy();
 void *hl_evdev_poll();
-void hl_ev_inject(int id, uint8_t type, uint16_t code, int16_t value);
+void hl_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value);
 
 #endif

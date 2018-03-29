@@ -136,7 +136,7 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 				emuvalue = emu.out.triggervalue;
 			}
 
-			hl_ev_inject(id, emu.out.type, emu.out.code, emuvalue);
+			hl_input_inject(id, emu.out.type, emu.out.code, emuvalue);
 			debug_print("Code %d (%d) converted to %d (%d)\n",
 				emu.in.code, value,
 				emu.out.code, emuvalue);

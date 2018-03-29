@@ -21,7 +21,7 @@
 #define CONTROLLER_DISPLAYS \
 	{\
 		.name = "SNES",\
-		.devices = {DEVICE_XBOX,DEVICE_ROCKCANDY},\
+		.devices = {DEVICE_XBOX, DEVICE_ROCKCANDY},\
 		.mapping = {\
 			{"^", {\
 				{EV_KEY, BTN_DPAD_UP},\
@@ -90,7 +90,7 @@
 	{\
 		.name = "konami",\
 		.function = NULL,\
-		.devices = {DEVICE_XBOX,DEVICE_ROCKCANDY},\
+		.devices = {DEVICE_XBOX, DEVICE_ROCKCANDY},\
 		.type = consecutive,\
 		.button_list = {\
 			{{\

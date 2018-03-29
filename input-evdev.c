@@ -350,7 +350,7 @@ void hl_evdev_destroy() {
 	pthread_exit(NULL);
 }
 
-void hl_ev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
+void hl_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
 	if (hl_evdev->uinput.uidev != NULL) {
 		libevdev_uinput_write_event(hl_evdev->uinput.uidev, type, code, value);
 		libevdev_uinput_write_event(hl_evdev->uinput.uidev, EV_SYN, SYN_REPORT, 0);
