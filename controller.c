@@ -48,6 +48,30 @@ int controller_check_device(const char *device, const char *device_list[], int c
 	return 0;
 }
 
+void controller_codeswaps(int id, uint8_t type, uint16_t code, int16_t value) {
+	for (int i = 0; i < sizeof(codeswaps) / sizeof(*codeswaps); i++) {
+		struct codeswap emu = codeswaps[i];
+		if (type == emu.in.type && code == emu.in.code) {
+			int emuvalue = 0;
+			if (emu.in.triggervalue < 0) {
+				emuvalue = (value <= emu.in.triggervalue);
+			} else if (emu.in.triggervalue > 0) {
+				emuvalue = (value >= emu.in.triggervalue);
+			} else {
+				emuvalue = value ? 1 : 0;
+			}
+			if (emuvalue && emu.out.triggervalue) {
+				emuvalue = emu.out.triggervalue;
+			}
+
+			hl_input_inject(id, emu.out.type, emu.out.code, emuvalue);
+			debug_print("Code %d (%d) converted to %d (%d)\n",
+				emu.in.code, value,
+				emu.out.code, emuvalue);
+		}
+	}
+}
+
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value) {
 	for (int i = 0; i < sizeof(controller_displays) / sizeof(*controller_displays); i++) {
 		struct controller_display *controller = &controller_displays[i];
@@ -108,26 +132,6 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 		}
 	}
 
-	for (int i = 0; i < sizeof(codeswaps) / sizeof(*codeswaps); i++) {
-		struct codeswap emu = codeswaps[i];
-		if (type == emu.in.type && code == emu.in.code) {
-			int emuvalue = 0;
-			if (emu.in.triggervalue < 0) {
-				emuvalue = (value <= emu.in.triggervalue);
-			} else if (emu.in.triggervalue > 0) {
-				emuvalue = (value >= emu.in.triggervalue);
-			} else {
-				emuvalue = value ? 1 : 0;
-			}
-			if (emuvalue && emu.out.triggervalue) {
-				emuvalue = emu.out.triggervalue;
-			}
-
-			hl_input_inject(id, emu.out.type, emu.out.code, emuvalue);
-			debug_print("Code %d (%d) converted to %d (%d)\n",
-				emu.in.code, value,
-				emu.out.code, emuvalue);
-		}
-	}
+	controller_codeswaps(id, type, code, value);
 	return;
 }
