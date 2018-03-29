@@ -7,6 +7,13 @@
  * (at your option) any later version.
  */
 
+/*
+ * These are here for systems that don't use libevdev and can be used as a
+ * common mapping for controllers.
+ *
+ * Note: They *DO NOT* match the Linux kernel definitions.
+ */
+
 #define EV_ABS 0x01
 #define EV_KEY 0x02
 
