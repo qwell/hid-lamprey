@@ -63,7 +63,7 @@ void hl_evdev_init() {
 
 		struct libevdev *dev = hl_evdev->devices[i].dev;
 
-		printf("Opening event file %s\n", filelist[i]->d_name);
+		debug_print("Opening event file %s\n", filelist[i]->d_name);
 
 		snprintf(fullpath, sizeof(fullpath), "%s%s", filepath, filelist[i]->d_name);
 		hl_evdev->fds[i].fd = open(fullpath, O_RDWR|O_NONBLOCK);
@@ -82,7 +82,7 @@ void hl_evdev_init() {
 			libevdev_get_name(dev));
 
 		libevdev_set_uniq(dev, uniq);
-		printf("Input device: \"%s\"\n", uniq);
+		printf("Input device: %s\n", uniq);
 
 		free(filelist[i]);
 
@@ -94,7 +94,7 @@ void hl_evdev_init() {
 				if (libevdev_has_event_code(dev, EV_KEY, code)) {
 					struct key_data key = {
 					};
-					printf("Device %d has key: %s\n",
+					debug_print("Device %d has key: %s\n",
 						i, libevdev_event_code_get_name(EV_KEY, code));
 					hl_evdev->maps.key_map[code - LOW_KEY] = key;
 				}
@@ -112,10 +112,10 @@ void hl_evdev_init() {
 						continue;
 					}
 
-					axis.min = absinfo->minimum,
-					axis.max = absinfo->maximum,
+					axis.min = absinfo->minimum;
+					axis.max = absinfo->maximum;
 
-					printf("Device %d has absolute axis: %s { %d > %d }\n",
+					debug_print("Device %d has absolute axis: %s { %d > %d }\n",
 					       i, libevdev_event_code_get_name(EV_ABS, code),
 					       absinfo->minimum, absinfo->maximum);
 					hl_evdev->maps.abs_map[code - LOW_AXIS] = axis;
@@ -135,7 +135,7 @@ void hl_evdev_init() {
 					hat.min = absinfo->minimum;
 					hat.max = absinfo->maximum;
 
-					printf("Device %d has hat: %s { %d > %d }\n",
+					debug_print("Device %d has hat: %s { %d > %d }\n",
 					       i, libevdev_event_code_get_name(EV_ABS, code),
 					       absinfo->minimum, absinfo->maximum);
 					hl_evdev->maps.hat_map[code - LOW_HAT] = hat;
@@ -153,13 +153,13 @@ void hl_evdev_init() {
 					.direction = 0x4000,
 					.replay.length = 100,
 				};
-				printf("Device %d has FF: %s\n", i, libevdev_event_code_get_name(EV_FF, FF_PERIODIC));
+				debug_print("Device %d has FF: %s\n", i, libevdev_event_code_get_name(EV_FF, FF_PERIODIC));
 
 				ioctl(hl_evdev->fds[i].fd, EVIOCSFF, &effect);
 				hl_evdev->devices[i].ff_id = effect.id;
 			}
 		}
-		printf("\n");
+		debug_print("\n");
 
 		hl_evdev->devices[i].dev = dev;
 	}
