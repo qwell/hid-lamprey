@@ -7,6 +7,8 @@
  * (at your option) any later version.
  */
 
+#include <stdio.h>
+
 #include "include/lamprey.h"
 
 #include "include/display.h"
