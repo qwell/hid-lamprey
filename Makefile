@@ -9,13 +9,13 @@ endif
 
 USE_CLI=1
 
-APPS=lamprey
-SOS=liblamprey.so
+APPS:=lamprey
+SOS:=liblamprey.so
 
 CFLAGS=-Wall -g -pthread -fPIC
 SO_LIBS=
 LIBS=-L. -llamprey -Wl,-rpath=.
-FILTER_C=main.c
+FILTER_C:=main.c
 
 SO_LIBS+=-lxml2
 
@@ -48,8 +48,15 @@ else
 FILTER_C+=xdo.c
 endif
 
-SRCS=$(filter-out $(FILTER_C),$(wildcard *.c))
-OBJS=$(SRCS:.c=.o)
+SRCS:=$(filter-out $(FILTER_C),$(wildcard *.c))
+OBJS:=$(SRCS:.c=.o)
+
+ALLFLAGS:=$(CFLAGS) $(LIBS) $(SO_LIBS) $(SRCS)
+
+ifeq ($(shell echo '$(ALLFLAGS)' | cmp -s - Makefile.deps; echo $$?),1)
+REBUILD:=rebuild
+.PHONY: $(REBUILD)
+endif
 
 all: $(APPS)
 
@@ -63,11 +70,15 @@ $(APPS): $(SOS)
 $(SOS): $(OBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(SO_LIBS) -shared
 
-%.o: %.c
+%.o: %.c Makefile.deps
 	$(CC) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
+
+Makefile.deps: $(REBUILD)
+	@echo '$(ALLFLAGS)' > $@
 
 clean:
 	@rm -rf $(APPS)
 	@rm -rf *.so
 	@rm -rf *.o
 	@rm -rf .*.o.d
+	@rm -rf Makefile.deps
