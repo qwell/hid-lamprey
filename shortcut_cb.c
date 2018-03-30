@@ -9,6 +9,10 @@
 
 #include <stdio.h>
 
-void callback_test() {
-	printf("It worked!\n");
+#include "include/shortcut_cb.h"
+
+void callback_test(void *ptr) {
+	struct cb_test *args = ptr;
+
+	printf("callback_test, args->foo: %s, args->bar: %d\n", args->foo, args->bar);
 }

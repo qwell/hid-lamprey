@@ -10,6 +10,15 @@
 #ifndef _SHORTCUT_CB_H
 #define _SHORTCUT_CB_H
 
-void callback_test();
+#define SHORTCUT_DECL(name, ...) \
+struct cb_ ##name {\
+__VA_ARGS__\
+};\
+void callback_ ##name (void *args);
+
+SHORTCUT_DECL(test,
+	char *foo;
+	int bar;
+);
 
 #endif

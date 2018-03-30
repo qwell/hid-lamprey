@@ -154,6 +154,10 @@
 	{\
 		.name = "simultest",\
 		.function = &callback_test,\
+		.args = &(struct cb_test){\
+			.foo="Some args",\
+			.bar=99,\
+		},\
 		.type = simultaneous,\
 		.button_list = {\
 			&(struct button){{\

@@ -39,6 +39,7 @@ struct controller_display {
 struct shortcut {
 	const char *name;
 	void (*function) ();
+	void *args;
 	enum shortcut_type {
 		simultaneous = 0,
 		consecutive = 1

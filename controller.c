@@ -72,7 +72,7 @@ void controller_shortcut_simultaneous(struct shortcut *shortcut) {
 	}
 
 	if (triggered && shortcut->function) {
-		shortcut->function();
+		shortcut->function(shortcut->args ? : NULL);
 	}
 }
 
