@@ -71,8 +71,11 @@ void controller_shortcut_simultaneous(struct shortcut *shortcut) {
 		}
 	}
 
-	if (triggered && shortcut->function) {
-		shortcut->function(shortcut->args ? : NULL);
+	if (triggered) {
+		debug_print("Triggered shortcut: %s\n", shortcut->name);
+		if (shortcut->function) {
+			shortcut->function(shortcut->args ? : NULL);
+		}
 	}
 }
 
