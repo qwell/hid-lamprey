@@ -10,14 +10,14 @@
 #ifndef _SHORTCUT_CB_H
 #define _SHORTCUT_CB_H
 
-#define SHORTCUT_CB_DEF(name, ...) \
+#define SHORTCUT_CB_DEFINE(name, ...) \
 struct cb_ ##name {\
 __VA_ARGS__\
 };\
 void callback_ ##name (void *args);
 
 /* Define callback test with struct members foo and bar. */
-SHORTCUT_CB_DEF(test,
+SHORTCUT_CB_DEFINE(test,
 	char *foo;
 	int bar;
 );
