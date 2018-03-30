@@ -13,6 +13,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "shortcut_cb.h"
+
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value);
 
 struct button_trigger {
@@ -44,9 +46,9 @@ struct shortcut {
 	const char *devices[8];
 	// I really, really hate this.
 	struct button {
-		const struct button_trigger buttons[8];
+		const struct button_trigger *buttons[8];
 		int state;
-	} button_list[16];
+	} *button_list[16];
 };
 
 #endif

@@ -90,51 +90,81 @@
 	{\
 		.name = "konami",\
 		.function = NULL,\
-		/*.devices = {DEVICE_XBOX, DEVICE_ROCKCANDY},*/\
+		.devices = {DEVICE_XBOX, DEVICE_ROCKCANDY},\
 		.type = consecutive,\
 		.button_list = {\
-			{{\
-				{EV_KEY, BTN_DPAD_UP},\
-				{EV_ABS, ABS_HAT0Y, -1},\
-				{EV_ABS, ABS_Y, -16834},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_UP},\
+				&(struct button_trigger){EV_KEY, BTN_DPAD_UP},\
+				&(struct button_trigger){EV_ABS, ABS_HAT0Y, -1},\
+				&(struct button_trigger){EV_ABS, ABS_Y, -16834},\
 			}},\
-			{{\
-				{EV_KEY, BTN_DPAD_UP},\
-				{EV_ABS, ABS_HAT0Y, -1},\
-				{EV_ABS, ABS_Y, -16834},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_UP},\
+				&(struct button_trigger){EV_KEY, BTN_DPAD_UP},\
+				&(struct button_trigger){EV_ABS, ABS_HAT0Y, -1},\
+				&(struct button_trigger){EV_ABS, ABS_Y, -16834},\
 			}},\
-			{{\
-				{EV_KEY, BTN_DPAD_DOWN},\
-				{EV_ABS, ABS_HAT0Y, 1},\
-				{EV_ABS, ABS_Y, 16834},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_DOWN},\
+				&(struct button_trigger){EV_KEY, BTN_DPAD_DOWN},\
+				&(struct button_trigger){EV_ABS, ABS_HAT0Y, 1},\
+				&(struct button_trigger){EV_ABS, ABS_Y, 16834},\
 			}},\
-			{{\
-				{EV_KEY, BTN_DPAD_DOWN},\
-				{EV_ABS, ABS_HAT0Y, 1},\
-				{EV_ABS, ABS_Y, 16834},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_DOWN},\
+				&(struct button_trigger){EV_KEY, BTN_DPAD_DOWN},\
+				&(struct button_trigger){EV_ABS, ABS_HAT0Y, 1},\
+				&(struct button_trigger){EV_ABS, ABS_Y, 16834},\
 			}},\
-			{{\
-				{EV_KEY, BTN_DPAD_LEFT},\
-				{EV_ABS, ABS_HAT0X, -1},\
-				{EV_ABS, ABS_X, -16834},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_LEFT},\
+				&(struct button_trigger){EV_KEY, BTN_DPAD_LEFT},\
+				&(struct button_trigger){EV_ABS, ABS_HAT0X, -1},\
+				&(struct button_trigger){EV_ABS, ABS_X, -16834},\
 			}},\
-			{{\
-				{EV_KEY, BTN_DPAD_RIGHT},\
-				{EV_ABS, ABS_HAT0X, 1},\
-				{EV_ABS, ABS_X, 16834},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_RIGHT},\
+				&(struct button_trigger){EV_KEY, BTN_DPAD_RIGHT},\
+				&(struct button_trigger){EV_ABS, ABS_HAT0X, 1},\
+				&(struct button_trigger){EV_ABS, ABS_X, 16834},\
 			}},\
-			{{\
-				{EV_KEY, BTN_DPAD_LEFT},\
-				{EV_ABS, ABS_HAT0X, -1},\
-				{EV_ABS, ABS_X, -16834},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_LEFT},\
+				&(struct button_trigger){EV_KEY, BTN_DPAD_LEFT},\
+				&(struct button_trigger){EV_ABS, ABS_HAT0X, -1},\
+				&(struct button_trigger){EV_ABS, ABS_X, -16834},\
 			}},\
-			{{\
-				{EV_KEY, BTN_DPAD_RIGHT},\
-				{EV_ABS, ABS_HAT0X, 1},\
-				{EV_ABS, ABS_X, 16834},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_RIGHT},\
+				&(struct button_trigger){EV_KEY, BTN_DPAD_RIGHT},\
+				&(struct button_trigger){EV_ABS, ABS_HAT0X, 1},\
+				&(struct button_trigger){EV_ABS, ABS_X, 16834},\
 			}},\
-			{{{EV_KEY, BTN_WEST}}},\
-			{{{EV_KEY, BTN_EAST}}},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_B},\
+				&(struct button_trigger){EV_KEY, BTN_WEST}\
+			}},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_A},\
+				&(struct button_trigger){EV_KEY, BTN_EAST}\
+			}},\
+		},\
+	},\
+	{\
+		.name = "simultest",\
+		.function = &callback_test,\
+		.type = simultaneous,\
+		.button_list = {\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_A},\
+			}},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_S},\
+			}},\
+			&(struct button){{\
+				&(struct button_trigger){EV_KEY, KEY_D},\
+			}},\
 		},\
 	},
 

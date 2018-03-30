@@ -33,19 +33,90 @@ struct shortcut shortcuts[] = {
 };
 
 int controller_check_device(const char *device, const char *device_list[], int count) {
-	for (int j = 0; j < count; j++) {
-		if (!device_list[j]) {
-			if (j == 0) {
+	if (count == 0) {
+		return 1;
+	}
+
+	for (int i = 0; i < count; i++) {
+		if (!device_list[i]) {
+			if (i == 0) {
 				return 1;
 			}
-			break;
-		}
-		if (!strcmp(device, device_list[j])) {
+		} else if (!strcmp(device, device_list[i])) {
 			return 1;
 		}
 	}
 
 	return 0;
+}
+
+void controller_shortcut_simultaneous(struct shortcut *shortcut) {
+	int triggered = 1; /* Assume success. */
+
+	for (int i = 0; i < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); i++) {
+		struct button *button = shortcut->button_list[i];
+		if (!button) {
+			continue;
+		}
+
+		for (int j = 0; j < sizeof(button->buttons) / sizeof(*button->buttons); j++) {
+			const struct button_trigger *trigger = button->buttons[j];
+			if (!trigger) {
+				continue;
+			}
+
+			if (!button->state) {
+				triggered = 0;
+			}
+		}
+	}
+
+	if (triggered && shortcut->function) {
+		shortcut->function();
+	}
+}
+
+void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16_t value) {
+	for (int i = 0; i < sizeof(shortcuts) / sizeof(*shortcuts); i++) {
+		struct shortcut *shortcut = &shortcuts[i];
+
+		if (!controller_check_device(device, shortcut->devices, sizeof(shortcut->devices) / sizeof(*shortcut->devices))) {
+			continue;
+		}
+
+		for (int i = 0; i < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); i++) {
+			struct button *button = shortcut->button_list[i];
+			if (!button) {
+				continue;
+			}
+
+			for (int j = 0; j < sizeof(button->buttons) / sizeof(*button->buttons); j++) {
+				const struct button_trigger *trigger = button->buttons[j];
+				if (!trigger) {
+					continue;
+				}
+
+				if (type == trigger->type && code == trigger->code) {
+					if (trigger->triggervalue < 0) {
+						button->state = (value <= trigger->triggervalue);
+					} else if (trigger->triggervalue > 0) {
+						button->state = (value >= trigger->triggervalue);
+					} else {
+						button->state = value ? 1 : 0;
+					}
+				}
+			}
+		}
+
+		switch (shortcut->type) {
+		case simultaneous:
+			controller_shortcut_simultaneous(shortcut);
+			break;
+		case consecutive:
+			break;
+		}
+	}
+
 }
 
 void controller_codeswaps(int id, uint8_t type, uint16_t code, int16_t value) {
@@ -84,16 +155,16 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 			struct controller_display_mapping *mapping = &controller->mapping[j];
 
 			for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
-				const struct button_trigger *button = &mapping->buttons[k];
+				const struct button_trigger *trigger = &mapping->buttons[k];
 
-				if (code == button->code && type == button->type) {
+				if (code == trigger->code && type == trigger->type) {
 					/* Things may not work properly if you have multiple buttons
 					 * assigned to a mapping that are concurrently triggered.
 					 */
-					if (button->triggervalue < 0) {
-						mapping->value = (value <= button->triggervalue);
-					} else if (button->triggervalue > 0) {
-						mapping->value = (value >= button->triggervalue);
+					if (trigger->triggervalue < 0) {
+						mapping->value = (value <= trigger->triggervalue);
+					} else if (trigger->triggervalue > 0) {
+						mapping->value = (value >= trigger->triggervalue);
 					} else {
 						mapping->value = value ? 1 : 0;
 					}
@@ -105,32 +176,7 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 		hl_display_output_controller(controller);
 	}
 
-	for (int i = 0; i < sizeof(shortcuts) / sizeof(*shortcuts); i++) {
-		struct shortcut *shortcut = &shortcuts[i];
-
-		if (!controller_check_device(device, shortcut->devices, sizeof(shortcut->devices) / sizeof(*shortcut->devices))) {
-			continue;
-		}
-		for (int j = 0; j < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); j++) {
-			struct button *button = &shortcut->button_list[j];
-			for (int k = 0; k < sizeof(button->buttons) / sizeof(*button->buttons); k++) {
-				const struct button_trigger *map = &button->buttons[k];
-				if (map->type != 0) {
-/*
-					if (map->triggervalue < 0) {
-						button->state = (value <= map->triggervalue);
-					} else if (map->triggervalue > 0) {
-						button->state = (value >= map->triggervalue);
-					} else {
-						button->state = value ? 1 : 0;
-					}
-*/
-
-					debug_print("Button %d (%d) [%d]\n", map->code, map->type, map->triggervalue);
-				}
-			}
-		}
-	}
+	controller_shortcuts(device, type, code, value);
 
 	controller_codeswaps(id, type, code, value);
 	return;
