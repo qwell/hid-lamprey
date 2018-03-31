@@ -79,6 +79,38 @@ void controller_shortcut_simultaneous(struct shortcut *shortcut) {
 	}
 }
 
+void controller_shortcut_consecutive(struct shortcut *shortcut) {
+	static struct test {
+	} *foo = NULL;
+
+	if (!foo) {
+		foo = calloc(1, sizeof(foo));
+	};
+
+	int triggered = 0; /* Assume failure. */
+
+	for (int i = 0; i < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); i++) {
+		struct button *button = shortcut->button_list[i];
+		if (!button) {
+			continue;
+		}
+
+		for (int j = 0; j < sizeof(button->buttons) / sizeof(*button->buttons); j++) {
+			const struct button_trigger *trigger = button->buttons[j];
+			if (!trigger) {
+				continue;
+			}
+
+			if (!button->state) {
+				triggered = 0;
+			}
+		}
+	}
+
+	free(foo);
+	foo = NULL;
+}
+
 void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16_t value) {
 	for (int i = 0; i < sizeof(shortcuts) / sizeof(*shortcuts); i++) {
 		struct shortcut *shortcut = &shortcuts[i];

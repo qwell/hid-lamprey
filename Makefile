@@ -13,7 +13,7 @@ APPS:=lamprey
 SOS:=liblamprey.so
 
 CFLAGS=-Wall -g -pthread -fPIC
-SO_LIBS=
+SO_LIBS=-lm
 LIBS=-L. -llamprey -Wl,-rpath=.
 FILTER_C:=main.c
 
