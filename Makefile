@@ -3,6 +3,8 @@ MAKE=make
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 OS:=$(shell uname)
 
+-include config.out
+
 ifeq ($(OS),Linux)
 USE_EVDEV=1
 endif
