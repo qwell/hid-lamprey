@@ -7,6 +7,7 @@
  * (at your option) any later version.
  */
 
+#include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
 

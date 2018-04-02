@@ -1,7 +1,7 @@
-On Ubuntu, the following packages are required to build.
-	libevdev-dev (with USE_EVDEV)
-	libgtk-3-dev (with USE_GTK)
-	libxdo-dev (with USE_XDO)
+On Ubuntu, the following packages may be required to build.
+	libevdev-dev
+	libgtk-3-dev
+	libxdo-dev
 	libxml2-dev
 
 On some systems, only the root user can create the uinput devices used for

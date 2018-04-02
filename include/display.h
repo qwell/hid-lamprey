@@ -7,7 +7,7 @@
  * (at your option) any later version.
  */
 
-#if defined(HAVE_CLI) && defined(HAVE_GTK)
+#if defined(HAVE_CLI) && defined(HAVE_GTK3)
 #include "display-cli.h"
 #include "display-gtk.h"
 
@@ -24,7 +24,7 @@
 
 #define hl_display_init(...) hl_cli_init(__VA_ARGS__)
 #define hl_display_output_controller(controller) hl_cli_output_controller(controller);
-#elif defined(HAVE_GTK)
+#elif defined(HAVE_GTK3)
 #include "display-gtk.h"
 
 #define hl_display_init(...) hl_gtk_init(__VA_ARGS__)

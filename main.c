@@ -46,7 +46,7 @@ int main (int argc, char **argv) {
 #endif
 
 
-#if defined(HAVE_GTK)
+#if defined(HAVE_GTK3)
 	pthread_join(t_gtk, NULL);
 #endif
 
