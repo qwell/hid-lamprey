@@ -49,6 +49,11 @@ OBJS:=$(SRCS:.c=.o)
 
 ALLFLAGS:=$(CFLAGS) $(LIBS) $(SO_LIBS) $(SRCS)
 
+COLOR_RED=\033[31m
+COLOR_GREEN=\033[32m
+COLOR_BLUE=\033[34m
+COLOR_DEFAULT=\033[39m
+
 ifeq ($(shell echo '$(ALLFLAGS)' | cmp -s - Makefile.deps; echo $$?),1)
 REBUILD:=rebuild
 .PHONY: $(REBUILD)
@@ -57,17 +62,20 @@ endif
 all: $(APPS)
 
 $(APPS): main.o
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(SO_LIBS)
+	@$(CC) -o $@ $< $(CFLAGS) $(LIBS) $(SO_LIBS)
+	@printf "[$(COLOR_RED)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$<$(COLOR_DEFAULT)\n" "$@"
 
 $(APPS): $(SOS)
 
 -include $(patsubst %.o,.%.o.d,$(OBJS))
 
 $(SOS): $(OBJS)
-	$(CC) -o $@ $^ $(CFLAGS) $(SO_LIBS) -shared
+	@$(CC) -o $@ $^ $(CFLAGS) $(SO_LIBS) -shared
+	@printf "[$(COLOR_RED)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$^$(COLOR_DEFAULT)\n" "$@"
 
 %.o: %.c Makefile.deps
-	$(CC) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
+	@$(CC) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
+	@printf "[$(COLOR_BLUE)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$<$(COLOR_DEFAULT)\n" "$@"
 
 Makefile.deps: $(REBUILD) config.out
 	@echo '$(ALLFLAGS)' > $@
