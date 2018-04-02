@@ -13,8 +13,6 @@ SO_LIBS=-lm
 LIBS=-L. -llamprey -Wl,-rpath=.
 FILTER_C:=main.c
 
-SO_LIBS+=-lxml2
-
 ifeq ($(DEBUG),1)
 CFLAGS+=-DDEBUG
 endif
@@ -24,6 +22,12 @@ CFLAGS+=$(EVDEV_CFLAGS)
 SO_LIBS+=$(EVDEV_LIBS)
 else
 FILTER_C+=input-evdev.c
+endif
+ifeq ($(HAVE_XML2),1)
+CFLAGS+=-DUSE_XML2
+CFLAGS+=$(XML2_CFLAGS)
+SO_LIBS+=$(XML2_LIBS)
+else
 endif
 ifeq ($(HAVE_CLI),1)
 CFLAGS+=-DUSE_CLI
