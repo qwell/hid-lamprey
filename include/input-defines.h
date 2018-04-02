@@ -91,3 +91,7 @@
 #define BTN_MODE 0x36
 #define BTN_THUMBL 0x37
 #define BTN_THUMBR 0x38
+#define KEY_UP 0x39
+#define KEY_DOWN 0x3a
+#define KEY_LEFT 0x3b
+#define KEY_RIGHT 0x3c
