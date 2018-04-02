@@ -11,8 +11,8 @@ PKG_PROG_PKG_CONFIG()
 
 LOCAL_WITH_HAVE([CLI], [cli])
 LOCAL_WITH_PKG([EVDEV], [evdev], [], [libevdev])
-LOCAL_WITH_LIB([XML2], [xml2], [], [xmlNewDoc])
 LOCAL_WITHOUT_PKG([GTK3], [gtk3], [ (for output display)], [gtk+-3.0])
 LOCAL_WITHOUT_LIB([XDO], [xdo], [], [xdo_new])
+LOCAL_WITH_LIB([XML2], [xml2], [], [xmlNewDoc])
 
 AC_OUTPUT()
