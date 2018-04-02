@@ -1,9 +1,6 @@
-CC=gcc
-MAKE=make
-MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
-OS:=$(shell uname)
-
 -include config.out
+
+MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
 APPS:=lamprey
 SOS:=liblamprey.so

@@ -1,3 +1,7 @@
+CC=@CC@
+MAKE=@GNU_MAKE@
+OS=@host_os@
+
 HAVE_CLI=@HAVE_CLI@
 
 HAVE_EVDEV=@HAVE_EVDEV@
