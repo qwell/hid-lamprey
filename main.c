@@ -21,16 +21,16 @@
 int main (int argc, char **argv) {
 	setlocale(LC_ALL, "");
 
-#ifdef USE_XDO
+#if defined(HAVE_XDO)
 	struct hl_xdo *hl_xdo = NULL;
 #endif
 
-	printf("Lamprey Version: %s\n", HL_VERSION);
+	printf("Lamprey Version: " PACKAGE_VERSION "\n");
 
 	/* Initialize input data. */
 	hl_input_init();
 
-#ifdef USE_XDO
+#if defined(HAVE_XDO)
 	/* Initialize xdo data. */
 	hl_xdo = hl_xdo_init();
 #endif
@@ -39,18 +39,18 @@ int main (int argc, char **argv) {
 
 	// Do...stuff.
 
-#ifdef USE_EVDEV
+#if defined(HAVE_EVDEV)
 	if (hl_evdev) {
 		pthread_join(t_evdev, NULL);
 	}
 #endif
 
 
-#ifdef USE_GTK
+#if defined(HAVE_GTK)
 	pthread_join(t_gtk, NULL);
 #endif
 
-#ifdef USE_XDO
+#if defined(HAVE_XDO)
 	free(hl_xdo);
 #endif
 }

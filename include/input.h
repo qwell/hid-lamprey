@@ -7,7 +7,7 @@
  * (at your option) any later version.
  */
 
-#ifdef USE_EVDEV
+#if defined(HAVE_EVDEV)
 #include "input-evdev.h"
 
 #define hl_input_init(...) hl_evdev_init(__VA_ARGS__)

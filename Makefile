@@ -17,32 +17,27 @@ ifeq ($(DEBUG),1)
 CFLAGS+=-DDEBUG
 endif
 ifeq ($(HAVE_EVDEV),1)
-CFLAGS+=-DUSE_EVDEV
 CFLAGS+=$(EVDEV_CFLAGS)
 SO_LIBS+=$(EVDEV_LIBS)
 else
 FILTER_C+=input-evdev.c
 endif
 ifeq ($(HAVE_XML2),1)
-CFLAGS+=-DUSE_XML2
 CFLAGS+=$(XML2_CFLAGS)
 SO_LIBS+=$(XML2_LIBS)
 else
 endif
 ifeq ($(HAVE_CLI),1)
-CFLAGS+=-DUSE_CLI
 else
 FILTER_C+=display-cli.c
 endif
 ifeq ($(HAVE_GTK3),1)
-CFLAGS+=-DUSE_GTK
 CFLAGS+=$(GTK3_CFLAGS)
 SO_LIBS+=$(GTK3_LIBS)
 else
 FILTER_C+=display-gtk.c
 endif
 ifeq ($(HAVE_XDO),1)
-CFLAGS+=-DUSE_XDO
 CFLAGS+=$(XDO_CFLAGS)
 SO_LIBS+=$(XDO_LIBS)
 else
@@ -83,4 +78,5 @@ clean:
 	@rm -rf *.o
 	@rm -rf .*.o.d
 	@rm -rf config.out
+	@rm -rf include/config.h
 	@rm -rf Makefile.deps

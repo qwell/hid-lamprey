@@ -8,4 +8,5 @@ autom4te.cache
 config.log
 config.status
 config.out
+include/config.h
 lamprey

@@ -1,0 +1,17 @@
+/* HAVE_CLI */
+#undef HAVE_CLI
+
+/* HAVE_EVDEV */
+#undef HAVE_EVDEV
+
+/* HAVE_GTK3 */
+#undef HAVE_GTK3
+
+/* HAVE_XDO */
+#undef HAVE_XDO
+
+/* HAVE_XML2 */
+#undef HAVE_XML2
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION

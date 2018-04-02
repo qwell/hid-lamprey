@@ -10,7 +10,7 @@
 #ifndef _LAMPREY_H
 #define _LAMPREY_H
 
-#include "version.h"
+#include "config.h"
 #include "settings.h"
 #include "defaults.h"
 
@@ -18,7 +18,7 @@
 #error "No.  Go get a real OS and try again."
 #endif
 
-#ifdef DEBUG
+#if defined(DEBUG)
 #define debug_print(...) printf(__VA_ARGS__)
 #else
 #define debug_print(...) do {} while(0)
