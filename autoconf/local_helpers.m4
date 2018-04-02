@@ -1,18 +1,3 @@
-dnl LOCAL_CHECK_GNU_MAKE
-AC_DEFUN([LOCAL_CHECK_GNU_MAKE], [
-	AC_CACHE_CHECK([for GNU make], [_cv_gnu_make_command], [
-		_cv_gnu_make_command=""
-		for a in "$MAKE" make gmake gnumake; do
-			if test -z "$a"; then continue; fi
-			if "$a" --version 2> /dev/null | grep GNU 2>&1 > /dev/null; then
-				_cv_gnu_make_command=$a
-				break;
-			fi
-		done
-	])
-	AC_SUBST([GNU_MAKE], [$_cv_gnu_make_command])
-])
-
 dnl LOCAL_SUBST_DEFINE(variable, value)
 AC_DEFUN([LOCAL_SUBST_DEFINE], [
 	AC_DEFINE([$1], [$2])

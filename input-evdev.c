@@ -57,7 +57,7 @@ void hl_evdev_init() {
 	memset(hl_evdev->devices, 0, sizeof(hl_evdev->devices));
 
 	for (int i = 0; i < filecount; ++i) {
-		char fullpath[256];
+		char fullpath[512];
 		char uniq[256];
 		int rc = 1;
 
@@ -362,7 +362,8 @@ void hl_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
 				.code = hl_evdev->devices[id].ff_id,
 			};
 
-			write(hl_evdev->fds[id].fd, &play, sizeof(play));
+			if (write(hl_evdev->fds[id].fd, &play, sizeof(play)) <= 0) {
+			}
 		}
 	}
 }

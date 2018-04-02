@@ -5,9 +5,9 @@ MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 APPS:=lamprey
 SOS:=liblamprey.so
 
-CFLAGS=-Wall -g -pthread -fPIC
-SO_LIBS=-lm
-LIBS=-L. -llamprey -Wl,-rpath=.
+CFLAGS+=-Wall -fPIC
+SO_LIBS+=-lm
+LIBS+=-L. -llamprey -Wl,-rpath=.
 FILTER_C:=main.c
 
 ifeq ($(DEBUG),1)
