@@ -70,7 +70,7 @@ $(SOS): $(OBJS)
 %.o: %.c Makefile.deps
 	$(CC) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
 
-Makefile.deps: $(REBUILD)
+Makefile.deps: $(REBUILD) config.out
 	@echo '$(ALLFLAGS)' > $@
 
 clean:
@@ -78,4 +78,5 @@ clean:
 	@rm -rf *.so
 	@rm -rf *.o
 	@rm -rf .*.o.d
+	@rm -rf config.out
 	@rm -rf Makefile.deps
