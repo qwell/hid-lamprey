@@ -148,6 +148,7 @@ void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16
 			controller_shortcut_simultaneous(shortcut);
 			break;
 		case consecutive:
+			controller_shortcut_consecutive(shortcut);
 			break;
 		}
 	}
