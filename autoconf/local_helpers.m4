@@ -1,6 +1,6 @@
 dnl LOCAL_SUBST_DEFINE(variable, value)
 AC_DEFUN([LOCAL_SUBST_DEFINE], [
-	AC_DEFINE([$1], [$2])
+	AC_DEFINE([$1], [$2], [$1])
 	AC_SUBST([$1], [$2])
 ])
 

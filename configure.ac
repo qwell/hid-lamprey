@@ -9,8 +9,9 @@ AC_CONFIG_HEADERS([include/config.h])
 AC_CANONICAL_HOST
 
 AC_PROG_CC
-AX_CHECK_GNU_MAKE
-AC_SUBST([GNU_MAKE], [$_cv_gnu_make_command])
+AX_CHECK_GNU_MAKE([
+	AC_SUBST([GNU_MAKE], [$_cv_gnu_make_command])
+])
 
 AX_PTHREAD
 

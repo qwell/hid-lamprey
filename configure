@@ -646,9 +646,9 @@ EGREP
 GREP
 CPP
 SED
-GNU_MAKE
 ifnGNUmake
 ifGNUmake
+GNU_MAKE
 AWK
 OBJEXT
 EXEEXT
@@ -3247,11 +3247,14 @@ else
 fi
   if test "x$_cv_gnu_make_command" = x""; then :
 
+else
+
+	GNU_MAKE=$_cv_gnu_make_command
+
+
 fi
 
 
-
-GNU_MAKE=$_cv_gnu_make_command
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for a sed that does not truncate output" >&5
@@ -4693,7 +4696,8 @@ fi
 
 	if test "x$with_CLI" = "xyes"; then :
 
-	$as_echo "#define HAVE_CLI /**/" >>confdefs.h
+
+$as_echo "#define HAVE_CLI /**/" >>confdefs.h
 
 
 , 1
@@ -4701,7 +4705,8 @@ elif test "x$with_CLI" = "xno"; then :
 
 else
 
-	$as_echo "#define HAVE_CLI 1" >>confdefs.h
+
+$as_echo "#define HAVE_CLI 1" >>confdefs.h
 
 	HAVE_CLI=1
 
@@ -4808,7 +4813,8 @@ else
 $as_echo "yes" >&6; }
 
 
-	$as_echo "#define HAVE_EVDEV 1" >>confdefs.h
+
+$as_echo "#define HAVE_EVDEV 1" >>confdefs.h
 
 	HAVE_EVDEV=1
 
@@ -4894,7 +4900,8 @@ else
 $as_echo "yes" >&6; }
 
 
-	$as_echo "#define HAVE_EVDEV 1" >>confdefs.h
+
+$as_echo "#define HAVE_EVDEV 1" >>confdefs.h
 
 	HAVE_EVDEV=1
 
@@ -5004,7 +5011,8 @@ else
 $as_echo "yes" >&6; }
 
 
-	$as_echo "#define HAVE_GTK3 1" >>confdefs.h
+
+$as_echo "#define HAVE_GTK3 1" >>confdefs.h
 
 	HAVE_GTK3=1
 
@@ -5073,7 +5081,8 @@ $as_echo "$ac_cv_lib_xdo_xdo_new" >&6; }
 if test "x$ac_cv_lib_xdo_xdo_new" = xyes; then :
 
 
-	$as_echo "#define HAVE_XDO 1" >>confdefs.h
+
+$as_echo "#define HAVE_XDO 1" >>confdefs.h
 
 	HAVE_XDO=1
 
@@ -5152,7 +5161,8 @@ $as_echo "$ac_cv_lib_xml2_xmlNewDoc" >&6; }
 if test "x$ac_cv_lib_xml2_xmlNewDoc" = xyes; then :
 
 
-	$as_echo "#define HAVE_XML2 1" >>confdefs.h
+
+$as_echo "#define HAVE_XML2 1" >>confdefs.h
 
 	HAVE_XML2=1
 
@@ -5214,7 +5224,8 @@ $as_echo "$ac_cv_lib_xml2_xmlNewDoc" >&6; }
 if test "x$ac_cv_lib_xml2_xmlNewDoc" = xyes; then :
 
 
-	$as_echo "#define HAVE_XML2 1" >>confdefs.h
+
+$as_echo "#define HAVE_XML2 1" >>confdefs.h
 
 	HAVE_XML2=1
 
