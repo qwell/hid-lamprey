@@ -5,12 +5,6 @@ OS:=$(shell uname)
 
 -include config.out
 
-ifeq ($(OS),Linux)
-USE_EVDEV=1
-endif
-
-USE_CLI=1
-
 APPS:=lamprey
 SOS:=liblamprey.so
 
@@ -24,28 +18,29 @@ SO_LIBS+=-lxml2
 ifeq ($(DEBUG),1)
 CFLAGS+=-DDEBUG
 endif
-ifeq ($(USE_EVDEV),1)
+ifeq ($(HAVE_EVDEV),1)
 CFLAGS+=-DUSE_EVDEV
-CFLAGS+=$(shell pkg-config --cflags libevdev)
-SO_LIBS+=$(shell pkg-config --libs libevdev)
+CFLAGS+=$(EVDEV_CFLAGS)
+SO_LIBS+=$(EVDEV_LIBS)
 else
 FILTER_C+=input-evdev.c
 endif
-ifeq ($(USE_CLI),1)
+ifeq ($(HAVE_CLI),1)
 CFLAGS+=-DUSE_CLI
 else
 FILTER_C+=display-cli.c
 endif
-ifeq ($(USE_GTK),1)
+ifeq ($(HAVE_GTK3),1)
 CFLAGS+=-DUSE_GTK
-CFLAGS+=$(shell pkg-config --cflags gtk+-3.0)
-SO_LIBS+=$(shell pkg-config --libs gtk+-3.0) -export-dynamic
+CFLAGS+=$(GTK3_CFLAGS)
+SO_LIBS+=$(GTK3_LIBS)
 else
 FILTER_C+=display-gtk.c
 endif
-ifeq ($(USE_XDO),1)
+ifeq ($(HAVE_XDO),1)
 CFLAGS+=-DUSE_XDO
-SO_LIBS+=-lxdo
+CFLAGS+=$(XDO_CFLAGS)
+SO_LIBS+=$(XDO_LIBS)
 else
 FILTER_C+=xdo.c
 endif

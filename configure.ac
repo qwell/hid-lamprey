@@ -1,16 +1,14 @@
 AC_INIT([lamprey], [0.0.1])
+AC_PREREQ([2.69])
+
+AC_CANONICAL_HOST
 
 PKG_PROG_PKG_CONFIG()
 
-PKG_CHECK_MODULES(GTK3, [gtk+-3.0], [
-	GTK3_INCLUDE="$GTK3_CFLAGS"
-	GTK3_LIBS="$GTK3_LIBS"
-	HAVE_GTK3=1
-])
-AC_SUBST([GTK3_LIBS])
-AC_SUBST([GTK3_INCLUDE])
-dnl AC_CHECK_LIB(gtk3, [gtk3-config], [HAVE_LIBXML3=1])
-dnl AC_CHECK_HEADER([libxml/tree.h], [LIBXML3_HEADER=1])
+LOCAL_WITH_HAVE([CLI], [cli])
+LOCAL_WITH_PKG([EVDEV], [evdev], [], [libevdev])
+LOCAL_WITHOUT_PKG([GTK3], [gtk3], [ (for output display)], [gtk+-3.0])
+LOCAL_WITHOUT_LIB([XDO], [xdo], [], [xdo_new])
 
 AC_CONFIG_FILES([config.out])
 AC_OUTPUT()

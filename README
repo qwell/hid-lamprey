@@ -20,13 +20,13 @@ Various settings can be changed in include/settings.h.
 
 Makefile flags:
 	Subsystems
-		USE_EVDEV (default enabled on Linux)
-		USE_CLI (default enabled)
-		USE_GTK (default disabled)
-		USE_XDO (default disabled)
+		CLI (default enabled)
+		evdev (default enabled when available)
+		gtk3 (default disabled)
+		xdo (default disabled)
 
 		Subsystems can be enabled or disabled with
-			`make USE_<subsystem>=1`; or
-			`make USE_<subsystem>=`
+			`./configure --with-<subsystem>`; or
+			`./configure --without-<subsystem>`
 
 	Debugging can be enabled with `make DEBUG=1`
