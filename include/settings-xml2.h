@@ -10,3 +10,5 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
+void hl_settings_xml_load();
+void hl_settings_xml_save();

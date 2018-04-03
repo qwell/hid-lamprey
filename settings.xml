@@ -1,0 +1,30 @@
+<settings>
+	<devices>
+		<device name="rockcandy">3/e6f-11f:Rock Candy Gamepad Wired Controller</device>
+		<device name="xbox">3/45e-2a1:Xbox 360 Wireless Receiver (XBOX)</device>
+		<device name="keyboard">11/1-1:AT Translated Set 2 keyboard</device>
+		<device name="keyboard2">3/258a-1:SINO WEALTH USB KEYBOARD</device>
+	</devices>
+	<remaps>
+		<remap>
+			<in type="EV_KEY" code="BTN_THUMBL"/>
+			<out type="EV_KEY" code="KEY_1" trigger="1"/>
+		</remap>
+		<remap>
+			<in type="EV_KEY" code="BTN_THUMBR"/>
+			<out type="EV_KEY" code="KEY_3" trigger="1"/>
+		</remap>
+		<remap>
+			<in type="EV_KEY" code="BTN_SELECT"/>
+			<out type="EV_ABS" code="ABS_X" trigger="-1"/>
+		</remap>
+		<remap>
+			<in type="EV_KEY" code="BTN_START"/>
+			<out type="EV_ABS" code="ABS_X" trigger="1"/>
+		</remap>
+		<remap>
+			<in type="EV_KEY" code="BTN_MODE"/>
+			<out type="EV_ABS" code="KEY_Y"/>
+		</remap>
+	</remaps>
+</settings>

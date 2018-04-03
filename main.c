@@ -27,6 +27,8 @@ int main (int argc, char **argv) {
 
 	printf("Lamprey Version: " PACKAGE_VERSION "\n");
 
+	hl_settings_load();
+
 	/* Initialize input data. */
 	hl_input_init();
 
