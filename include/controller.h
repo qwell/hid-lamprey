@@ -10,6 +10,7 @@
 #ifndef _CONTROLLER_H
 #define _CONTROLLER_H
 
+#include "input.h"
 #include "shortcut_cb.h"
 
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value);
@@ -23,6 +24,11 @@ struct button_trigger {
 struct remap {
 	struct button_trigger in;
 	struct button_trigger out;
+};
+
+struct remapptr {
+	struct button_trigger *in;
+	struct button_trigger *out;
 };
 
 struct controller_display_mapping {

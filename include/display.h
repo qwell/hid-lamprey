@@ -7,6 +7,8 @@
  * (at your option) any later version.
  */
 
+#include "controller.h"
+
 #if defined(HAVE_CLI) && defined(HAVE_GTK3)
 #include "display-cli.h"
 #include "display-gtk.h"

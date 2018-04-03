@@ -7,7 +7,7 @@
  * (at your option) any later version.
  */
 
-#define CODELOOKUP(type, key) { #key, type, key }
+#define CODELOOKUP(type, key) { #type, #key, type, key }
 #define KEYLOOKUP(key) CODELOOKUP(EV_KEY, key)
 #define ABSLOOKUP(key) CODELOOKUP(EV_ABS, key)
 #define RELLOOKUP(key) CODELOOKUP(EV_REL, key)

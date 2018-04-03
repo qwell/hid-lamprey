@@ -13,7 +13,7 @@
 #include <libevdev/libevdev.h>
 #include <libevdev/libevdev-uinput.h>
 
-#include "evdev-codetable.h"
+//#include "evdev-codetable.h"
 
 extern pthread_t t_evdev;
 extern pthread_mutex_t mutex_evdev;
@@ -46,12 +46,6 @@ struct axis_data {
 struct hat_data {
 	int min;
 	int max;
-};
-
-struct codelookup {
-	const char *name;
-	const uint8_t type;
-	const uint16_t code;
 };
 
 struct hl_evdev {

@@ -15,7 +15,6 @@
 #include "include/lamprey.h"
 
 #include "include/display.h"
-#include "include/input.h"
 #include "include/xdo.h"
 
 int main (int argc, char **argv) {

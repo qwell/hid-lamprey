@@ -27,10 +27,6 @@ pthread_t t_evdev;
 pthread_mutex_t mutex_evdev = PTHREAD_MUTEX_INITIALIZER;
 struct hl_evdev *hl_evdev = NULL;
 
-const struct codelookup codelookup[] = {
-	CODETABLE
-};
-
 int filter_event_files(const struct dirent *entry)
 {
 	return !strncmp(entry->d_name, "event", 5);
@@ -174,8 +170,9 @@ void hl_evdev_init() {
 	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_REL);
 
 	/* Emulate all keys in the code table. */
-	for (int i = 0; i < sizeof(codelookup) / sizeof(*codelookup); i++) {
-		struct codelookup emu = codelookup[i];
+printf("size %d, %d\n", sizeof(codelookups) / sizeof(*codelookups));
+	for (int i = 0; i < sizeof(codelookups) / sizeof(*codelookups); i++) {
+		struct codelookup emu = codelookups[i];
 		void *codedata = NULL;
 		switch (emu.type) {
 		case EV_ABS:

@@ -49,7 +49,7 @@ void settings_xml_load_devices(xmlXPathContext *context) {
 	}
 }
 
-void settings_xml_load_remaps(xmlDoc *doc, xmlXPathContext *context) {
+void settings_xml_load_remaps(xmlXPathContext *context) {
 	xmlChar *xpath = (xmlChar *)"//remaps/remap";
 	xmlXPathObject *result;
 
@@ -60,21 +60,35 @@ void settings_xml_load_remaps(xmlDoc *doc, xmlXPathContext *context) {
 		for (int i = 0; i < nodeset->nodeNr; i++) {
 			xmlNode *node = nodeset->nodeTab[i];
 
-			debug_print("dump: %s\n", xml_debug_node(doc, node));
-
 			printf("Remap %d\n", i);
 
 			for (xmlNode *cur = node->children; cur; cur = cur->next) {
 				if (cur->type == XML_ELEMENT_NODE) {
+					struct remapptr *remap = calloc(1, sizeof(struct remapptr));
+
 					if (!xmlStrcmp(cur->name, (const xmlChar *)"in")) {
+						struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
+
 						xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
 						xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
+int code2=0, type2=0;
+if (!xmlStrcmp(code, (const xmlChar *)"BTN_THUMBL")) {
+//code2 = BTN_THUMBL;
+//type2 = EV_KEY;
+}
+
+						button_trigger->code = code2;
+						button_trigger->type = type2;
+						remap->in = button_trigger;
 
 						printf("In: %s, %s\n", code, type);
+						printf("In: %d, %d\n", code2, type2);
 
 						xmlFree(code);
 						xmlFree(type);
 					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"out")) {
+						struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
+
 						xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
 						xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
 						xmlChar *trigger = xmlGetProp(cur, (const xmlChar *)"trigger");
@@ -145,7 +159,7 @@ void hl_settings_xml_load() {
 	}
 
 	settings_xml_load_devices(context);
-	settings_xml_load_remaps(doc, context);
+	settings_xml_load_remaps(context);
 
 	printf("Settings file '%s' loaded successfully.\n", xmlfilename);
 
