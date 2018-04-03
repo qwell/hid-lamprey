@@ -23,6 +23,7 @@ ifeq ($(HAVE_XML2),1)
 CFLAGS+=$(XML2_CFLAGS)
 SO_LIBS+=$(XML2_LIBS)
 else
+FILTER_C+=config-xml2.c
 endif
 ifeq ($(HAVE_CLI),1)
 else
