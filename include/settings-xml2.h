@@ -9,6 +9,7 @@
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <libxml/xmlschemas.h>
 #include <libxml/xpath.h>
 
 void hl_settings_xml_load();

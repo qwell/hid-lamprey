@@ -93,25 +93,61 @@ void settings_xml_load_remaps(xmlDoc *doc, xmlXPathContext *context) {
 }
 
 void hl_settings_xml_load() {
-	char *filename = "settings.xml";
+	char *xmlfilename = "settings.xml";
+	char *xsdfilename = "settings.xsd";
 	xmlDoc *doc;
+	xmlSchemaParserCtxt *parser_context;
+	xmlSchema *schema;
+	xmlSchemaValidCtxt *valid_context;
 	xmlXPathContext *context;
 
 	xmlSetGenericErrorFunc(NULL, xml_generic_error_func);
 
-	if (!(doc = xmlParseFile(filename))) {
-		printf("Settings file '%s' is missing or invalid.\n", filename);
+	if (!(doc = xmlParseFile(xmlfilename))) {
+		printf("Settings file '%s' is missing or invalid.\n", xmlfilename);
 		return;
 	}
 
+	if (!(parser_context = xmlSchemaNewParserCtxt(xsdfilename))) {
+		printf("Settings file schema '%s' could not be loaded.\n", xsdfilename);
+		xmlFreeDoc(doc);
+		return;
+	}
+	if (!(schema = xmlSchemaParse(parser_context))) {
+		printf("Settings file schema '%s' could not be loaded.\n", xsdfilename);
+		xmlSchemaFreeParserCtxt(parser_context);
+		xmlFreeDoc(doc);
+		return;
+	}
+	if (!(valid_context = xmlSchemaNewValidCtxt(schema))) {
+		printf("Settings file schema '%s' could not be loaded.\n", xsdfilename);
+		xmlSchemaFreeParserCtxt(parser_context);
+		xmlSchemaFree(schema);
+		xmlFreeDoc(doc);
+		return;
+	}
+	if (xmlSchemaValidateDoc(valid_context, doc)) {
+		printf("Settings file '%s' did not validate against %s.\n", xmlfilename, xsdfilename);
+		xmlSchemaFreeParserCtxt(parser_context);
+		xmlSchemaFree(schema);
+		xmlSchemaFreeValidCtxt(valid_context);
+		xmlFreeDoc(doc);
+		return;
+	}
+	xmlSchemaFreeParserCtxt(parser_context);
+	xmlSchemaFree(schema);
+	xmlSchemaFreeValidCtxt(valid_context);
+
 	if (!(context = xmlXPathNewContext(doc))) {
-		printf("Settings file '%s' could not be loaded.\n", filename);
+		printf("Settings file '%s' could not be loaded.\n", xmlfilename);
 		xmlFreeDoc(doc);
 		return;
 	}
 
 	settings_xml_load_devices(context);
 	settings_xml_load_remaps(doc, context);
+
+	printf("Settings file '%s' loaded successfully.\n", xmlfilename);
 
 	xmlFree(context);
 	xmlFreeDoc(doc);
