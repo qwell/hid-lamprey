@@ -21,11 +21,11 @@ struct controller_display controller_displays[] = {
 	CONTROLLER_DISPLAYS
 };
 
-const struct codeswap {
+const struct remap {
 	struct button_trigger in;
 	struct button_trigger out;
-} codeswaps[] = {
-	CODESWAPS
+} remaps[] = {
+	REMAPS
 };
 
 struct shortcut shortcuts[] = {
@@ -155,9 +155,9 @@ void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16
 
 }
 
-void controller_codeswaps(int id, uint8_t type, uint16_t code, int16_t value) {
-	for (int i = 0; i < sizeof(codeswaps) / sizeof(*codeswaps); i++) {
-		struct codeswap emu = codeswaps[i];
+void controller_remaps(int id, uint8_t type, uint16_t code, int16_t value) {
+	for (int i = 0; i < sizeof(remaps) / sizeof(*remaps); i++) {
+		struct remap emu = remaps[i];
 		if (type == emu.in.type && code == emu.in.code) {
 			int emuvalue = 0;
 			if (emu.in.triggervalue < 0) {
@@ -214,6 +214,6 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 
 	controller_shortcuts(device, type, code, value);
 
-	controller_codeswaps(id, type, code, value);
+	controller_remaps(id, type, code, value);
 	return;
 }

@@ -19,6 +19,6 @@
 #define CONTROLLERS
 #endif
 
-#ifndef CODESWAPS
-#define CODESWAPS
+#ifndef REMAPS
+#define REMAPS
 #endif

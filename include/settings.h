@@ -79,7 +79,7 @@
 		},\
 	},
 
-#define CODESWAPS \
+#define REMAPS \
 	{{EV_KEY, BTN_THUMBL}, {EV_KEY, KEY_1, 1}},\
 	{{EV_KEY, BTN_THUMBR}, {EV_KEY, KEY_3, 1}},\
 	{{EV_KEY, BTN_SELECT}, {EV_ABS, ABS_X, -1}},\
