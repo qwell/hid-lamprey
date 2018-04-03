@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:simpleType name="nonEmptyString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:element name="settings">
     <xs:complexType>
       <xs:sequence>
@@ -9,8 +14,8 @@
               <xs:element name="device" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:simpleContent>
-                    <xs:extension base="xs:string">
-                      <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                    <xs:extension base="nonEmptyString">
+                      <xs:attribute type="nonEmptyString" name="name" use="required"/>
                     </xs:extension>
                   </xs:simpleContent>
                 </xs:complexType>
@@ -28,8 +33,8 @@
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">
-                            <xs:attribute type="xs:string" name="type" use="required"/>
-                            <xs:attribute type="xs:string" name="code" use="required"/>
+                            <xs:attribute type="nonEmptyString" name="type" use="required"/>
+                            <xs:attribute type="nonEmptyString" name="code" use="required"/>
                           </xs:extension>
                         </xs:simpleContent>
                       </xs:complexType>
@@ -38,8 +43,8 @@
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">
-                            <xs:attribute type="xs:string" name="type" use="required"/>
-                            <xs:attribute type="xs:string" name="code" use="required"/>
+                            <xs:attribute type="nonEmptyString" name="type" use="required"/>
+                            <xs:attribute type="nonEmptyString" name="code" use="required"/>
                             <xs:attribute type="xs:integer" name="trigger"/>
                           </xs:extension>
                         </xs:simpleContent>
