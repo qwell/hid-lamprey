@@ -23,6 +23,11 @@ struct button_trigger {
 	int16_t triggervalue;
 };
 
+struct remap {
+	struct button_trigger in;
+	struct button_trigger out;
+};
+
 struct controller_display_mapping {
 	const char *display;
 	struct button_trigger buttons[8];

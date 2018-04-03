@@ -21,10 +21,7 @@ struct controller_display controller_displays[] = {
 	CONTROLLER_DISPLAYS
 };
 
-const struct remap {
-	struct button_trigger in;
-	struct button_trigger out;
-} remaps[] = {
+struct remap remaps[] = {
 	REMAPS
 };
 
