@@ -1,4 +1,4 @@
--include config.out
+-include configure.out
 
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
@@ -74,7 +74,7 @@ $(SOS): $(OBJS)
 	@$(CC) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
 	@printf "[$(COLOR_BLUE)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$<$(COLOR_DEFAULT)\n" "$@"
 
-Makefile.deps: $(REBUILD) config.out
+Makefile.deps: $(REBUILD) configure.out
 	@echo '$(ALLFLAGS)' > $@
 
 clean:
@@ -82,6 +82,6 @@ clean:
 	@rm -rf *.so
 	@rm -rf *.o
 	@rm -rf .*.o.d
-	@rm -rf config.out
-	@rm -rf include/config.h
+	@rm -rf configure.out
+	@rm -rf include/configure.h
 	@rm -rf Makefile.deps

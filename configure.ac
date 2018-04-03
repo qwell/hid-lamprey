@@ -3,8 +3,8 @@ AC_CONFIG_MACRO_DIR([autoconf])
 
 AC_INIT([lamprey], [0.0.1])
 
-AC_CONFIG_FILES([config.out])
-AC_CONFIG_HEADERS([include/config.h])
+AC_CONFIG_FILES([configure.out])
+AC_CONFIG_HEADERS([include/configure.h])
 
 AC_CANONICAL_HOST
 

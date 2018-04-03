@@ -1,4 +1,4 @@
-/* include/config.h.in.  Generated from configure.ac by autoheader.  */
+/* include/configure.h.in.  Generated from configure.ac by autoheader.  */
 
 /* HAVE_CLI */
 #undef HAVE_CLI

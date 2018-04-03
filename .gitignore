@@ -7,6 +7,6 @@ aclocal.m4
 autom4te.cache
 config.log
 config.status
-config.out
-include/config.h
+configure.out
+include/configure.h
 lamprey
