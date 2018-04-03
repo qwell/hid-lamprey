@@ -10,7 +10,7 @@
 #ifndef _LAMPREY_H
 #define _LAMPREY_H
 
-#include "configure.h"
+#include "config.h"
 #include "settings.h"
 #include "defaults.h"
 

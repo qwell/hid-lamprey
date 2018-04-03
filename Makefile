@@ -1,4 +1,4 @@
--include configure.out
+-include config.out
 
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
@@ -23,7 +23,7 @@ ifeq ($(HAVE_XML2),1)
 CFLAGS+=$(XML2_CFLAGS)
 SO_LIBS+=$(XML2_LIBS)
 else
-FILTER_C+=config-xml2.c
+FILTER_C+=settings-xml2.c
 endif
 ifeq ($(HAVE_CLI),1)
 else
@@ -75,7 +75,7 @@ $(SOS): $(OBJS)
 	@$(CC) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
 	@printf "[$(COLOR_BLUE)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$<$(COLOR_DEFAULT)\n" "$@"
 
-Makefile.deps: $(REBUILD) configure.out
+Makefile.deps: $(REBUILD) config.out
 	@echo '$(ALLFLAGS)' > $@
 
 clean:
@@ -83,6 +83,6 @@ clean:
 	@rm -rf *.so
 	@rm -rf *.o
 	@rm -rf .*.o.d
-	@rm -rf configure.out
-	@rm -rf include/configure.h
+	@rm -rf config.out
+	@rm -rf include/config.h
 	@rm -rf Makefile.deps

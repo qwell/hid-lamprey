@@ -9,4 +9,4 @@
 
 #include "include/lamprey.h"
 
-#include "include/config.h"
+#include "include/settings.h"

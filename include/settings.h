@@ -10,6 +10,10 @@
 #ifndef _SETTINGS_H
 #define _SETTINGS_H
 
+#if defined(HAVE_XML2)
+#include "settings-xml2.h"
+#endif
+
 // #define AXIS_DEADZONE .2
 // #define HAT_DEADZONE 0
 
