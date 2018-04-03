@@ -10,10 +10,6 @@
 #ifndef _EVDEV_H
 #define _EVDEV_H
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <sys/poll.h>
-
 #include <libevdev/libevdev.h>
 #include <libevdev/libevdev-uinput.h>
 

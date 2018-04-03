@@ -10,9 +10,6 @@
 #ifndef _CONTROLLER_H
 #define _CONTROLLER_H
 
-#include <stdbool.h>
-#include <stdint.h>
-
 #include "shortcut_cb.h"
 
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value);

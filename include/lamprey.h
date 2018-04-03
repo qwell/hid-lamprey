@@ -10,18 +10,34 @@
 #ifndef _LAMPREY_H
 #define _LAMPREY_H
 
+#include <inttypes.h>
+#include <stdint.h>
+#include <sys/poll.h>
+#include <sys/types.h>
+
+#ifdef HAVE_STDBOOL_H
+	#include <stdbool.h>
+#else
+	#ifndef HAVE__BOOL
+		#ifdef __cplusplus
+			typedef bool _Bool;
+		#else
+			#define _Bool signed char
+		#endif
+	#endif
+	#define bool _Bool
+	#define false 0
+	#define true 1
+#endif
+
 #include "config.h"
 #include "settings.h"
 #include "defaults.h"
 
-#ifndef __linux__
-#error "No.  Go get a real OS and try again."
-#endif
-
 #if defined(DEBUG)
-#define debug_print(...) printf(__VA_ARGS__)
+	#define debug_print(...) printf(__VA_ARGS__)
 #else
-#define debug_print(...) do {} while(0)
+	#define debug_print(...) do {} while(0)
 #endif
 
 #endif
