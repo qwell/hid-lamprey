@@ -11,7 +11,7 @@
 
 #include "include/lamprey.h"
 
-#include "include/settings.h"
+#include "include/controller.h"
 
 /* Fuck everything about libxml2. */
 
