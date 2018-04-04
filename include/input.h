@@ -16,8 +16,6 @@
 #define hl_input_init(...) hl_evdev_init(__VA_ARGS__)
 #define hl_input_inject(id, type, code, value) hl_evdev_inject(id, type, code, value)
 #else
-#include "input-defines.h"
-
 #define hl_input_init(...)
 #define hl_input_inject(id, type, code, value)
 #endif
