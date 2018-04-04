@@ -14,6 +14,7 @@
 
 #include "include/lamprey.h"
 
+#include "include/controller.h"
 #include "include/display.h"
 #include "include/xdo.h"
 

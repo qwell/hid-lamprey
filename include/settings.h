@@ -7,8 +7,8 @@
  * (at your option) any later version.
  */
 
-#ifndef _SETTINGS_H
-#define _SETTINGS_H
+#ifndef LAMPREY_SETTINGS_H
+#define LAMPREY_SETTINGS_H
 
 #if defined(HAVE_XML2)
 #include "settings-xml2.h"
@@ -93,7 +93,7 @@
 	*/
 
 #define SHORTCUTS \
-	{\
+	{/*\
 		.name = "konami",\
 		.function = NULL,\
 		.devices = {DEVICE_XBOX, DEVICE_ROCKCANDY},\
@@ -176,6 +176,6 @@
 				&(struct button_trigger){EV_KEY, KEY_D},\
 			}},\
 		},\
-	},
+	*/},
 
 #endif

@@ -7,8 +7,8 @@
  * (at your option) any later version.
  */
 
-#ifndef _LAMPREY_H
-#define _LAMPREY_H
+#ifndef LAMPREY_H
+#define LAMPREY_H
 
 #include <inttypes.h>
 #include <stdint.h>

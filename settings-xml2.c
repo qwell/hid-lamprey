@@ -67,33 +67,38 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 					struct remapptr *remap = calloc(1, sizeof(struct remapptr));
 
 					if (!xmlStrcmp(cur->name, (const xmlChar *)"in")) {
-						struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
+						struct button_code *test2;
 
 						xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
 						xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
-int code2=0, type2=0;
-if (!xmlStrcmp(code, (const xmlChar *)"BTN_THUMBL")) {
-//code2 = BTN_THUMBL;
-//type2 = EV_KEY;
-}
 
-						button_trigger->code = code2;
-						button_trigger->type = type2;
-						remap->in = button_trigger;
+						if ((test2 = hl_controller_get_code_by_name((char *)type, (char *)code))) {
+							struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
+							button_trigger->code = test2->code;
+							button_trigger->type = test2->type;
+							remap->in = button_trigger;
 
-						printf("In: %s, %s\n", code, type);
-						printf("In: %d, %d\n", code2, type2);
+							printf("In: %d, %d\n", button_trigger->code, button_trigger->type);
+						}
 
 						xmlFree(code);
 						xmlFree(type);
 					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"out")) {
-						struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
+						struct button_code *test2;
 
 						xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
 						xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
 						xmlChar *trigger = xmlGetProp(cur, (const xmlChar *)"trigger");
 
-						printf("Out: %s, %s, %s\n", code, type, trigger);
+						if ((test2 = hl_controller_get_code_by_name((char *)type, (char *)code))) {
+							struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
+							button_trigger->code = test2->code;
+							button_trigger->type = test2->type;
+							button_trigger->triggervalue = atol((char *)trigger);
+							remap->out = button_trigger;
+
+							printf("Out: %d, %d, %d\n", button_trigger->code, button_trigger->type, button_trigger->triggervalue);
+						}
 
 						xmlFree(code);
 						xmlFree(type);

@@ -7,8 +7,8 @@
  * (at your option) any later version.
  */
 
-#ifndef _SHORTCUT_CB_H
-#define _SHORTCUT_CB_H
+#ifndef LAMPREY_SHORTCUT_CB_H
+#define LAMPREY_SHORTCUT_CB_H
 
 #define SHORTCUT_CB_DEFINE(name, ...) \
 struct cb_ ##name {\

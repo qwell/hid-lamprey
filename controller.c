@@ -16,6 +16,16 @@
 #include "include/controller.h"
 #include "include/display.h"
 
+
+struct codelookup codelookups[] = {
+	CODETABLE
+};
+int codelookup_count = sizeof(codelookups);
+struct codelookupnew codelookupnews[] = {
+	CODETABLENEW
+};
+int codelookupnew_count = sizeof(codelookupnews);
+
 struct controller_display controller_displays[] = {
 	CONTROLLER_DISPLAYS
 };
@@ -30,6 +40,23 @@ struct remapptr *remapsptr[] = {
 struct shortcut shortcuts[] = {
 	SHORTCUTS
 };
+
+struct button_code *hl_controller_get_code_by_name(char *type, char *name) {
+	for (int i = 0; i < codelookupnew_count / sizeof(*codelookupnews); i++) {
+		struct codelookupnew foo = codelookupnews[i];
+		if (foo.typestr && !strcmp(foo.typestr, type)) {
+			for (int j = 0; j < sizeof(foo.codes) / sizeof(*foo.codes); j++) {
+				if (foo.codes[j].codestr && !strcmp(foo.codes[j].codestr, name)) {
+					struct button_code *test = calloc(1, sizeof(*test));
+					test->type = foo.type;
+					test->code = foo.codes[j].code;
+					return test;
+				}
+			}
+		}
+	}
+	return NULL;
+}
 
 int controller_check_device(const char *device, const char *device_list[], int count) {
 	if (count == 0) {

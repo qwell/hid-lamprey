@@ -7,13 +7,11 @@
  * (at your option) any later version.
  */
 
-#ifndef _EVDEV_H
-#define _EVDEV_H
+#ifndef LAMPREY_EVDEV_H
+#define LAMPREY_EVDEV_H
 
 #include <libevdev/libevdev.h>
 #include <libevdev/libevdev-uinput.h>
-
-//#include "evdev-codetable.h"
 
 extern pthread_t t_evdev;
 extern pthread_mutex_t mutex_evdev;

@@ -7,6 +7,9 @@
  * (at your option) any later version.
  */
 
+#ifndef LAMPREY_DISPLAY_H
+#define LAMPREY_DISPLAY_H
+
 #include "controller.h"
 
 #if defined(HAVE_CLI) && defined(HAVE_GTK3)
@@ -34,4 +37,6 @@
 #else
 #define hl_display_init(...)
 #define hl_display_output_controller(controller)
+#endif
+
 #endif

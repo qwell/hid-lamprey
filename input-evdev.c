@@ -170,8 +170,7 @@ void hl_evdev_init() {
 	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_REL);
 
 	/* Emulate all keys in the code table. */
-printf("size %d, %d\n", sizeof(codelookups) / sizeof(*codelookups));
-	for (int i = 0; i < sizeof(codelookups) / sizeof(*codelookups); i++) {
+	for (int i = 0; i < codelookup_count / sizeof(*codelookups); i++) {
 		struct codelookup emu = codelookups[i];
 		void *codedata = NULL;
 		switch (emu.type) {
