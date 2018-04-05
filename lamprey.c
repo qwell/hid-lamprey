@@ -19,6 +19,9 @@
 #if defined(HAVE_XDO)
 #include "include/xdo.h"
 #endif
+#if defined(HAVE_SDL2)
+#include <SDL2/SDL.h>
+#endif
 
 int main (int argc, char **argv) {
 	setlocale(LC_ALL, "");
@@ -40,6 +43,15 @@ int main (int argc, char **argv) {
 #endif
 
 	hl_display_init(argc, argv);
+
+#if defined(HAVE_SDL2)
+	if (SDL_Init(SDL_INIT_VIDEO) != 0){
+		printf("SDL_Init Error: %s\n", SDL_GetError());
+		return 1;
+	}
+	printf("SDL2 initialized.\n");
+	SDL_Quit();
+#endif
 
 	// Do...stuff.
 

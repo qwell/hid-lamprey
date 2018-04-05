@@ -619,6 +619,9 @@ ac_includes_default="\
 #endif"
 
 ac_subst_vars='LTLIBOBJS
+HAVE_SDL2
+SDL2_LIBS
+SDL2_CFLAGS
 HAVE_XML2
 XML2_LIBS
 XML2_CFLAGS
@@ -712,6 +715,7 @@ with_evdev
 with_gtk3
 with_xdo
 with_xml2
+with_sdl2
 '
       ac_precious_vars='build_alias
 host_alias
@@ -730,7 +734,9 @@ EVDEV_LIBS
 GTK3_CFLAGS
 GTK3_LIBS
 XML2_CFLAGS
-XML2_LIBS'
+XML2_LIBS
+SDL2_CFLAGS
+SDL2_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1359,6 +1365,7 @@ Optional Packages:
   --with-gtk3             Enable GTK3 support (for output display)
   --with-xdo              Enable XDO support
   --with-xml2             Enable XML2 support
+  --with-sdl2             Enable SDL2 support
 
 Some influential environment variables:
   CC          C compiler command
@@ -1381,6 +1388,8 @@ Some influential environment variables:
   GTK3_LIBS   linker flags for GTK3, overriding pkg-config
   XML2_CFLAGS C compiler flags for XML2, overriding pkg-config
   XML2_LIBS   linker flags for XML2, overriding pkg-config
+  SDL2_CFLAGS C compiler flags for SDL2, overriding pkg-config
+  SDL2_LIBS   linker flags for SDL2, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -5131,6 +5140,204 @@ $as_echo "yes" >&6; }
 $as_echo "#define HAVE_XML2 1" >>confdefs.h
 
 	HAVE_XML2=1
+
+
+
+fi
+
+
+fi
+
+
+
+
+
+
+
+
+# Check whether --with-sdl2 was given.
+if test "${with_sdl2+set}" = set; then :
+  withval=$with_sdl2; with_SDL2=${withval}
+else
+  with_SDL2=
+fi
+
+
+
+	if test "x$with_SDL2" = "xyes"; then :
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SDL2" >&5
+$as_echo_n "checking for SDL2... " >&6; }
+
+if test -n "$SDL2_CFLAGS"; then
+    pkg_cv_SDL2_CFLAGS="$SDL2_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sdl2\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "sdl2") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_SDL2_CFLAGS=`$PKG_CONFIG --cflags "sdl2" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$SDL2_LIBS"; then
+    pkg_cv_SDL2_LIBS="$SDL2_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sdl2\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "sdl2") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_SDL2_LIBS=`$PKG_CONFIG --libs "sdl2" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        SDL2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "sdl2" 2>&1`
+        else
+	        SDL2_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "sdl2" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$SDL2_PKG_ERRORS" >&5
+
+
+			{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "--with-sdl2 was given, but cannot be used.
+See \`config.log' for more details" "$LINENO" 5; }
+
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+			{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "--with-sdl2 was given, but cannot be used.
+See \`config.log' for more details" "$LINENO" 5; }
+
+else
+	SDL2_CFLAGS=$pkg_cv_SDL2_CFLAGS
+	SDL2_LIBS=$pkg_cv_SDL2_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+
+
+$as_echo "#define HAVE_SDL2 1" >>confdefs.h
+
+	HAVE_SDL2=1
+
+
+
+fi
+
+elif test "x$with_SDL2" = "xno"; then :
+
+
+else
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SDL2" >&5
+$as_echo_n "checking for SDL2... " >&6; }
+
+if test -n "$SDL2_CFLAGS"; then
+    pkg_cv_SDL2_CFLAGS="$SDL2_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sdl2\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "sdl2") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_SDL2_CFLAGS=`$PKG_CONFIG --cflags "sdl2" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$SDL2_LIBS"; then
+    pkg_cv_SDL2_LIBS="$SDL2_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sdl2\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "sdl2") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_SDL2_LIBS=`$PKG_CONFIG --libs "sdl2" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        SDL2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "sdl2" 2>&1`
+        else
+	        SDL2_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "sdl2" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$SDL2_PKG_ERRORS" >&5
+
+
+
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+
+else
+	SDL2_CFLAGS=$pkg_cv_SDL2_CFLAGS
+	SDL2_LIBS=$pkg_cv_SDL2_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+
+
+$as_echo "#define HAVE_SDL2 1" >>confdefs.h
+
+	HAVE_SDL2=1
 
 
 

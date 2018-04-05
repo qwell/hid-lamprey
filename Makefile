@@ -33,6 +33,11 @@ SO_LIBS+=$(XML2_LIBS)
 else
 FILTER_C+=settings-xml2.c
 endif
+ifeq ($(HAVE_SDL2),1)
+CFLAGS+=$(SDL2_CFLAGS)
+SO_LIBS+=$(SDL2_LIBS)
+else
+endif
 ifeq ($(HAVE_CLI),1)
 else
 FILTER_C+=display-cli.c
