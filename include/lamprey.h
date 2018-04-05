@@ -12,7 +12,6 @@
 
 #include <inttypes.h>
 #include <stdint.h>
-#include <sys/poll.h>
 #include <sys/types.h>
 
 #ifdef HAVE_STDBOOL_H

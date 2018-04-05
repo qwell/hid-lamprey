@@ -14,6 +14,8 @@
 #include "settings-xml2.h"
 
 #define hl_settings_load(...) hl_settings_xml_load(__VA_ARGS__)
+#else
+#define hl_settings_load(...)
 #endif
 
 // #define AXIS_DEADZONE .2

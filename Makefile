@@ -4,6 +4,9 @@ MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
 APPS:=lamprey
 SOS:=liblamprey.so
+ifeq ($(OS),mingw32)
+SOS:=$(SOS:.so=.dll)
+endif
 
 CFLAGS+=-Wall -fPIC
 SO_LIBS+=-lm

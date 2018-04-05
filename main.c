@@ -16,7 +16,9 @@
 
 #include "include/controller.h"
 #include "include/display.h"
+#if defined(HAVE_XDO)
 #include "include/xdo.h"
+#endif
 
 int main (int argc, char **argv) {
 	setlocale(LC_ALL, "");

@@ -10,6 +10,8 @@
 #ifndef LAMPREY_EVDEV_H
 #define LAMPREY_EVDEV_H
 
+#include <sys/poll.h>
+
 #include <libevdev/libevdev.h>
 #include <libevdev/libevdev-uinput.h>
 
