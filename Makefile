@@ -68,7 +68,7 @@ all: $(APPS:%=%$(APPSUFFIX))
 lamprey$(APPSUFFIX): lamprey.o
 
 $(APPS:%=%$(APPSUFFIX)):
-	$(CC) -o $@ $< $(CFLAGS) $(LIBS) $(SO_LIBS)
+	@$(CC) -o $@ $< $(CFLAGS) $(LIBS) $(SO_LIBS)
 	@printf "[$(COLOR_RED)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$<$(COLOR_DEFAULT)\n" "$@"
 
 $(APPS:%=%$(APPSUFFIX)): $(SOS)
