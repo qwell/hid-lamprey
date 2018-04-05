@@ -37,6 +37,7 @@ ifeq ($(HAVE_SDL2),1)
 CFLAGS+=$(SDL2_CFLAGS)
 SO_LIBS+=$(SDL2_LIBS)
 else
+FILTER_C+=input-sdl2.c
 endif
 ifeq ($(HAVE_CLI),1)
 else
