@@ -24,7 +24,11 @@
 		</remap>
 		<remap>
 			<in type="EV_KEY" code="BTN_MODE"/>
-			<out type="EV_ABS" code="KEY_Y"/>
+			<out type="EV_KEY" code="KEY_Y"/>
+		</remap>
+		<remap>
+			<in type="EV_KEY" code="KEY_A"/>
+			<out type="EV_KEY" code="KEY_A"/>
 		</remap>
 	</remaps>
 </settings>

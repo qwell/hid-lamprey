@@ -30,12 +30,8 @@ struct controller_display controller_displays[] = {
 	CONTROLLER_DISPLAYS
 };
 
-struct remap remaps[] = {
-	REMAPS
-};
-
-struct remapptr *remapsptr[] = {
-};
+struct remap **remaps;
+int remap_count = 0;
 
 struct shortcut shortcuts[] = {
 	SHORTCUTS
@@ -182,32 +178,8 @@ void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16
 }
 
 void controller_remaps(int id, uint8_t type, uint16_t code, int16_t value) {
-	for (int i = 0; i < sizeof(remaps) / sizeof(*remaps); i++) {
-		struct remap emu = remaps[i];
-		if (type == emu.in.type && code == emu.in.code) {
-			int emuvalue = 0;
-			if (emu.in.triggervalue < 0) {
-				emuvalue = (value <= emu.in.triggervalue);
-			} else if (emu.in.triggervalue > 0) {
-				emuvalue = (value >= emu.in.triggervalue);
-			} else {
-				emuvalue = value ? 1 : 0;
-			}
-			if (emuvalue && emu.out.triggervalue) {
-				emuvalue = emu.out.triggervalue;
-			}
-
-			hl_input_inject(id, emu.out.type, emu.out.code, emuvalue);
-			debug_print("Code %d (%d) converted to %d (%d)\n",
-				emu.in.code, value,
-				emu.out.code, emuvalue);
-		}
-	}
-}
-
-void controller_remapsptr(int id, uint8_t type, uint16_t code, int16_t value) {
-	for (int i = 0; i < sizeof(remapsptr) / sizeof(*remapsptr); i++) {
-		struct remapptr *emu = remapsptr[i];
+	for (int i = 0; i < remap_count; i++) {
+		struct remap *emu = remaps[i];
 		if (type == emu->in->type && code == emu->in->code) {
 			int emuvalue = 0;
 			if (emu->in->triggervalue < 0) {
@@ -264,7 +236,6 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 
 	controller_shortcuts(device, type, code, value);
 
-//	controller_remaps(id, type, code, value);
-	controller_remapsptr(id, type, code, value);
+	controller_remaps(id, type, code, value);
 	return;
 }

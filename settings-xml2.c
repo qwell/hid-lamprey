@@ -58,27 +58,29 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 	} else {
 		xmlNodeSet *nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {
-			xmlNode *node = nodeset->nodeTab[i];
+			struct remap *remap = calloc(1, sizeof(struct remap));
 
-			printf("Remap %d\n", i);
+			xmlNode *node = nodeset->nodeTab[i];
 
 			for (xmlNode *cur = node->children; cur; cur = cur->next) {
 				if (cur->type == XML_ELEMENT_NODE) {
-					struct remapptr *remap = calloc(1, sizeof(struct remapptr));
-
 					if (!xmlStrcmp(cur->name, (const xmlChar *)"in")) {
 						struct button_code *test2;
 
 						xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
 						xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
+						xmlChar *trigger = xmlGetProp(cur, (const xmlChar *)"trigger");
 
 						if ((test2 = hl_controller_get_code_by_name((char *)type, (char *)code))) {
 							struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
 							button_trigger->code = test2->code;
 							button_trigger->type = test2->type;
+							if (xmlStrlen(trigger) > 0) {
+								button_trigger->triggervalue = atol((char *)trigger);
+							} else {
+								button_trigger->triggervalue = 0;
+							}
 							remap->in = button_trigger;
-
-							printf("In: %d, %d\n", button_trigger->code, button_trigger->type);
 						}
 
 						xmlFree(code);
@@ -94,10 +96,12 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 							struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
 							button_trigger->code = test2->code;
 							button_trigger->type = test2->type;
-							button_trigger->triggervalue = atol((char *)trigger);
+							if (xmlStrlen(trigger) > 0) {
+								button_trigger->triggervalue = atol((char *)trigger);
+							} else {
+								button_trigger->triggervalue = 0;
+							}
 							remap->out = button_trigger;
-
-							printf("Out: %d, %d, %d\n", button_trigger->code, button_trigger->type, button_trigger->triggervalue);
 						}
 
 						xmlFree(code);
@@ -105,6 +109,22 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 						xmlFree(trigger);
 					}
 				}
+			}
+			if (remap->in && remap->out) {
+				remaps = realloc(remaps, (remap_count + 1) * sizeof(*remaps));
+				remaps[remap_count] = remap;
+				remap_count++;
+
+				debug_print("Added remap: in %d / %d (%d), out %d / %d (%d)\n",
+					remap->in->type, remap->in->code, remap->in->triggervalue,
+					remap->out->type, remap->out->code, remap->out->triggervalue);
+			} else {
+				if (remap->in) {
+					free(remap->in);
+				} else if (remap->out) {
+					free(remap->out);
+				}
+				free(remap);
 			}
 		}
 		xmlXPathFreeObject(result);

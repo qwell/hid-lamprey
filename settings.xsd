@@ -35,6 +35,7 @@
                           <xs:extension base="xs:string">
                             <xs:attribute type="nonEmptyString" name="type" use="required"/>
                             <xs:attribute type="nonEmptyString" name="code" use="required"/>
+                            <xs:attribute type="xs:integer" name="trigger"/>
                           </xs:extension>
                         </xs:simpleContent>
                       </xs:complexType>

@@ -28,11 +28,6 @@ struct button_trigger {
 };
 
 struct remap {
-	struct button_trigger in;
-	struct button_trigger out;
-};
-
-struct remapptr {
 	struct button_trigger *in;
 	struct button_trigger *out;
 };
@@ -85,5 +80,7 @@ extern struct codelookup codelookups[];
 extern int codelookup_count;
 extern struct codelookupnew codelookupnews[];
 extern int codelookupnew_count;
+extern struct remap **remaps;
+extern int remap_count;
 
 #endif
