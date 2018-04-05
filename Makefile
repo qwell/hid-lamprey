@@ -9,9 +9,11 @@ SOS:=liblamprey.so
 ifeq ($(OS),mingw32)
 APPSUFFIX:=.exe
 SOS:=$(SOS:.so=.dll)
+else
+CFLAGS+=-fPIC
 endif
 
-CFLAGS+=-Wall -fPIC
+CFLAGS+=-Wall
 SO_LIBS+=-lm
 LIBS+=-L. -llamprey -Wl,-rpath=.
 FILTER_C:=
