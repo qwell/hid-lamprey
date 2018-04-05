@@ -3,15 +3,18 @@
 MAKE_DEPS=-MD -MT $@ -MF .$(subst /,_,$@).d -MP
 
 APPS:=lamprey
+APPSUFFIX:=
 SOS:=liblamprey.so
+
 ifeq ($(OS),mingw32)
+APPSUFFIX:=.exe
 SOS:=$(SOS:.so=.dll)
 endif
 
 CFLAGS+=-Wall -fPIC
 SO_LIBS+=-lm
 LIBS+=-L. -llamprey -Wl,-rpath=.
-FILTER_C:=main.c
+FILTER_C:=
 
 ifeq ($(DEBUG),1)
 CFLAGS+=-DDEBUG
@@ -60,17 +63,19 @@ REBUILD:=rebuild
 .PHONY: $(REBUILD)
 endif
 
-all: $(APPS)
+all: $(APPS:%=%$(APPSUFFIX))
 
-$(APPS): main.o
-	@$(CC) -o $@ $< $(CFLAGS) $(LIBS) $(SO_LIBS)
+lamprey$(APPSUFFIX): lamprey.o
+
+$(APPS:%=%$(APPSUFFIX)):
+	$(CC) -o $@ $< $(CFLAGS) $(LIBS) $(SO_LIBS)
 	@printf "[$(COLOR_RED)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$<$(COLOR_DEFAULT)\n" "$@"
 
-$(APPS): $(SOS)
+$(APPS:%=%$(APPSUFFIX)): $(SOS)
 
 -include $(patsubst %.o,.%.o.d,$(OBJS))
 
-$(SOS): $(OBJS)
+$(SOS): $(filter-out $(APPS:%$(APPSUFFIX)=%.o),$(OBJS))
 	@$(CC) -o $@ $^ $(CFLAGS) $(SO_LIBS) -shared
 	@printf "[$(COLOR_RED)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$^$(COLOR_DEFAULT)\n" "$@"
 
@@ -83,9 +88,13 @@ Makefile.deps: $(REBUILD) config.out
 
 clean:
 	@rm -rf $(APPS)
+	@rm -rf $(APPS:%=%$(APPSUFFIX))
 	@rm -rf *.so
+	@rm -rf *.dll
 	@rm -rf *.o
 	@rm -rf .*.o.d
 	@rm -rf config.out
 	@rm -rf include/config.h
 	@rm -rf Makefile.deps
+	@rm -rf config.log
+	@rm -rf config.status
