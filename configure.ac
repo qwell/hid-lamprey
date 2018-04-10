@@ -1,7 +1,7 @@
 AC_PREREQ([2.69])
 AC_CONFIG_MACRO_DIR([autoconf])
 
-AC_INIT([lamprey], [0.0.1])
+AC_INIT([lamprey],[0.0.1])
 
 AC_CONFIG_FILES([config.out])
 AC_CONFIG_HEADERS([include/config.h])
@@ -27,4 +27,4 @@ LOCAL_WITHOUT_LIB([XDO], [xdo], [], [xdo_new])
 LOCAL_WITH_PKG([XML2], [xml2], [], [libxml-2.0])
 LOCAL_WITH_PKG([SDL2], [sdl2], [], [sdl2])
 
-AC_OUTPUT()
+AC_OUTPUT
