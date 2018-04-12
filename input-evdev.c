@@ -238,8 +238,10 @@ void *hl_evdev_poll() {
 				case EV_KEY:
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
 						__attribute__((__unused__)) struct key_data key = hl_evdev->maps.key_map[ev.code - LOW_KEY];
+						pthread_mutex_unlock(&mutex_evdev);
 						debug_print("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
 						hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, ev.value);
+						pthread_mutex_lock(&mutex_evdev);
 					}
 					break;
 				case EV_ABS:
@@ -266,8 +268,10 @@ void *hl_evdev_poll() {
 							} else if (ev.value <= relzero - deadsize) {
 								value = (relzero - hat.min) * (ev.value - hat.min) / ((relzero - deadsize) - hat.min) + hat.min;
 							}
+							pthread_mutex_unlock(&mutex_evdev);
 							debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
 							hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
+							pthread_mutex_lock(&mutex_evdev);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -294,8 +298,10 @@ void *hl_evdev_poll() {
 							} else if (ev.value <= relzero - deadsize) {
 								value = (relzero - axis.min) * (ev.value - axis.min) / ((relzero - deadsize) - axis.min) + axis.min;
 							}
+							pthread_mutex_unlock(&mutex_evdev);
 							debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
 							hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
+							pthread_mutex_lock(&mutex_evdev);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -348,6 +354,7 @@ void hl_evdev_destroy() {
 }
 
 void hl_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
+	pthread_mutex_lock(&mutex_evdev);
 	if (hl_evdev->uinput.uidev != NULL) {
 		libevdev_uinput_write_event(hl_evdev->uinput.uidev, type, code, value);
 		libevdev_uinput_write_event(hl_evdev->uinput.uidev, EV_SYN, SYN_REPORT, 0);
@@ -363,4 +370,5 @@ void hl_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
 			}
 		}
 	}
+	pthread_mutex_unlock(&mutex_evdev);
 }
