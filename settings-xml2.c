@@ -64,44 +64,27 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 
 			for (xmlNode *cur = node->children; cur; cur = cur->next) {
 				if (cur->type == XML_ELEMENT_NODE) {
-					if (!xmlStrcmp(cur->name, (const xmlChar *)"in")) {
-						struct button_code *test2;
+					if (!xmlStrcmp(cur->name, (const xmlChar *)"in") || !xmlStrcmp(cur->name, (const xmlChar *)"out")) {
+						struct button_code *button_code;
 
 						xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
 						xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
 						xmlChar *trigger = xmlGetProp(cur, (const xmlChar *)"trigger");
 
-						if ((test2 = hl_controller_get_code_by_name((char *)type, (char *)code))) {
+						if ((button_code = hl_controller_get_code_by_name((char *)type, (char *)code))) {
 							struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
-							button_trigger->code = test2->code;
-							button_trigger->type = test2->type;
+							button_trigger->code = button_code->code;
+							button_trigger->type = button_code->type;
 							if (xmlStrlen(trigger) > 0) {
 								button_trigger->triggervalue = atol((char *)trigger);
 							} else {
 								button_trigger->triggervalue = 0;
 							}
-							remap->in = button_trigger;
-						}
-
-						xmlFree(code);
-						xmlFree(type);
-					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"out")) {
-						struct button_code *test2;
-
-						xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
-						xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
-						xmlChar *trigger = xmlGetProp(cur, (const xmlChar *)"trigger");
-
-						if ((test2 = hl_controller_get_code_by_name((char *)type, (char *)code))) {
-							struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
-							button_trigger->code = test2->code;
-							button_trigger->type = test2->type;
-							if (xmlStrlen(trigger) > 0) {
-								button_trigger->triggervalue = atol((char *)trigger);
-							} else {
-								button_trigger->triggervalue = 0;
+							if (!xmlStrcmp(cur->name, (const xmlChar *)"in")) {
+								remap->in = button_trigger;
+							} else if (!xmlStrcmp(cur->name, (const xmlChar *)"out")) {
+								remap->out = button_trigger;
 							}
-							remap->out = button_trigger;
 						}
 
 						xmlFree(code);
