@@ -63,13 +63,6 @@ struct shortcut {
 
 struct codelookup {
 	const char *typestr;
-	const char *codestr;
-	const uint8_t type;
-	const uint16_t code;
-};
-
-struct codelookupnew {
-	const char *typestr;
 	const uint8_t type;
 	const struct codes {
 		const char *codestr;
@@ -78,8 +71,6 @@ struct codelookupnew {
 };
 extern struct codelookup codelookups[];
 extern int codelookup_count;
-extern struct codelookupnew codelookupnews[];
-extern int codelookupnew_count;
 extern struct remap **remaps;
 extern int remap_count;
 
