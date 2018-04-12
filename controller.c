@@ -32,6 +32,9 @@ int remap_count = 0;
 struct shortcut **shortcuts;
 int shortcut_count = 0;
 
+struct device **devices;
+int device_count = 0;
+
 struct button_code *hl_controller_get_code_by_name(char *type, char *name) {
 	for (int i = 0; i < codelookup_count / sizeof(*codelookups); i++) {
 		struct codelookup code = codelookups[i];
@@ -70,13 +73,13 @@ int controller_check_device(const char *device, const char *device_list[], int c
 void controller_shortcut_simultaneous(struct shortcut *shortcut) {
 	int triggered = 1; /* Assume success. */
 
-	for (int i = 0; i < sizeof(shortcut->buttons) / sizeof(*shortcut->buttons); i++) {
+	for (int i = 0; i < shortcut->button_count; i++) {
 		struct button *button = shortcut->buttons[i];
 		if (!button) {
 			continue;
 		}
 
-		for (int j = 0; j < sizeof(button->triggers) / sizeof(*button->triggers); j++) {
+		for (int j = 0; j < button->trigger_count; j++) {
 			const struct button_trigger *trigger = button->triggers[j];
 			if (!trigger) {
 				continue;
@@ -136,13 +139,13 @@ void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16
 			continue;
 		}
 
-		for (int i = 0; i < sizeof(shortcut->buttons) / sizeof(*shortcut->buttons); i++) {
+		for (int i = 0; i < shortcut->button_count; i++) {
 			struct button *button = shortcut->buttons[i];
 			if (!button) {
 				continue;
 			}
 
-			for (int j = 0; j < sizeof(button->triggers) / sizeof(*button->triggers); j++) {
+			for (int j = 0; j < button->trigger_count; j++) {
 				const struct button_trigger *trigger = button->triggers[j];
 				if (!trigger) {
 					continue;

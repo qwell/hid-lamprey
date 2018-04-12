@@ -27,7 +27,6 @@ char *xml_debug_node(xmlDoc *doc, xmlNode *node) {
 	return strdup((char *)buffer->content);
 }
 
-//TODO Save devices somewhere.
 void settings_xml_load_devices(xmlXPathContext *context) {
 	xmlChar *xpath = (xmlChar *)"/settings/devices/device";
 	xmlXPathObject *result;
@@ -38,13 +37,21 @@ void settings_xml_load_devices(xmlXPathContext *context) {
 		xmlNodeSet *nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {
 			xmlNode *node = nodeset->nodeTab[i];
-			xmlChar *name = xmlGetProp(node, (const xmlChar *)"name");
-			xmlChar *device = xmlNodeGetContent(node->children);
 
-			printf("Device %d: %s = %s\n", i, name, device);
+			struct device *device = calloc(1, sizeof(struct device));
+			xmlChar *name = xmlGetProp(node, (const xmlChar *)"name");
+			xmlChar *uniqueid = xmlNodeGetContent(node->children);
+
+			device->name = strdup((char *)name);
+			device->uniqueid = strdup((char *)uniqueid);
+
+			devices = realloc(devices, (device_count + 1) * sizeof(*devices));
+			devices[device_count] = device;
+			device_count++;
+			debug_print("Added device: %s (%s)\n", name, uniqueid);
 
 			xmlFree(name);
-			xmlFree(device);
+			xmlFree(uniqueid);
 		}
 		xmlXPathFreeObject(result);
 	}
@@ -80,15 +87,17 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 					if (!xmlStrcmp(cur->name, (const xmlChar *)"device")) {
 						xmlChar *name = xmlGetProp(cur, (const xmlChar *)"name");
 
-						shortcut->devices = realloc(shortcut->devices, (shortcut->device_count + 1) * sizeof(*shortcut->devices));
-						shortcut->devices[shortcut->device_count] = strdup((char *)name);
-						shortcut->device_count++;
+						for (int i = 0; i < device_count; i++) {
+							if (!xmlStrcmp(name, (const xmlChar *)devices[i]->name)) {
+								shortcut->devices = realloc(shortcut->devices, (shortcut->device_count + 1) * sizeof(*shortcut->devices));
+								shortcut->devices[shortcut->device_count] = strdup(devices[i]->uniqueid);
+								shortcut->device_count++;
+							}
+						}
 
-//TODO printf("Device with name '%s' does not exist.\n", name);
 						xmlFree(name);
-					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"buttons")) {
-						/* <button/> */
-						struct button *buttons = calloc(1, sizeof(struct button));
+					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"button")) {
+						struct button *button = calloc(1, sizeof(struct button));
 
 						for (xmlNode *tchild = cur->children; tchild; tchild = tchild->next) {
 							if (tchild->type == XML_ELEMENT_NODE) {
@@ -109,9 +118,9 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 										button_trigger->triggervalue = 0;
 									}
 
-									buttons->triggers = realloc(buttons->triggers, (buttons->trigger_count + 1) * sizeof(*buttons->triggers));
-									buttons->triggers[buttons->trigger_count] = button_trigger;
-									buttons->trigger_count++;
+									button->triggers = realloc(button->triggers, (button->trigger_count + 1) * sizeof(*button->triggers));
+									button->triggers[button->trigger_count] = button_trigger;
+									button->trigger_count++;
 								}
 
 								xmlFree(code);
@@ -121,7 +130,7 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 						}
 
 						shortcut->buttons = realloc(shortcut->buttons, (shortcut->button_count + 1) * sizeof(*shortcut->buttons));
-						shortcut->buttons[shortcut->button_count] = buttons;
+						shortcut->buttons[shortcut->button_count] = button;
 						shortcut->button_count++;
 					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"function")) {
 /*

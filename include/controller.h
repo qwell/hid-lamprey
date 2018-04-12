@@ -63,6 +63,11 @@ struct shortcut {
 	int button_count;
 };
 
+struct device {
+	char *name;
+	char *uniqueid;
+};
+
 struct codelookup {
 	const char *typestr;
 	const uint8_t type;
@@ -77,5 +82,7 @@ extern struct remap **remaps;
 extern int remap_count;
 extern struct shortcut **shortcuts;
 extern int shortcut_count;
+extern struct device **devices;
+extern int device_count;
 
 #endif

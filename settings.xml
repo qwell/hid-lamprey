@@ -15,7 +15,11 @@
 			</function>
 			<button>
 				<trigger type="EV_KEY" code="KEY_A"/>
+			</button>
+			<button>
 				<trigger type="EV_KEY" code="KEY_S"/>
+			</button>
+			<button>
 				<trigger type="EV_KEY" code="KEY_D"/>
 			</button>
 		</shortcut>
