@@ -6,19 +6,21 @@
 		<device name="keyboard2">3/258a-1:SINO WEALTH USB KEYBOARD</device>
 	</devices>
 	<shortcuts>
-		<shortcut name="simultest" function="test" type="simultaneous">
+		<shortcut name="simultest" type="simultaneous">
 			<devices>
 				<device name="keyboard"/>
 				<device name="keyboard2"/>
 			</devices>
-			<args>
+			<function name="test">
 				<arg name="foo">Some args</arg>
 				<arg name="bar">99</arg>
-			</args>
+			</function>
 			<buttons>
-				<button type="EV_KEY" code="KEY_A"/>
-				<button type="EV_KEY" code="KEY_S"/>
-				<button type="EV_KEY" code="KEY_D"/>
+				<button>
+					<trigger type="EV_KEY" code="KEY_A"/>
+					<trigger type="EV_KEY" code="KEY_S"/>
+					<trigger type="EV_KEY" code="KEY_D"/>
+				</button>
 			</buttons>
 		</shortcut>
 	</shortcuts>

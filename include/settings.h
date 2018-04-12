@@ -81,19 +81,6 @@
 		},\
 	},
 
-#define REMAPS \
-	{{EV_KEY, BTN_THUMBL}, {EV_KEY, KEY_1, 1}},\
-	{{EV_KEY, BTN_THUMBR}, {EV_KEY, KEY_3, 1}},\
-	{{EV_KEY, BTN_SELECT}, {EV_ABS, ABS_X, -1}},\
-	{{EV_KEY, BTN_START}, {EV_ABS, ABS_X, 1}},\
-	{{EV_KEY, BTN_MODE}, {EV_KEY, KEY_Y}},\
-	/*\
-	{{EV_ABS, ABS_X, -16834}, {EV_KEY, KEY_A}},\
-	{{EV_ABS, ABS_X, 16834}, {EV_KEY, KEY_D}},\
-	{{EV_ABS, ABS_Y, -16834}, {EV_KEY, KEY_W}},\
-	{{EV_ABS, ABS_Y, 16834}, {EV_KEY, KEY_S}},\
-	*/
-
 #define SHORTCUTS \
 	{/*\
 		.name = "konami",\
