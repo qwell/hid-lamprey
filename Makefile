@@ -9,6 +9,9 @@ SOS:=liblamprey.so
 ifeq ($(OS),mingw32)
 APPSUFFIX:=.exe
 SOS:=$(SOS:.so=.dll)
+else ifeq ($(OS),cygwin)
+APPSUFFIX:=.exe
+SOS:=$(SOS:.so=.dll)
 else
 CFLAGS+=-fPIC
 endif
