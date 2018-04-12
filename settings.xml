@@ -5,6 +5,23 @@
 		<device name="keyboard">11/1-1:AT Translated Set 2 keyboard</device>
 		<device name="keyboard2">3/258a-1:SINO WEALTH USB KEYBOARD</device>
 	</devices>
+	<shortcuts>
+		<shortcut name="simultest" function="test" type="simultaneous">
+			<devices>
+				<device name="keyboard"/>
+				<device name="keyboard2"/>
+			</devices>
+			<args>
+				<arg name="foo">Some args</arg>
+				<arg name="bar">99</arg>
+			</args>
+			<buttons>
+				<button type="EV_KEY" code="KEY_A"/>
+				<button type="EV_KEY" code="KEY_S"/>
+				<button type="EV_KEY" code="KEY_D"/>
+			</buttons>
+		</shortcut>
+	</shortcuts>
 	<remaps>
 		<remap>
 			<in type="EV_KEY" code="BTN_THUMBL"/>

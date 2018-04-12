@@ -28,7 +28,7 @@ char *xml_debug_node(xmlDoc *doc, xmlNode *node) {
 }
 
 void settings_xml_load_devices(xmlXPathContext *context) {
-	xmlChar *xpath = (xmlChar *)"//devices/device";
+	xmlChar *xpath = (xmlChar *)"/settings/devices/device";
 	xmlXPathObject *result;
 
 	if (!(result = xmlXPathEvalExpression(xpath, context))) {
@@ -50,7 +50,7 @@ void settings_xml_load_devices(xmlXPathContext *context) {
 }
 
 void settings_xml_load_remaps(xmlXPathContext *context) {
-	xmlChar *xpath = (xmlChar *)"//remaps/remap";
+	xmlChar *xpath = (xmlChar *)"/settings/remaps/remap";
 	xmlXPathObject *result;
 
 	if (!(result = xmlXPathEvalExpression(xpath, context))) {
