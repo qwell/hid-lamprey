@@ -132,7 +132,7 @@ void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16
 	for (int i = 0; i < shortcut_count; i++) {
 		struct shortcut *shortcut = shortcuts[i];
 
-		if (!controller_check_device(device, shortcut->devices, sizeof(shortcut->devices) / sizeof(*shortcut->devices))) {
+		if (!controller_check_device(device, shortcut->devices, shortcut->device_count)) {
 			continue;
 		}
 

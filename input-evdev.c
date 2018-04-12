@@ -165,9 +165,6 @@ void hl_evdev_init() {
 	/* Create emulated uinput device. */
 	hl_evdev->uinput.dev = libevdev_new();
 	libevdev_set_name(hl_evdev->uinput.dev, "Lamprey Emulated Device");
-	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_KEY);
-	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_ABS);
-	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_REL);
 
 	/* Emulate all keys in the code table. */
 	for (int i = 0; i < codelookup_count / sizeof(*codelookups); i++) {
@@ -184,7 +181,11 @@ void hl_evdev_init() {
 			((struct input_absinfo *)codedata)->resolution = 0;
 			break;
 		}
-		libevdev_enable_event_code(hl_evdev->uinput.dev, emu.type, emu.code, codedata);
+
+		libevdev_enable_event_type(hl_evdev->uinput.dev, emu.type);
+		for (int j = 0; j < sizeof(emu.codes) / sizeof(*emu.codes); j++) {
+			libevdev_enable_event_code(hl_evdev->uinput.dev, emu.type, emu.codes[j].code, codedata);
+		}
 	}
 
 	if (libevdev_uinput_create_from_device(hl_evdev->uinput.dev, LIBEVDEV_UINPUT_OPEN_MANAGED, &hl_evdev->uinput.uidev)) {
