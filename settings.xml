@@ -7,21 +7,17 @@
 	</devices>
 	<shortcuts>
 		<shortcut name="simultest" type="simultaneous">
-			<devices>
-				<device name="keyboard"/>
-				<device name="keyboard2"/>
-			</devices>
+			<device name="keyboard"/>
+			<device name="keyboard2"/>
 			<function name="test">
 				<arg name="foo">Some args</arg>
 				<arg name="bar">99</arg>
 			</function>
-			<buttons>
-				<button>
-					<trigger type="EV_KEY" code="KEY_A"/>
-					<trigger type="EV_KEY" code="KEY_S"/>
-					<trigger type="EV_KEY" code="KEY_D"/>
-				</button>
-			</buttons>
+			<button>
+				<trigger type="EV_KEY" code="KEY_A"/>
+				<trigger type="EV_KEY" code="KEY_S"/>
+				<trigger type="EV_KEY" code="KEY_D"/>
+			</button>
 		</shortcut>
 	</shortcuts>
 	<remaps>

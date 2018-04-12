@@ -74,70 +74,62 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 
 			xmlFree(name);
 			xmlFree(type);
+
+			for (xmlNode *cur = node->children; cur; cur = cur->next) {
+				if (cur->type == XML_ELEMENT_NODE) {
+					if (!xmlStrcmp(cur->name, (const xmlChar *)"device")) {
+						xmlChar *name = xmlGetProp(cur, (const xmlChar *)"name");
+
+						shortcut->devices = realloc(shortcut->devices, (shortcut->device_count + 1) * sizeof(*shortcut->devices));
+						shortcut->devices[shortcut->device_count] = strdup((char *)name);
+						shortcut->device_count++;
+
+//TODO printf("Device with name '%s' does not exist.\n", name);
+						xmlFree(name);
+					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"buttons")) {
+						/* <button/> */
+						struct button *buttons = calloc(1, sizeof(struct button));
+
+						for (xmlNode *tchild = cur->children; tchild; tchild = tchild->next) {
+							if (tchild->type == XML_ELEMENT_NODE) {
+								/* <trigger/> */
+								struct button_code *button_code;
+
+								xmlChar *code = xmlGetProp(tchild, (const xmlChar *)"code");
+								xmlChar *type = xmlGetProp(tchild, (const xmlChar *)"type");
+								xmlChar *trigger = xmlGetProp(tchild, (const xmlChar *)"trigger");
+
+								if ((button_code = hl_controller_get_code_by_name((char *)type, (char *)code))) {
+									struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
+									button_trigger->code = button_code->code;
+									button_trigger->type = button_code->type;
+									if (xmlStrlen(trigger) > 0) {
+										button_trigger->triggervalue = atol((char *)trigger);
+									} else {
+										button_trigger->triggervalue = 0;
+									}
+
+									buttons->triggers = realloc(buttons->triggers, (buttons->trigger_count + 1) * sizeof(*buttons->triggers));
+									buttons->triggers[buttons->trigger_count] = button_trigger;
+									buttons->trigger_count++;
+								}
+
+								xmlFree(code);
+								xmlFree(type);
+								xmlFree(trigger);
+							}
+						}
+
+						shortcut->buttons = realloc(shortcut->buttons, (shortcut->button_count + 1) * sizeof(*shortcut->buttons));
+						shortcut->buttons[shortcut->button_count] = buttons;
+						shortcut->button_count++;
+					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"function")) {
 /*
 struct shortcut {
 	void (*function) ();
 	void *args;
 };
 */
-			for (xmlNode *cur = node->children; cur; cur = cur->next) {
-				if (cur->type == XML_ELEMENT_NODE) {
-					if (!xmlStrcmp(cur->name, (const xmlChar *)"devices")) {
-						for (xmlNode *child = cur->children; child; child = child->next) {
-							if (child->type == XML_ELEMENT_NODE) {
-								xmlChar *name = xmlGetProp(child, (const xmlChar *)"name");
-
-								shortcut->devices = realloc(shortcut->devices, (shortcut->device_count + 1) * sizeof(*shortcut->devices));
-								shortcut->devices[shortcut->device_count] = strdup((char *)name);
-								shortcut->device_count++;
-
-//TODO printf("Device with name '%s' does not exist.\n", name);
-								xmlFree(name);
-							}
-						}
-					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"buttons")) {
-						for (xmlNode *bchild = cur->children; bchild; bchild = bchild->next) {
-							if (bchild->type == XML_ELEMENT_NODE) {
-								/* <button/> */
-								struct button *buttons = calloc(1, sizeof(struct button));
-
-								for (xmlNode *tchild = bchild->children; tchild; tchild = tchild->next) {
-									if (tchild->type == XML_ELEMENT_NODE) {
-										/* <trigger/> */
-										struct button_code *button_code;
-
-										xmlChar *code = xmlGetProp(tchild, (const xmlChar *)"code");
-										xmlChar *type = xmlGetProp(tchild, (const xmlChar *)"type");
-										xmlChar *trigger = xmlGetProp(tchild, (const xmlChar *)"trigger");
-
-										if ((button_code = hl_controller_get_code_by_name((char *)type, (char *)code))) {
-											struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
-											button_trigger->code = button_code->code;
-											button_trigger->type = button_code->type;
-											if (xmlStrlen(trigger) > 0) {
-												button_trigger->triggervalue = atol((char *)trigger);
-											} else {
-												button_trigger->triggervalue = 0;
-											}
-
-											buttons->triggers = realloc(buttons->triggers, (buttons->trigger_count + 1) * sizeof(*buttons->triggers));
-											buttons->triggers[buttons->trigger_count] = button_trigger;
-											buttons->trigger_count++;
-										}
-
-										xmlFree(code);
-										xmlFree(type);
-										xmlFree(trigger);
-									}
-
-								}
-
-								shortcut->buttons = realloc(shortcut->buttons, (shortcut->button_count + 1) * sizeof(*shortcut->buttons));
-								shortcut->buttons[shortcut->button_count] = buttons;
-								shortcut->button_count++;
-							}
-						}
-					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"function")) {
 					}
 				}
 			}
