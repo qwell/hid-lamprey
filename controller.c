@@ -100,6 +100,7 @@ void controller_shortcut_simultaneous(struct shortcut *shortcut) {
 }
 
 void controller_shortcut_consecutive(struct shortcut *shortcut) {
+#if 0
 	static struct test {
 	} *foo = NULL;
 
@@ -129,6 +130,7 @@ void controller_shortcut_consecutive(struct shortcut *shortcut) {
 
 	free(foo);
 	foo = NULL;
+#endif
 }
 
 void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16_t value) {
