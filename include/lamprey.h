@@ -29,7 +29,12 @@
 	#define true 1
 #endif
 
+#ifdef _WIN32
+#include "config-win.h"
+#else
 #include "config.h"
+#endif
+
 #include "settings.h"
 #include "defaults.h"
 
