@@ -9,7 +9,7 @@
 #define HAVE_SYS_STAT_H
 #define HAVE_SYS_TYPES_H
 #define HAVE_UNISTD_H
-//#define HAVE_XML2
+#define HAVE_XML2
 #define HAVE__BOOL
 #define PACKAGE_NAME "lamprey"
 #define PACKAGE_VERSION "0.0.1"
