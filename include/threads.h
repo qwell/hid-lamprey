@@ -17,7 +17,7 @@
 #include <windows.h>
 typedef HANDLE HL_THREAD;
 typedef HANDLE HL_MUTEX;
-typedef DWORD WINAPI HL_THREAD_FUNC;
+typedef DWORD HL_THREAD_FUNC;
 
 #else
 
