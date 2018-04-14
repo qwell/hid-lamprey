@@ -63,5 +63,8 @@ int main (int argc, char **argv) {
 	if (t_test) {
 		hl_thread_join(t_test);
 	}
+	if (t_test2) {
+		hl_thread_join(t_test2);
+	}
 	threadtest_destroy();
 }
