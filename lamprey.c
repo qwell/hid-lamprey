@@ -8,7 +8,6 @@
  */
 
 #include <locale.h>
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,6 +18,8 @@
 #if defined(HAVE_XDO)
 #include "include/xdo.h"
 #endif
+
+#include "include/threads.h"
 
 int main (int argc, char **argv) {
 	setlocale(LC_ALL, "");
@@ -57,4 +58,10 @@ int main (int argc, char **argv) {
 #if defined(HAVE_XDO)
 	free(hl_xdo);
 #endif
+
+	threadtest_init();
+	if (t_test) {
+		hl_thread_join(t_test);
+	}
+	threadtest_destroy();
 }
