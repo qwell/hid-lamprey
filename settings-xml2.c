@@ -147,7 +147,7 @@ struct shortcut {
 			shortcuts[shortcut_count] = shortcut;
 			shortcut_count++;
 
-			printf("Added shortcut: %s\n", shortcut->name);
+			debug_print("Added shortcut: %s\n", shortcut->name);
 		}
 	}
 }
