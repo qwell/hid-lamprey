@@ -42,6 +42,8 @@ int main (int argc, char **argv) {
 
 	hl_display_init(argc, argv);
 
+	threadtest_init();
+
 	// Do...stuff.
 
 #if defined(HAVE_EVDEV)
@@ -59,7 +61,6 @@ int main (int argc, char **argv) {
 	free(hl_xdo);
 #endif
 
-	threadtest_init();
 	if (t_test) {
 		hl_thread_join(t_test);
 	}

@@ -75,7 +75,7 @@ void hl_mutex_create(HL_MUTEX *handle) {
 #if defined(_WIN32)
 	*handle = CreateMutex(NULL, FALSE, NULL);
 #else
-	*handle = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_init(handle, NULL);
 #endif
 }
 
