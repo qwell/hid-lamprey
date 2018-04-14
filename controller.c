@@ -21,10 +21,6 @@ struct codelookup codelookups[] = {
 	CODETABLE
 };
 int codelookup_count = sizeof(codelookups);
-struct codelookupnew codelookupnews[] = {
-	CODETABLENEW
-};
-int codelookupnew_count = sizeof(codelookupnews);
 
 struct controller_display controller_displays[] = {
 	CONTROLLER_DISPLAYS
@@ -33,19 +29,21 @@ struct controller_display controller_displays[] = {
 struct remap **remaps;
 int remap_count = 0;
 
-struct shortcut shortcuts[] = {
-	SHORTCUTS
-};
+struct shortcut **shortcuts;
+int shortcut_count = 0;
+
+struct device **devices;
+int device_count = 0;
 
 struct button_code *hl_controller_get_code_by_name(char *type, char *name) {
-	for (int i = 0; i < codelookupnew_count / sizeof(*codelookupnews); i++) {
-		struct codelookupnew foo = codelookupnews[i];
-		if (foo.typestr && !strcmp(foo.typestr, type)) {
-			for (int j = 0; j < sizeof(foo.codes) / sizeof(*foo.codes); j++) {
-				if (foo.codes[j].codestr && !strcmp(foo.codes[j].codestr, name)) {
+	for (int i = 0; i < codelookup_count / sizeof(*codelookups); i++) {
+		struct codelookup code = codelookups[i];
+		if (code.typestr && !strcmp(code.typestr, type)) {
+			for (int j = 0; j < sizeof(code.codes) / sizeof(*code.codes); j++) {
+				if (code.codes[j].codestr && !strcmp(code.codes[j].codestr, name)) {
 					struct button_code *test = calloc(1, sizeof(*test));
-					test->type = foo.type;
-					test->code = foo.codes[j].code;
+					test->type = code.type;
+					test->code = code.codes[j].code;
 					return test;
 				}
 			}
@@ -75,14 +73,14 @@ int controller_check_device(const char *device, const char *device_list[], int c
 void controller_shortcut_simultaneous(struct shortcut *shortcut) {
 	int triggered = 1; /* Assume success. */
 
-	for (int i = 0; i < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); i++) {
-		struct button *button = shortcut->button_list[i];
+	for (int i = 0; i < shortcut->button_count; i++) {
+		struct button *button = shortcut->buttons[i];
 		if (!button) {
 			continue;
 		}
 
-		for (int j = 0; j < sizeof(button->buttons) / sizeof(*button->buttons); j++) {
-			const struct button_trigger *trigger = button->buttons[j];
+		for (int j = 0; j < button->trigger_count; j++) {
+			const struct button_trigger *trigger = button->triggers[j];
 			if (!trigger) {
 				continue;
 			}
@@ -96,12 +94,13 @@ void controller_shortcut_simultaneous(struct shortcut *shortcut) {
 	if (triggered) {
 		debug_print("Triggered shortcut: %s\n", shortcut->name);
 		if (shortcut->function) {
-			shortcut->function(shortcut->args ? : NULL);
+			shortcut->function(shortcut->args ? shortcut->args : NULL);
 		}
 	}
 }
 
 void controller_shortcut_consecutive(struct shortcut *shortcut) {
+#if 0
 	static struct test {
 	} *foo = NULL;
 
@@ -111,14 +110,14 @@ void controller_shortcut_consecutive(struct shortcut *shortcut) {
 
 	int triggered = 0; /* Assume failure. */
 
-	for (int i = 0; i < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); i++) {
-		struct button *button = shortcut->button_list[i];
+	for (int i = 0; i < sizeof(shortcut->buttons) / sizeof(*shortcut->buttons); i++) {
+		struct button *button = shortcut->buttons[i];
 		if (!button) {
 			continue;
 		}
 
-		for (int j = 0; j < sizeof(button->buttons) / sizeof(*button->buttons); j++) {
-			const struct button_trigger *trigger = button->buttons[j];
+		for (int j = 0; j < sizeof(button->triggers) / sizeof(*button->triggers); j++) {
+			const struct button_trigger *trigger = button->triggers[j];
 			if (!trigger) {
 				continue;
 			}
@@ -131,24 +130,25 @@ void controller_shortcut_consecutive(struct shortcut *shortcut) {
 
 	free(foo);
 	foo = NULL;
+#endif
 }
 
 void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16_t value) {
-	for (int i = 0; i < sizeof(shortcuts) / sizeof(*shortcuts); i++) {
-		struct shortcut *shortcut = &shortcuts[i];
+	for (int i = 0; i < shortcut_count; i++) {
+		struct shortcut *shortcut = shortcuts[i];
 
-		if (!controller_check_device(device, shortcut->devices, sizeof(shortcut->devices) / sizeof(*shortcut->devices))) {
+		if (!controller_check_device(device, shortcut->devices, shortcut->device_count)) {
 			continue;
 		}
 
-		for (int i = 0; i < sizeof(shortcut->button_list) / sizeof(*shortcut->button_list); i++) {
-			struct button *button = shortcut->button_list[i];
+		for (int i = 0; i < shortcut->button_count; i++) {
+			struct button *button = shortcut->buttons[i];
 			if (!button) {
 				continue;
 			}
 
-			for (int j = 0; j < sizeof(button->buttons) / sizeof(*button->buttons); j++) {
-				const struct button_trigger *trigger = button->buttons[j];
+			for (int j = 0; j < button->trigger_count; j++) {
+				const struct button_trigger *trigger = button->triggers[j];
 				if (!trigger) {
 					continue;
 				}

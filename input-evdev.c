@@ -165,9 +165,6 @@ void hl_evdev_init() {
 	/* Create emulated uinput device. */
 	hl_evdev->uinput.dev = libevdev_new();
 	libevdev_set_name(hl_evdev->uinput.dev, "Lamprey Emulated Device");
-	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_KEY);
-	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_ABS);
-	libevdev_enable_event_type(hl_evdev->uinput.dev, EV_REL);
 
 	/* Emulate all keys in the code table. */
 	for (int i = 0; i < codelookup_count / sizeof(*codelookups); i++) {
@@ -184,7 +181,11 @@ void hl_evdev_init() {
 			((struct input_absinfo *)codedata)->resolution = 0;
 			break;
 		}
-		libevdev_enable_event_code(hl_evdev->uinput.dev, emu.type, emu.code, codedata);
+
+		libevdev_enable_event_type(hl_evdev->uinput.dev, emu.type);
+		for (int j = 0; j < sizeof(emu.codes) / sizeof(*emu.codes); j++) {
+			libevdev_enable_event_code(hl_evdev->uinput.dev, emu.type, emu.codes[j].code, codedata);
+		}
 	}
 
 	if (libevdev_uinput_create_from_device(hl_evdev->uinput.dev, LIBEVDEV_UINPUT_OPEN_MANAGED, &hl_evdev->uinput.uidev)) {
@@ -237,8 +238,10 @@ void *hl_evdev_poll() {
 				case EV_KEY:
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
 						__attribute__((__unused__)) struct key_data key = hl_evdev->maps.key_map[ev.code - LOW_KEY];
+						pthread_mutex_unlock(&mutex_evdev);
 						debug_print("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
 						hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, ev.value);
+						pthread_mutex_lock(&mutex_evdev);
 					}
 					break;
 				case EV_ABS:
@@ -265,8 +268,10 @@ void *hl_evdev_poll() {
 							} else if (ev.value <= relzero - deadsize) {
 								value = (relzero - hat.min) * (ev.value - hat.min) / ((relzero - deadsize) - hat.min) + hat.min;
 							}
+							pthread_mutex_unlock(&mutex_evdev);
 							debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
 							hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
+							pthread_mutex_lock(&mutex_evdev);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -293,8 +298,10 @@ void *hl_evdev_poll() {
 							} else if (ev.value <= relzero - deadsize) {
 								value = (relzero - axis.min) * (ev.value - axis.min) / ((relzero - deadsize) - axis.min) + axis.min;
 							}
+							pthread_mutex_unlock(&mutex_evdev);
 							debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
 							hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
+							pthread_mutex_lock(&mutex_evdev);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -347,6 +354,7 @@ void hl_evdev_destroy() {
 }
 
 void hl_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
+	pthread_mutex_lock(&mutex_evdev);
 	if (hl_evdev->uinput.uidev != NULL) {
 		libevdev_uinput_write_event(hl_evdev->uinput.uidev, type, code, value);
 		libevdev_uinput_write_event(hl_evdev->uinput.uidev, EV_SYN, SYN_REPORT, 0);
@@ -362,4 +370,5 @@ void hl_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
 			}
 		}
 	}
+	pthread_mutex_unlock(&mutex_evdev);
 }

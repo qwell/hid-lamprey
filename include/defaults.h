@@ -18,7 +18,3 @@
 #ifndef CONTROLLERS
 #define CONTROLLERS
 #endif
-
-#ifndef REMAPS
-#define REMAPS
-#endif

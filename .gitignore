@@ -12,3 +12,6 @@ config.log
 config.status
 config.out
 include/config.h
+.vs/
+x86/
+x64/

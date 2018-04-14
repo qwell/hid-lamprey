@@ -53,22 +53,22 @@ struct shortcut {
 		simultaneous = 0,
 		consecutive = 1
 	} type;
-	const char *devices[8];
-	// I really, really hate this.
+	const char **devices;
+	int device_count;
 	struct button {
-		const struct button_trigger *buttons[8];
+		const struct button_trigger **triggers;
+		int trigger_count;
 		int state;
-	} *button_list[16];
+	} **buttons;
+	int button_count;
+};
+
+struct device {
+	char *name;
+	char *uniqueid;
 };
 
 struct codelookup {
-	const char *typestr;
-	const char *codestr;
-	const uint8_t type;
-	const uint16_t code;
-};
-
-struct codelookupnew {
 	const char *typestr;
 	const uint8_t type;
 	const struct codes {
@@ -78,9 +78,11 @@ struct codelookupnew {
 };
 extern struct codelookup codelookups[];
 extern int codelookup_count;
-extern struct codelookupnew codelookupnews[];
-extern int codelookupnew_count;
 extern struct remap **remaps;
 extern int remap_count;
+extern struct shortcut **shortcuts;
+extern int shortcut_count;
+extern struct device **devices;
+extern int device_count;
 
 #endif
