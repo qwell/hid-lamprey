@@ -31,6 +31,7 @@ typedef void *HL_THREAD_FUNC;
 int hl_thread_create(HL_THREAD *handle, void *func, void *args);
 void hl_thread_destroy(HL_THREAD handle);
 int hl_thread_join(HL_THREAD handle);
+void hl_mutex_create(HL_MUTEX *handle);
 int hl_mutex_lock(HL_MUTEX *handle);
 int hl_mutex_unlock(HL_MUTEX *handle);
 
