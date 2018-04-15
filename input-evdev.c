@@ -194,7 +194,7 @@ void hl_input_evdev_init() {
 	}
 
 	/* Spawn off a thread to handle evdev polling. */
-	pthread_create(&t_evdev, NULL, hl_evdev_poll, NULL);
+	pthread_create(&t_evdev, NULL, hl_input_evdev_poll, NULL);
 
 	pthread_mutex_unlock(&mutex_evdev);
 

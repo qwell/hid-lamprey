@@ -619,9 +619,9 @@ ac_includes_default="\
 #endif"
 
 ac_subst_vars='LTLIBOBJS
-HAVE_SDL2
-SDL2_LIBS
-SDL2_CFLAGS
+HAVE_XINPUT
+XINPUT_LIBS
+XINPUT_CFLAGS
 HAVE_XML2
 XML2_LIBS
 XML2_CFLAGS
@@ -715,7 +715,7 @@ with_evdev
 with_gtk3
 with_xdo
 with_xml2
-with_sdl2
+with_xinput
 '
       ac_precious_vars='build_alias
 host_alias
@@ -735,8 +735,8 @@ GTK3_CFLAGS
 GTK3_LIBS
 XML2_CFLAGS
 XML2_LIBS
-SDL2_CFLAGS
-SDL2_LIBS'
+XINPUT_CFLAGS
+XINPUT_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1365,7 +1365,7 @@ Optional Packages:
   --with-gtk3             Enable GTK3 support (for output display)
   --with-xdo              Enable XDO support
   --with-xml2             Enable XML2 support
-  --with-sdl2             Enable SDL2 support
+  --with-xinput           Enable XINPUT support
 
 Some influential environment variables:
   CC          C compiler command
@@ -1388,8 +1388,9 @@ Some influential environment variables:
   GTK3_LIBS   linker flags for GTK3, overriding pkg-config
   XML2_CFLAGS C compiler flags for XML2, overriding pkg-config
   XML2_LIBS   linker flags for XML2, overriding pkg-config
-  SDL2_CFLAGS C compiler flags for SDL2, overriding pkg-config
-  SDL2_LIBS   linker flags for SDL2, overriding pkg-config
+  XINPUT_CFLAGS
+              C compiler flags for XINPUT, overriding pkg-config
+  XINPUT_LIBS linker flags for XINPUT, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -5155,32 +5156,32 @@ fi
 
 
 
-# Check whether --with-sdl2 was given.
-if test "${with_sdl2+set}" = set; then :
-  withval=$with_sdl2; with_SDL2=${withval}
+# Check whether --with-xinput was given.
+if test "${with_xinput+set}" = set; then :
+  withval=$with_xinput; with_XINPUT=${withval}
 else
-  with_SDL2=
+  with_XINPUT=
 fi
 
 
 
-	if test "x$with_SDL2" = "xyes"; then :
+	if test "x$with_XINPUT" = "xyes"; then :
 
 
 pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SDL2" >&5
-$as_echo_n "checking for SDL2... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for XINPUT" >&5
+$as_echo_n "checking for XINPUT... " >&6; }
 
-if test -n "$SDL2_CFLAGS"; then
-    pkg_cv_SDL2_CFLAGS="$SDL2_CFLAGS"
+if test -n "$XINPUT_CFLAGS"; then
+    pkg_cv_XINPUT_CFLAGS="$XINPUT_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sdl2\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "sdl2") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libxinput\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libxinput") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_SDL2_CFLAGS=`$PKG_CONFIG --cflags "sdl2" 2>/dev/null`
+  pkg_cv_XINPUT_CFLAGS=`$PKG_CONFIG --cflags "libxinput" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -5188,16 +5189,16 @@ fi
  else
     pkg_failed=untried
 fi
-if test -n "$SDL2_LIBS"; then
-    pkg_cv_SDL2_LIBS="$SDL2_LIBS"
+if test -n "$XINPUT_LIBS"; then
+    pkg_cv_XINPUT_LIBS="$XINPUT_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sdl2\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "sdl2") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libxinput\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libxinput") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_SDL2_LIBS=`$PKG_CONFIG --libs "sdl2" 2>/dev/null`
+  pkg_cv_XINPUT_LIBS=`$PKG_CONFIG --libs "libxinput" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -5218,17 +5219,17 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        SDL2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "sdl2" 2>&1`
+	        XINPUT_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libxinput" 2>&1`
         else
-	        SDL2_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "sdl2" 2>&1`
+	        XINPUT_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libxinput" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
-	echo "$SDL2_PKG_ERRORS" >&5
+	echo "$XINPUT_PKG_ERRORS" >&5
 
 
 			{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "--with-sdl2 was given, but cannot be used.
+as_fn_error $? "--with-xinput was given, but cannot be used.
 See \`config.log' for more details" "$LINENO" 5; }
 
 elif test $pkg_failed = untried; then
@@ -5237,45 +5238,45 @@ $as_echo "no" >&6; }
 
 			{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "--with-sdl2 was given, but cannot be used.
+as_fn_error $? "--with-xinput was given, but cannot be used.
 See \`config.log' for more details" "$LINENO" 5; }
 
 else
-	SDL2_CFLAGS=$pkg_cv_SDL2_CFLAGS
-	SDL2_LIBS=$pkg_cv_SDL2_LIBS
+	XINPUT_CFLAGS=$pkg_cv_XINPUT_CFLAGS
+	XINPUT_LIBS=$pkg_cv_XINPUT_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 
 
 
-$as_echo "#define HAVE_SDL2 1" >>confdefs.h
+$as_echo "#define HAVE_XINPUT 1" >>confdefs.h
 
-	HAVE_SDL2=1
+	HAVE_XINPUT=1
 
 
 
 fi
 
-elif test "x$with_SDL2" = "xno"; then :
+elif test "x$with_XINPUT" = "xno"; then :
 
 
 else
 
 
 pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SDL2" >&5
-$as_echo_n "checking for SDL2... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for XINPUT" >&5
+$as_echo_n "checking for XINPUT... " >&6; }
 
-if test -n "$SDL2_CFLAGS"; then
-    pkg_cv_SDL2_CFLAGS="$SDL2_CFLAGS"
+if test -n "$XINPUT_CFLAGS"; then
+    pkg_cv_XINPUT_CFLAGS="$XINPUT_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sdl2\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "sdl2") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libxinput\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libxinput") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_SDL2_CFLAGS=`$PKG_CONFIG --cflags "sdl2" 2>/dev/null`
+  pkg_cv_XINPUT_CFLAGS=`$PKG_CONFIG --cflags "libxinput" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -5283,16 +5284,16 @@ fi
  else
     pkg_failed=untried
 fi
-if test -n "$SDL2_LIBS"; then
-    pkg_cv_SDL2_LIBS="$SDL2_LIBS"
+if test -n "$XINPUT_LIBS"; then
+    pkg_cv_XINPUT_LIBS="$XINPUT_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sdl2\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "sdl2") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libxinput\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libxinput") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_SDL2_LIBS=`$PKG_CONFIG --libs "sdl2" 2>/dev/null`
+  pkg_cv_XINPUT_LIBS=`$PKG_CONFIG --libs "libxinput" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -5313,12 +5314,12 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        SDL2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "sdl2" 2>&1`
+	        XINPUT_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libxinput" 2>&1`
         else
-	        SDL2_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "sdl2" 2>&1`
+	        XINPUT_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libxinput" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
-	echo "$SDL2_PKG_ERRORS" >&5
+	echo "$XINPUT_PKG_ERRORS" >&5
 
 
 
@@ -5328,16 +5329,16 @@ $as_echo "no" >&6; }
 
 
 else
-	SDL2_CFLAGS=$pkg_cv_SDL2_CFLAGS
-	SDL2_LIBS=$pkg_cv_SDL2_LIBS
+	XINPUT_CFLAGS=$pkg_cv_XINPUT_CFLAGS
+	XINPUT_LIBS=$pkg_cv_XINPUT_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 
 
 
-$as_echo "#define HAVE_SDL2 1" >>confdefs.h
+$as_echo "#define HAVE_XINPUT 1" >>confdefs.h
 
-	HAVE_SDL2=1
+	HAVE_XINPUT=1
 
 
 

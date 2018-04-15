@@ -25,9 +25,6 @@
 /* Have PTHREAD_PRIO_INHERIT. */
 #undef HAVE_PTHREAD_PRIO_INHERIT
 
-/* HAVE_SDL2 */
-#undef HAVE_SDL2
-
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
@@ -51,6 +48,9 @@
 
 /* HAVE_XDO */
 #undef HAVE_XDO
+
+/* HAVE_XINPUT */
+#undef HAVE_XINPUT
 
 /* HAVE_XML2 */
 #undef HAVE_XML2
