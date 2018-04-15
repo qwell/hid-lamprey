@@ -59,9 +59,6 @@
     <ClInclude Include="include\input-evdev.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\input-sdl2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\input.h">
       <Filter>Header Files</Filter>
     </ClInclude>

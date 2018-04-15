@@ -51,6 +51,11 @@ int main (int argc, char **argv) {
 		pthread_join(t_evdev, NULL);
 	}
 #endif
+#if defined(HAVE_XINPUT)
+if (t_input_xinput) {
+	hl_thread_join(t_input_xinput);
+}
+#endif
 
 
 #if defined(HAVE_GTK3)

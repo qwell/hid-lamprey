@@ -126,7 +126,6 @@
     <ClInclude Include="include\display.h" />
     <ClInclude Include="include\input-codetable.h" />
     <ClInclude Include="include\input-evdev.h" />
-    <ClInclude Include="include\input-sdl2.h" />
     <ClInclude Include="include\input-xinput.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\lamprey.h" />
