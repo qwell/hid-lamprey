@@ -54,9 +54,9 @@
 			}},\
 			{"L", {{EV_KEY, BTN_TL}}},\
 			{"R", {{EV_KEY, BTN_TR}}},\
-			{"Y", {{EV_KEY, BTN_NORTH}}},\
+			{"Y", {{EV_KEY, BTN_WEST}}},\
 			{"B", {{EV_KEY, BTN_SOUTH}}},\
-			{"X", {{EV_KEY, BTN_WEST}}},\
+			{"X", {{EV_KEY, BTN_NORTH}}},\
 			{"A", {{EV_KEY, BTN_EAST}}},\
 			{"s", {{EV_KEY, BTN_SELECT}}},\
 			{"S", {{EV_KEY, BTN_START}}},\
