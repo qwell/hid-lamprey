@@ -37,6 +37,7 @@
 
 #include "settings.h"
 #include "defaults.h"
+#include "threads.h"
 
 #if defined(DEBUG)
 	#define debug_print(...) printf(__VA_ARGS__)

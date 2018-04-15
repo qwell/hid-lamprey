@@ -46,7 +46,7 @@ int hl_thread_join(hl_thread_t handle) {
 
 void hl_thread_exit() {
 #if defined(_WIN32)
-	WORD ret;
+	WORD ret = 0;
 	ExitThread(ret);
 #else
 	pthread_exit(NULL);

@@ -10,22 +10,16 @@
 #ifndef LAMPREY_THREADS_H
 #define LAMPREY_THREADS_H
 
-#include "lamprey.h"
-
 #if defined(_WIN32)
-
 #include <windows.h>
 typedef HANDLE hl_thread_t;
 typedef HANDLE hl_mutex_t;
 typedef DWORD HL_THREAD_FUNC;
-
 #else
-
 #include <pthread.h>
 typedef pthread_t hl_thread_t;
 typedef pthread_mutex_t hl_mutex_t;
 typedef void *HL_THREAD_FUNC;
-
 #endif
 
 int hl_thread_create(hl_thread_t *handle, void *func, void *args);

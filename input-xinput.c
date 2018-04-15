@@ -14,7 +14,6 @@
 
 #include "include/controller.h"
 #include "include/input.h"
-#include "include/threads.h"
 
 hl_thread_t t_input_xinput;
 hl_mutex_t mutex_input_xinput;
