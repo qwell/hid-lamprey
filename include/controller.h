@@ -40,7 +40,7 @@ struct controller_display_mapping {
 
 struct controller_display {
 	const char *name;
-	const char *devices[18];
+	char *devices[18];
 	struct controller_display_mapping mapping[64];
 	const char layout[256];
 };

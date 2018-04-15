@@ -52,7 +52,7 @@ struct button_code *hl_controller_get_code_by_name(char *type, char *name) {
 	return NULL;
 }
 
-int controller_check_device(const char *device, const char *device_list[], int count) {
+int controller_check_device(const char *device, char *device_list[], int count) {
 	if (count == 0) {
 		return 1;
 	}
