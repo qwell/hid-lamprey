@@ -53,10 +53,10 @@ struct shortcut {
 		simultaneous = 0,
 		consecutive = 1
 	} type;
-	const char **devices;
+	char **devices;
 	int device_count;
 	struct button {
-		const struct button_trigger **triggers;
+		struct button_trigger **triggers;
 		int trigger_count;
 		int state;
 	} **buttons;
