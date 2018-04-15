@@ -44,6 +44,15 @@ int hl_thread_join(hl_thread_t handle) {
 #endif
 }
 
+void hl_thread_exit() {
+#if defined(_WIN32)
+	WORD ret;
+	ExitThread(ret);
+#else
+	pthread_exit(NULL);
+#endif
+}
+
 int hl_mutex_lock(hl_mutex_t *handle) {
 #if defined(_WIN32)
 	DWORD result = WaitForSingleObject(*handle, INFINITE);
