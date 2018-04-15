@@ -15,31 +15,24 @@
 #if defined(_WIN32)
 
 #include <windows.h>
-typedef HANDLE HL_THREAD;
-typedef HANDLE HL_MUTEX;
+typedef HANDLE hl_thread_t;
+typedef HANDLE hl_mutex_t;
 typedef DWORD HL_THREAD_FUNC;
 
 #else
 
 #include <pthread.h>
-typedef pthread_t HL_THREAD;
-typedef pthread_mutex_t HL_MUTEX;
+typedef pthread_t hl_thread_t;
+typedef pthread_mutex_t hl_mutex_t;
 typedef void *HL_THREAD_FUNC;
 
 #endif
 
-int hl_thread_create(HL_THREAD *handle, void *func, void *args);
-void hl_thread_destroy(HL_THREAD handle);
-int hl_thread_join(HL_THREAD handle);
-void hl_mutex_create(HL_MUTEX *handle);
-int hl_mutex_lock(HL_MUTEX *handle);
-int hl_mutex_unlock(HL_MUTEX *handle);
-
-extern HL_THREAD t_test;
-extern HL_THREAD t_test2;
-extern HL_MUTEX t_mutex_test;
-
-int threadtest_init();
-void threadtest_destroy();
+int hl_thread_create(hl_thread_t *handle, void *func, void *args);
+void hl_thread_destroy(hl_thread_t handle);
+int hl_thread_join(hl_thread_t handle);
+void hl_mutex_create(hl_mutex_t *handle);
+int hl_mutex_lock(hl_mutex_t *handle);
+int hl_mutex_unlock(hl_mutex_t *handle);
 
 #endif

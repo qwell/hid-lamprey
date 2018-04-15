@@ -6,8 +6,8 @@
 #include "include/input.h"
 #include "include/threads.h"
 
-HL_THREAD t_input_xinput;
-HL_MUTEX mutex_input_xinput;
+hl_thread_t t_input_xinput;
+hl_mutex_t mutex_input_xinput;
 
 bool xinput_button_changed(WORD oldButtons, WORD newButtons, WORD button) {
 	if ((oldButtons & button) != (newButtons & button)) {
@@ -70,6 +70,10 @@ void *hl_input_xinput_poll() {
 				debug_print("Device %s connected.\n", xinput_devices[i].name);
 			}
 
+			if (newState.dwPacketNumber <= xinput_devices[i].state.dwPacketNumber) {
+				continue;
+			}
+
 			for (int j = 0; j < sizeof(xinput_maps) / sizeof(*xinput_maps); j++) {
 				if (xinput_button_changed(xinput_devices[i].state.Gamepad.wButtons, newState.Gamepad.wButtons, xinput_maps[j].xinput)) {
 					int value = newState.Gamepad.wButtons & xinput_maps[j].xinput ? 1 : 0;
@@ -82,6 +86,7 @@ void *hl_input_xinput_poll() {
 
 			hl_mutex_unlock(&mutex_input_xinput);
 		}
+		Sleep(100);
 	} while (res == 0);
 
 	hl_input_xinput_destroy();

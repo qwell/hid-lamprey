@@ -14,8 +14,8 @@
 
 #include "threads.h"
 
-extern HL_THREAD t_input_xinput;
-extern HL_MUTEX mutex_input_xinput;
+extern hl_thread_t t_input_xinput;
+extern hl_mutex_t mutex_input_xinput;
 
 void hl_input_xinput_init();
 void hl_input_xinput_destroy();
