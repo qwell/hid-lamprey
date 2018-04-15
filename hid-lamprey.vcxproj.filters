@@ -36,6 +36,15 @@
     <ClCompile Include="input-xinput.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="input-evdev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="display-gtk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xdo.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\controller.h">

@@ -111,11 +111,20 @@
   <ItemGroup>
     <ClCompile Include="controller.c" />
     <ClCompile Include="display-cli.c" />
+    <ClCompile Include="display-gtk.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="input-evdev.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="input-xinput.c" />
     <ClCompile Include="lamprey.c" />
     <ClCompile Include="settings-xml2.c" />
     <ClCompile Include="shortcut_cb.c" />
     <ClCompile Include="threads.c" />
+    <ClCompile Include="xdo.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\config-win.h" />
