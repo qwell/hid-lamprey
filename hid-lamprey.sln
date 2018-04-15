@@ -4,6 +4,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27428.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hid-lamprey", "hid-lamprey.vcxproj", "{EA37416A-813A-4057-BEA3-9FE08582A57E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6} = {8EEE40E4-037A-4DC5-B598-F9381F7372E6}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libiconv-static", "..\libiconv-win-build\build-VS2017\libiconv-static\libiconv-static.vcxproj", "{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libz-static", "..\zlib-win-build\build-VS2017\libz-static\libz-static.vcxproj", "{B56D17BC-072B-42F3-844A-870A07AFBAAA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libxml2-static", "..\libxml2-win-build\build-VS2017\libxml2-static\libxml2-static.vcxproj", "{8EEE40E4-037A-4DC5-B598-F9381F7372E6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2} = {46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA} = {B56D17BC-072B-42F3-844A-870A07AFBAAA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +38,36 @@ Global
 		{EA37416A-813A-4057-BEA3-9FE08582A57E}.Release|x64.Build.0 = Release|x64
 		{EA37416A-813A-4057-BEA3-9FE08582A57E}.Release|x86.ActiveCfg = Release|Win32
 		{EA37416A-813A-4057-BEA3-9FE08582A57E}.Release|x86.Build.0 = Release|Win32
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}.Debug|ARM.ActiveCfg = Debug|Win32
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}.Debug|x64.ActiveCfg = Debug|x64
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}.Debug|x64.Build.0 = Debug|x64
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}.Debug|x86.ActiveCfg = Debug|Win32
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}.Debug|x86.Build.0 = Debug|Win32
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}.Release|ARM.ActiveCfg = Release|Win32
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}.Release|x64.ActiveCfg = Release|x64
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}.Release|x64.Build.0 = Release|x64
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}.Release|x86.ActiveCfg = Release|Win32
+		{46CAFE4A-B5BD-4422-ACC6-117D4AD041E2}.Release|x86.Build.0 = Release|Win32
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA}.Debug|ARM.ActiveCfg = Debug|Win32
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA}.Debug|x64.ActiveCfg = Debug|x64
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA}.Debug|x64.Build.0 = Debug|x64
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA}.Debug|x86.ActiveCfg = Debug|Win32
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA}.Debug|x86.Build.0 = Debug|Win32
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA}.Release|ARM.ActiveCfg = Release|Win32
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA}.Release|x64.ActiveCfg = Release|x64
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA}.Release|x64.Build.0 = Release|x64
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA}.Release|x86.ActiveCfg = Release|Win32
+		{B56D17BC-072B-42F3-844A-870A07AFBAAA}.Release|x86.Build.0 = Release|Win32
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6}.Debug|ARM.ActiveCfg = Debug|Win32
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6}.Debug|x64.ActiveCfg = Debug|x64
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6}.Debug|x64.Build.0 = Debug|x64
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6}.Debug|x86.ActiveCfg = Debug|Win32
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6}.Debug|x86.Build.0 = Debug|Win32
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6}.Release|ARM.ActiveCfg = Release|Win32
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6}.Release|x64.ActiveCfg = Release|x64
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6}.Release|x64.Build.0 = Release|x64
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6}.Release|x86.ActiveCfg = Release|Win32
+		{8EEE40E4-037A-4DC5-B598-F9381F7372E6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
