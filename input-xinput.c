@@ -32,10 +32,10 @@ void hl_input_xinput_init() {
 }
 
 void *hl_input_xinput_poll() {
-	struct xinput_maps {
+	struct xinput_button_maps {
 		WORD xinput;
 		int mapto;
-	} xinput_maps[] = {
+	} xinput_button_maps[] = {
 		{ XINPUT_GAMEPAD_DPAD_UP, BTN_DPAD_UP },
 		{ XINPUT_GAMEPAD_DPAD_DOWN, BTN_DPAD_DOWN },
 		{ XINPUT_GAMEPAD_DPAD_LEFT, BTN_DPAD_LEFT },
@@ -83,12 +83,37 @@ void *hl_input_xinput_poll() {
 				continue;
 			}
 
-			for (int j = 0; j < sizeof(xinput_maps) / sizeof(*xinput_maps); j++) {
-				if (xinput_button_changed(xinput_devices[i].state.Gamepad.wButtons, newState.Gamepad.wButtons, xinput_maps[j].xinput)) {
-					int value = newState.Gamepad.wButtons & xinput_maps[j].xinput ? 1 : 0;
-					hl_controller_change(xinput_devices[i].name, i, EV_KEY, xinput_maps[j].mapto, value);
-					debug_print("Controller %s, Button: %d = %d\n", xinput_devices[i].name, xinput_maps[j].xinput, value);
+			for (int j = 0; j < sizeof(xinput_button_maps) / sizeof(*xinput_button_maps); j++) {
+				if (xinput_button_changed(xinput_devices[i].state.Gamepad.wButtons, newState.Gamepad.wButtons, xinput_button_maps[j].xinput)) {
+					int value = newState.Gamepad.wButtons & xinput_button_maps[j].xinput ? 1 : 0;
+					hl_controller_change(xinput_devices[i].name, i, EV_KEY, xinput_button_maps[j].mapto, value);
+					debug_print("Controller %s, Button: %d = %d\n", xinput_devices[i].name, xinput_button_maps[j].xinput, value);
 				}
+			}
+
+			if (xinput_devices[i].state.Gamepad.bLeftTrigger != newState.Gamepad.bLeftTrigger) {
+				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_HAT2Y, newState.Gamepad.bLeftTrigger);
+				debug_print("Controller %s, ABS_HAT2Y = %d\n", xinput_devices[i].name, value);
+			}
+			if (xinput_devices[i].state.Gamepad.bRightTrigger != newState.Gamepad.bRightTrigger) {
+				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_HAT2X, newState.Gamepad.bRightTrigger);
+				debug_print("Controller %s, ABS_HAT2X: %d = %d\n", xinput_devices[i].name, value);
+			}
+			if (xinput_devices[i].state.Gamepad.sThumbLX != newState.Gamepad.sThumbLX) {
+				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_X, newState.Gamepad.sThumbLX);
+				debug_print("Controller %s, ABS_X: %d = %d\n", xinput_devices[i].name, value);
+			}
+			if (xinput_devices[i].state.Gamepad.sThumbLY != newState.Gamepad.sThumbLY) {
+				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_Y, newState.Gamepad.sThumbLY);
+				debug_print("Controller %s, ABS_Y: %d = %d\n", xinput_devices[i].name, value);
+			}
+			if (xinput_devices[i].state.Gamepad.sThumbRX != newState.Gamepad.sThumbRX) {
+				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_RX, newState.Gamepad.sThumbRX);
+				debug_print("Controller %s, ABS_RX: %d = %d\n", xinput_devices[i].name, value);
+			}
+			if (xinput_devices[i].state.Gamepad.sThumbRY != newState.Gamepad.sThumbRY) {
+				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_RY, newState.Gamepad.sThumbRY);
+				debug_print("Controller %s, ABS_RY: %d = %d\n", xinput_devices[i].name, value);
 			}
 
 			xinput_devices[i].state = newState;
