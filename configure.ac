@@ -25,6 +25,5 @@ LOCAL_WITH_PKG([EVDEV], [evdev], [], [libevdev])
 LOCAL_WITHOUT_PKG([GTK3], [gtk3], [ (for output display)], [gtk+-3.0])
 LOCAL_WITHOUT_LIB([XDO], [xdo], [], [xdo_new])
 LOCAL_WITH_PKG([XML2], [xml2], [], [libxml-2.0])
-LOCAL_WITH_PKG([SDL2], [sdl2], [], [sdl2])
 
 AC_OUTPUT

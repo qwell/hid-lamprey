@@ -49,7 +49,18 @@ void hl_cli_output_controller(struct controller_display *controller) {
 		}
 
 		if (strstr(pressed, layout_char)) {
+#if defined(_WIN32)
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			CONSOLE_SCREEN_BUFFER_INFO console;
+			WORD attr;
+			GetConsoleScreenBufferInfo(handle, &console);
+			attr = console.wAttributes;
+			SetConsoleTextAttribute(handle, FOREGROUND_RED);
+			printf("%s", layout_char);
+			SetConsoleTextAttribute(handle, attr);
+#else
 			printf("\e[31m%s\e[39m", layout_char);
+#endif
 		} else {
 			printf("%s", layout_char);
 		}

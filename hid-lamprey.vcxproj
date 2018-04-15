@@ -105,12 +105,13 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Users\north\source\repos\hid-lamprey;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="controller.c" />
     <ClCompile Include="display-cli.c" />
+    <ClCompile Include="input-xinput.c" />
     <ClCompile Include="lamprey.c" />
     <ClCompile Include="settings-xml2.c" />
     <ClCompile Include="shortcut_cb.c" />
@@ -126,6 +127,7 @@
     <ClInclude Include="include\input-codetable.h" />
     <ClInclude Include="include\input-evdev.h" />
     <ClInclude Include="include\input-sdl2.h" />
+    <ClInclude Include="include\input-xinput.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\lamprey.h" />
     <ClInclude Include="include\settings-xml2.h" />

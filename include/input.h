@@ -10,28 +10,28 @@
 #ifndef LAMPREY_INPUT_H
 #define LAMPREY_INPUT_H
 
-#if defined(HAVE_EVDEV) && defined(HAVE_SDL2)
+#if defined(HAVE_EVDEV) && defined(HAVE_XINPUT)
 #include "input-evdev.h"
-#include "input-sdl2.h"
+#include "input-xinput.h"
 
 #define hl_input_init(...) {\
-	hl_evdev_init(__VA_ARGS__);\
-	hl_sdl2_init(__VA_ARGS__);\
+	hl_input_evdev_init(__VA_ARGS__);\
+	hl_input_xinput_init(__VA_ARGS__);\
 }
 #define hl_input_inject(id, type, code, value) {\
-	hl_evdev_inject(id, type, code, value);\
-	hl_sdl2_inject(id, type, code, value);\
+	hl_input_evdev_inject(id, type, code, value);\
+	hl_input_xinput_inject(id, type, code, value);\
 }
 #elif defined(HAVE_EVDEV)
 #include "input-evdev.h"
 
-#define hl_input_init(...) hl_evdev_init(__VA_ARGS__)
-#define hl_input_inject(id, type, code, value) hl_evdev_inject(id, type, code, value)
-#elif defined(HAVE_SDL2)
-#include "input-sdl2.h"
+#define hl_input_init(...) hl_input_evdev_init(__VA_ARGS__)
+#define hl_input_inject(id, type, code, value) hl_input_evdev_inject(id, type, code, value)
+#elif defined(HAVE_XINPUT)
+#include "input-xinput.h"
 
-#define hl_input_init(...) hl_sdl2_init(__VA_ARGS__)
-#define hl_input_inject(id, type, code, value) hl_sdl2_inject(id, type, code, value)
+#define hl_input_init(...) hl_input_xinput_init(__VA_ARGS__)
+#define hl_input_inject(id, type, code, value) hl_input_xinput_inject(id, type, code, value)
 #else
 #define hl_input_init(...)
 #define hl_input_inject(id, type, code, value)

@@ -32,7 +32,7 @@ int filter_event_files(const struct dirent *entry)
 	return !strncmp(entry->d_name, "event", 5);
 }
 
-void hl_evdev_init() {
+void hl_input_evdev_init() {
 	const char *filepath = "/dev/input/";
 	struct dirent **filelist;
 	int filecount = 0;
@@ -201,7 +201,7 @@ void hl_evdev_init() {
 	return;
 }
 
-void *hl_evdev_poll() {
+void *hl_input_evdev_poll() {
 	int rc = 1;
 
 	// Poll events
@@ -318,12 +318,12 @@ void *hl_evdev_poll() {
 		pthread_mutex_unlock(&mutex_evdev);
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
 
-	hl_evdev_destroy();
+	hl_input_evdev_destroy();
 
 	return NULL;
 }
 
-void hl_evdev_destroy() {
+void hl_input_evdev_destroy() {
 	pthread_mutex_lock(&mutex_evdev);
 
 	if (hl_evdev == NULL) {
@@ -353,7 +353,7 @@ void hl_evdev_destroy() {
 	pthread_exit(NULL);
 }
 
-void hl_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
+void hl_input_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
 	pthread_mutex_lock(&mutex_evdev);
 	if (hl_evdev->uinput.uidev != NULL) {
 		libevdev_uinput_write_event(hl_evdev->uinput.uidev, type, code, value);

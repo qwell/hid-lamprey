@@ -7,8 +7,8 @@
  * (at your option) any later version.
  */
 
-#ifndef LAMPREY_EVDEV_H
-#define LAMPREY_EVDEV_H
+#ifndef LAMPREY_INPUT_EVDEV_H
+#define LAMPREY_INPUT_EVDEV_H
 
 #include <sys/poll.h>
 
@@ -65,9 +65,9 @@ struct hl_evdev {
 	} maps;
 };
 
-void hl_evdev_init();
-void hl_evdev_destroy();
-void *hl_evdev_poll();
-void hl_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value);
+void hl_input_evdev_init();
+void hl_input_evdev_destroy();
+void *hl_input_evdev_poll();
+void hl_input_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value);
 
 #endif
