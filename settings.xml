@@ -1,4 +1,6 @@
 <settings>
+	<option name="deadzone_hat">0</option>
+	<option name="deadzone_axis">0.2</option>
 	<devices>
 		<device name="rockcandy">3/e6f-11f:Rock Candy Gamepad Wired Controller</device>
 		<device name="xbox">3/45e-2a1:Xbox 360 Wireless Receiver (XBOX)</device>

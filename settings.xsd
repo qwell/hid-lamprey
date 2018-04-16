@@ -14,6 +14,15 @@
   <xs:element name="settings">
     <xs:complexType>
       <xs:sequence>
+        <xs:element name="option" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute type="nonEmptyString" name="name" use="required"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
         <xs:element name="devices">
           <xs:complexType>
             <xs:sequence>
