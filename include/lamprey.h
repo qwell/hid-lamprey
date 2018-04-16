@@ -30,9 +30,17 @@
 #endif
 
 #ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <SDKDDKVer.h>
+
+#include "lamprey-rc.h"
+
 #include "config-win.h"
+#define LAMPREY_ENTRY_FUNC int lamprey_entry(int argc, char **argv, HINSTANCE hInstance, int nCmdShow)
 #else
 #include "config.h"
+#define LAMPREY_ENTRY_FUNC int lamprey_entry(int argc, char **argv)
 #endif
 
 #include "settings.h"

@@ -45,6 +45,9 @@
     <ClCompile Include="xdo.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="display-win32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\controller.h">
@@ -95,6 +98,12 @@
     <ClInclude Include="include\input-xinput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\lamprey-rc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\display-win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="settings.xml">
@@ -110,5 +119,18 @@
     <Library Include="..\libxml2-win-build\build-VS2017\x64\Debug\libxml2-static.lib" />
     <Library Include="..\libiconv-win-build\build-VS2017\x64\Debug\libiconv-static.lib" />
     <Library Include="..\zlib-win-build\build-VS2017\x64\Debug\libz-static.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\lamprey.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\small.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\lamprey.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

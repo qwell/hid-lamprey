@@ -24,6 +24,18 @@
 	hl_cli_output_controller(controller);\
 	hl_gtk_output_controller(controller);\
 }
+#elif defined(HAVE_CLI) && defined(_WIN32)
+#include "display-cli.h"
+#include "display-win32.h"
+
+#define hl_display_init(...) {\
+	hl_cli_init(__VA_ARGS__);\
+	hl_display_win32_init(hInstance, nCmdShow, __VA_ARGS__);\
+}
+#define hl_display_output_controller(controller) {\
+	hl_cli_output_controller(controller);\
+	hl_display_win32_output_controller(controller);\
+}
 #elif defined(HAVE_CLI)
 #include "display-cli.h"
 

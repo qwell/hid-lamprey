@@ -106,6 +106,7 @@
     <Link>
       <AdditionalLibraryDirectories>C:\Users\north\source\repos\hid-lamprey;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -114,6 +115,7 @@
     <ClCompile Include="display-gtk.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="display-win32.c" />
     <ClCompile Include="input-evdev.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -134,6 +136,7 @@
     <ClInclude Include="include\display-gtk.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="include\display-win32.h" />
     <ClInclude Include="include\display.h" />
     <ClInclude Include="include\input-codetable.h" />
     <ClInclude Include="include\input-evdev.h">
@@ -142,6 +145,7 @@
     <ClInclude Include="include\input-xinput.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\lamprey.h" />
+    <ClInclude Include="include\lamprey-rc.h" />
     <ClInclude Include="include\settings-xml2.h" />
     <ClInclude Include="include\settings.h" />
     <ClInclude Include="include\shortcut_cb.h" />
@@ -160,6 +164,13 @@
     <Library Include="..\libiconv-win-build\build-VS2017\x64\Debug\libiconv-static.lib" />
     <Library Include="..\libxml2-win-build\build-VS2017\x64\Debug\libxml2-static.lib" />
     <Library Include="..\zlib-win-build\build-VS2017\x64\Debug\libz-static.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\lamprey.ico" />
+    <Image Include="resources\small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\lamprey.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
