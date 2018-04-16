@@ -14,7 +14,3 @@
 #ifndef HAT_DEADZONE
 #define HAT_DEADZONE 0
 #endif
-
-#ifndef CONTROLLERS
-#define CONTROLLERS
-#endif
