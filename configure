@@ -619,9 +619,6 @@ ac_includes_default="\
 #endif"
 
 ac_subst_vars='LTLIBOBJS
-HAVE_XINPUT
-XINPUT_LIBS
-XINPUT_CFLAGS
 HAVE_XML2
 XML2_LIBS
 XML2_CFLAGS
@@ -715,7 +712,6 @@ with_evdev
 with_gtk3
 with_xdo
 with_xml2
-with_xinput
 '
       ac_precious_vars='build_alias
 host_alias
@@ -734,9 +730,7 @@ EVDEV_LIBS
 GTK3_CFLAGS
 GTK3_LIBS
 XML2_CFLAGS
-XML2_LIBS
-XINPUT_CFLAGS
-XINPUT_LIBS'
+XML2_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1365,7 +1359,6 @@ Optional Packages:
   --with-gtk3             Enable GTK3 support (for output display)
   --with-xdo              Enable XDO support
   --with-xml2             Enable XML2 support
-  --with-xinput           Enable XINPUT support
 
 Some influential environment variables:
   CC          C compiler command
@@ -1388,9 +1381,6 @@ Some influential environment variables:
   GTK3_LIBS   linker flags for GTK3, overriding pkg-config
   XML2_CFLAGS C compiler flags for XML2, overriding pkg-config
   XML2_LIBS   linker flags for XML2, overriding pkg-config
-  XINPUT_CFLAGS
-              C compiler flags for XINPUT, overriding pkg-config
-  XINPUT_LIBS linker flags for XINPUT, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -5141,204 +5131,6 @@ $as_echo "yes" >&6; }
 $as_echo "#define HAVE_XML2 1" >>confdefs.h
 
 	HAVE_XML2=1
-
-
-
-fi
-
-
-fi
-
-
-
-
-
-
-
-
-# Check whether --with-xinput was given.
-if test "${with_xinput+set}" = set; then :
-  withval=$with_xinput; with_XINPUT=${withval}
-else
-  with_XINPUT=
-fi
-
-
-
-	if test "x$with_XINPUT" = "xyes"; then :
-
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for XINPUT" >&5
-$as_echo_n "checking for XINPUT... " >&6; }
-
-if test -n "$XINPUT_CFLAGS"; then
-    pkg_cv_XINPUT_CFLAGS="$XINPUT_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libxinput\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libxinput") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_XINPUT_CFLAGS=`$PKG_CONFIG --cflags "libxinput" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$XINPUT_LIBS"; then
-    pkg_cv_XINPUT_LIBS="$XINPUT_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libxinput\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libxinput") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_XINPUT_LIBS=`$PKG_CONFIG --libs "libxinput" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        XINPUT_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libxinput" 2>&1`
-        else
-	        XINPUT_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libxinput" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$XINPUT_PKG_ERRORS" >&5
-
-
-			{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "--with-xinput was given, but cannot be used.
-See \`config.log' for more details" "$LINENO" 5; }
-
-elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-			{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "--with-xinput was given, but cannot be used.
-See \`config.log' for more details" "$LINENO" 5; }
-
-else
-	XINPUT_CFLAGS=$pkg_cv_XINPUT_CFLAGS
-	XINPUT_LIBS=$pkg_cv_XINPUT_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-
-
-
-$as_echo "#define HAVE_XINPUT 1" >>confdefs.h
-
-	HAVE_XINPUT=1
-
-
-
-fi
-
-elif test "x$with_XINPUT" = "xno"; then :
-
-
-else
-
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for XINPUT" >&5
-$as_echo_n "checking for XINPUT... " >&6; }
-
-if test -n "$XINPUT_CFLAGS"; then
-    pkg_cv_XINPUT_CFLAGS="$XINPUT_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libxinput\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libxinput") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_XINPUT_CFLAGS=`$PKG_CONFIG --cflags "libxinput" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$XINPUT_LIBS"; then
-    pkg_cv_XINPUT_LIBS="$XINPUT_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libxinput\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libxinput") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_XINPUT_LIBS=`$PKG_CONFIG --libs "libxinput" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        XINPUT_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libxinput" 2>&1`
-        else
-	        XINPUT_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libxinput" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$XINPUT_PKG_ERRORS" >&5
-
-
-
-elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-
-else
-	XINPUT_CFLAGS=$pkg_cv_XINPUT_CFLAGS
-	XINPUT_LIBS=$pkg_cv_XINPUT_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-
-
-
-$as_echo "#define HAVE_XINPUT 1" >>confdefs.h
-
-	HAVE_XINPUT=1
 
 
 

@@ -47,6 +47,8 @@
 #include "defaults.h"
 #include "threads.h"
 
+LAMPREY_ENTRY_FUNC;
+
 #if defined(DEBUG)
 	#define debug_print(...) printf(__VA_ARGS__)
 #else

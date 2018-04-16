@@ -60,7 +60,7 @@ LAMPREY_ENTRY_FUNC {
 	}
 #endif
 
-#if defined(HAVE_XINPUT)
+#if defined(_WIN32)
 if (t_input_xinput) {
 	hl_thread_join(t_input_xinput);
 }

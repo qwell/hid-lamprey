@@ -21,6 +21,11 @@ SO_LIBS+=-lm
 LIBS+=-L. -llamprey -Wl,-rpath=.
 FILTER_C:=
 
+ifeq ($(OS),windows)
+else
+FILTER_C+=input-xinput.c display-win32.c
+endif
+
 ifeq ($(DEBUG),1)
 CFLAGS+=-DDEBUG
 endif
@@ -35,12 +40,6 @@ CFLAGS+=$(XML2_CFLAGS)
 SO_LIBS+=$(XML2_LIBS)
 else
 FILTER_C+=settings-xml2.c
-endif
-ifeq ($(HAVE_XINPUT),1)
-CFLAGS+=$(XINPUT_CFLAGS)
-SO_LIBS+=$(XINPUT_LIBS)
-else
-FILTER_C+=input-xinput.c
 endif
 ifeq ($(HAVE_CLI),1)
 else

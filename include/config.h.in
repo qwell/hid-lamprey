@@ -49,9 +49,6 @@
 /* HAVE_XDO */
 #undef HAVE_XDO
 
-/* HAVE_XINPUT */
-#undef HAVE_XINPUT
-
 /* HAVE_XML2 */
 #undef HAVE_XML2
 

@@ -10,7 +10,7 @@
 #ifndef LAMPREY_INPUT_H
 #define LAMPREY_INPUT_H
 
-#if defined(HAVE_EVDEV) && defined(HAVE_XINPUT)
+#if defined(HAVE_EVDEV) && defined(_WIN32)
 #include "input-evdev.h"
 #include "input-xinput.h"
 
@@ -27,7 +27,7 @@
 
 #define hl_input_init(...) hl_input_evdev_init(__VA_ARGS__)
 #define hl_input_inject(id, type, code, value) hl_input_evdev_inject(id, type, code, value)
-#elif defined(HAVE_XINPUT)
+#elif defined(_WIN32)
 #include "input-xinput.h"
 
 #define hl_input_init(...) hl_input_xinput_init(__VA_ARGS__)
