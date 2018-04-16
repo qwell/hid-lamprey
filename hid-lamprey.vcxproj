@@ -131,10 +131,14 @@
     <ClInclude Include="include\controller.h" />
     <ClInclude Include="include\defaults.h" />
     <ClInclude Include="include\display-cli.h" />
-    <ClInclude Include="include\display-gtk.h" />
+    <ClInclude Include="include\display-gtk.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="include\display.h" />
     <ClInclude Include="include\input-codetable.h" />
-    <ClInclude Include="include\input-evdev.h" />
+    <ClInclude Include="include\input-evdev.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="include\input-xinput.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\lamprey.h" />
@@ -142,7 +146,9 @@
     <ClInclude Include="include\settings.h" />
     <ClInclude Include="include\shortcut_cb.h" />
     <ClInclude Include="include\threads.h" />
-    <ClInclude Include="include\xdo.h" />
+    <ClInclude Include="include\xdo.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="settings.xml" />
