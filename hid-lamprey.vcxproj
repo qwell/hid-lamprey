@@ -110,6 +110,7 @@
       <AdditionalLibraryDirectories>C:\Users\north\source\repos\hid-lamprey;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>main</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -138,6 +139,9 @@
     <ClInclude Include="include\display-cli.h" />
     <ClInclude Include="include\display-gtk.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\display-win32-main.h">
+      <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="include\display-win32.h" />
     <ClInclude Include="include\display.h" />
@@ -173,7 +177,16 @@
     <Image Include="resources\small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="resources\lamprey.rc" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="include\display-win32-main.resx">
+      <DependentUpon>include\display-win32-main.h</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

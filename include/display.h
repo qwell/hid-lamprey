@@ -30,7 +30,7 @@
 
 #define hl_display_init(...) {\
 	hl_cli_init(__VA_ARGS__);\
-	hl_display_win32_init(hInstance, nCmdShow, __VA_ARGS__);\
+	hl_display_win32_init(__VA_ARGS__);\
 }
 #define hl_display_output_controller(controller) {\
 	hl_cli_output_controller(controller);\

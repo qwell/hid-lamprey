@@ -37,17 +37,13 @@
 #include "lamprey-rc.h"
 
 #include "config-win.h"
-#define LAMPREY_ENTRY_FUNC int lamprey_entry(int argc, char **argv, HINSTANCE hInstance, int nCmdShow)
 #else
 #include "config.h"
-#define LAMPREY_ENTRY_FUNC int lamprey_entry(int argc, char **argv)
 #endif
 
 #include "settings.h"
 #include "defaults.h"
 #include "threads.h"
-
-LAMPREY_ENTRY_FUNC;
 
 #if defined(DEBUG)
 	#define debug_print(...) printf(__VA_ARGS__)

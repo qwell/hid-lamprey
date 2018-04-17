@@ -104,6 +104,9 @@
     <ClInclude Include="include\display-win32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\display-win32-main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="settings.xml">
@@ -127,10 +130,5 @@
     <Image Include="resources\small.ico">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resources\lamprey.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>

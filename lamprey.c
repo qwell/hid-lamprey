@@ -22,16 +22,12 @@
 #include "include/threads.h"
 
 #if defined(_WIN32)
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
-	return lamprey_entry(0, NULL, hInstance, nCmdShow);
-}
+int main(void) {
+	int argc = 0;
+	char **argv = NULL;
 #else
 int main(int argc, char **argv) {
-	return lamprey_entry(argc, argv);
-}
 #endif
-
-LAMPREY_ENTRY_FUNC {
 	setlocale(LC_ALL, "");
 
 #if defined(HAVE_XDO)

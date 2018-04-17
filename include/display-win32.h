@@ -7,5 +7,7 @@
 * (at your option) any later version.
 */
 
-void hl_display_win32_init(HINSTANCE hInstance, int nCmdShow, int argc, char **argv);
+#include "include/display-win32-main.h"
+
+void hl_display_win32_init(int argc, char **argv);
 void hl_display_win32_output_controller(struct controller_display *controller);
