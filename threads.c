@@ -11,7 +11,11 @@
 
 #include "include/threads.h"
 
-int __cdecl hl_thread_create(hl_thread_t *handle, void *func, void *args) {
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+int hl_thread_create(hl_thread_t *handle, void *func, void *args) {
 #if defined(_WIN32)
 	if (!(*handle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)func, args, 0, NULL))) {
 		return -1;
@@ -23,7 +27,7 @@ int __cdecl hl_thread_create(hl_thread_t *handle, void *func, void *args) {
 #endif
 }
 
-void __cdecl hl_thread_destroy(hl_thread_t handle) {
+void hl_thread_destroy(hl_thread_t handle) {
 #if defined(_WIN32)
 	CloseHandle(handle);
 #else
@@ -31,9 +35,9 @@ void __cdecl hl_thread_destroy(hl_thread_t handle) {
 #endif
 }
 
-int __cdecl hl_thread_join(hl_thread_t handle) {
+int hl_thread_join(hl_thread_t handle) {
 #if defined(_WIN32)
-	switch(WaitForSingleObject(handle, INFINITE)) {
+	switch (WaitForSingleObject(handle, INFINITE)) {
 	case WAIT_OBJECT_0:
 		return 0;
 	default:
@@ -44,7 +48,7 @@ int __cdecl hl_thread_join(hl_thread_t handle) {
 #endif
 }
 
-void __cdecl hl_thread_exit(void) {
+void hl_thread_exit(void) {
 #if defined(_WIN32)
 	WORD ret = 0;
 	ExitThread(ret);
@@ -53,7 +57,7 @@ void __cdecl hl_thread_exit(void) {
 #endif
 }
 
-int __cdecl hl_mutex_lock(hl_mutex_t *handle) {
+int hl_mutex_lock(hl_mutex_t *handle) {
 #if defined(_WIN32)
 	DWORD result = WaitForSingleObject(*handle, INFINITE);
 	switch (result) {
@@ -67,7 +71,7 @@ int __cdecl hl_mutex_lock(hl_mutex_t *handle) {
 #endif
 }
 
-int __cdecl hl_mutex_unlock(hl_mutex_t *handle) {
+int hl_mutex_unlock(hl_mutex_t *handle) {
 #if defined(_WIN32)
 	if (ReleaseMutex(*handle)) {
 		return 0;
@@ -86,3 +90,6 @@ void hl_mutex_create(hl_mutex_t *handle) {
 #endif
 }
 
+#if defined(__cplusplus)
+}
+#endif

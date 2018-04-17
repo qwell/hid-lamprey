@@ -59,7 +59,7 @@ enum shortcut_type {
 
 struct shortcut {
 	const char *name;
-	void (*function) (...);
+	void (*function) (void *);
 	void *args;
 	enum shortcut_type type;
 	char **devices;
