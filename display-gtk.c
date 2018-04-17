@@ -7,7 +7,6 @@
  * (at your option) any later version.
  */
 
-#include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -16,8 +15,8 @@
 #include "include/controller.h"
 #include "include/display.h"
 
-pthread_t t_gtk;
-pthread_mutex_t mutex_gtk = PTHREAD_MUTEX_INITIALIZER;
+hl_thread_t t_gtk;
+hl_mutex_t mutex_gtk;
 
 void print_hello(GtkWidget *widget, gpointer data) {
 	g_print("Hello World\n");
@@ -27,9 +26,10 @@ void hl_gtk_init(int argc, char **argv) {
 	gtk_init(&argc, &argv);
 
 	/* Spawn another thread for gtk window handling. */
-	pthread_mutex_lock(&mutex_gtk);
-	pthread_create(&t_gtk, NULL, hl_gtk_show, NULL);
-	pthread_mutex_unlock(&mutex_gtk);
+	hl_mutex_create(&mutex_gtk);
+	hl_mutex_lock(&mutex_gtk);
+	hl_thread_create(&t_gtk, hl_gtk_show, NULL);
+	hl_mutex_unlock(&mutex_gtk);
 }
 
 void *hl_gtk_show(void *ptr) {
@@ -52,7 +52,7 @@ void *hl_gtk_show(void *ptr) {
 }
 
 void hl_gtk_destroy() {
-	pthread_exit(NULL);
+	hl_thread_exit();
 }
 
 void hl_gtk_output_controller(struct controller_display *controller) {

@@ -68,7 +68,7 @@ if (t_input_xinput) {
 
 
 #if defined(HAVE_GTK3)
-	pthread_join(t_gtk, NULL);
+	hl_thread_join(t_gtk);
 #endif
 
 #if defined(HAVE_XDO)

@@ -9,8 +9,8 @@
 
 #include <gtk/gtk.h>
 
-extern pthread_t t_gtk;
-extern pthread_mutex_t mutex_gtk;
+extern hl_thread_t t_gtk;
+extern hl_mutex_t mutex_gtk;
 
 void hl_gtk_init(int argc, char **argv);
 void *hl_gtk_show(void *ptr);
