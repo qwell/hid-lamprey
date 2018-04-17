@@ -38,14 +38,14 @@ void settings_xml_load_devices(xmlXPathContext *context) {
 		for (int i = 0; i < nodeset->nodeNr; i++) {
 			xmlNode *node = nodeset->nodeTab[i];
 
-			struct device *device = calloc(1, sizeof(struct device));
+			struct device *device = (struct device *)calloc(1, sizeof(struct device));
 			xmlChar *name = xmlGetProp(node, (const xmlChar *)"name");
 			xmlChar *uniqueid = xmlNodeGetContent(node->children);
 
 			device->name = strdup((char *)name);
 			device->uniqueid = strdup((char *)uniqueid);
 
-			devices = realloc(devices, (device_count + 1) * sizeof(*devices));
+			devices = (struct device **)realloc(devices, (device_count + 1) * sizeof(*devices));
 			devices[device_count] = device;
 			device_count++;
 			debug_print("Added device: %s (%s)\n", name, uniqueid);
@@ -68,7 +68,7 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 		for (int i = 0; i < nodeset->nodeNr; i++) {
 			xmlNode *node = nodeset->nodeTab[i];
 
-			struct shortcut *shortcut = calloc(1, sizeof(struct shortcut));
+			struct shortcut *shortcut = (struct shortcut *)calloc(1, sizeof(struct shortcut));
 			xmlChar *name = xmlGetProp(node, (const xmlChar *)"name");
 			xmlChar *type = xmlGetProp(node, (const xmlChar *)"type");
 
@@ -89,7 +89,7 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 
 						for (int i = 0; i < device_count; i++) {
 							if (!xmlStrcmp(name, (const xmlChar *)devices[i]->name)) {
-								shortcut->devices = realloc(shortcut->devices, (shortcut->device_count + 1) * sizeof(*shortcut->devices));
+								shortcut->devices = (char **)realloc(shortcut->devices, (shortcut->device_count + 1) * sizeof(*shortcut->devices));
 								shortcut->devices[shortcut->device_count] = strdup(devices[i]->uniqueid);
 								shortcut->device_count++;
 							}
@@ -97,7 +97,7 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 
 						xmlFree(name);
 					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"button")) {
-						struct button *button = calloc(1, sizeof(struct button));
+						struct shortcut_button *button = (struct shortcut_button *)calloc(1, sizeof(struct shortcut_button));
 
 						for (xmlNode *tchild = cur->children; tchild; tchild = tchild->next) {
 							if (tchild->type == XML_ELEMENT_NODE) {
@@ -109,7 +109,7 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 								xmlChar *trigger = xmlGetProp(tchild, (const xmlChar *)"trigger");
 
 								if ((button_code = hl_controller_get_code_by_name((char *)type, (char *)code))) {
-									struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
+									struct button_trigger *button_trigger = (struct button_trigger *)calloc(1, sizeof(struct button_trigger));
 									button_trigger->code = button_code->code;
 									button_trigger->type = button_code->type;
 									if (xmlStrlen(trigger) > 0) {
@@ -118,7 +118,7 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 										button_trigger->triggervalue = 0;
 									}
 
-									button->triggers = realloc(button->triggers, (button->trigger_count + 1) * sizeof(*button->triggers));
+									button->triggers = (struct button_trigger **)realloc(button->triggers, (button->trigger_count + 1) * sizeof(*button->triggers));
 									button->triggers[button->trigger_count] = button_trigger;
 									button->trigger_count++;
 								}
@@ -129,7 +129,7 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 							}
 						}
 
-						shortcut->buttons = realloc(shortcut->buttons, (shortcut->button_count + 1) * sizeof(*shortcut->buttons));
+						shortcut->buttons = (struct shortcut_button **)realloc(shortcut->buttons, (shortcut->button_count + 1) * sizeof(*shortcut->buttons));
 						shortcut->buttons[shortcut->button_count] = button;
 						shortcut->button_count++;
 					} else if (!xmlStrcmp(cur->name, (const xmlChar *)"function")) {
@@ -143,7 +143,7 @@ struct shortcut {
 				}
 			}
 
-			shortcuts = realloc(shortcuts, (shortcut_count + 1) * sizeof(*shortcuts));
+			shortcuts = (struct shortcut **)realloc(shortcuts, (shortcut_count + 1) * sizeof(*shortcuts));
 			shortcuts[shortcut_count] = shortcut;
 			shortcut_count++;
 
@@ -161,7 +161,7 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 	} else {
 		xmlNodeSet *nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {
-			struct remap *remap = calloc(1, sizeof(struct remap));
+			struct remap *remap = (struct remap *)calloc(1, sizeof(struct remap));
 
 			xmlNode *node = nodeset->nodeTab[i];
 
@@ -175,7 +175,7 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 						xmlChar *trigger = xmlGetProp(cur, (const xmlChar *)"trigger");
 
 						if ((button_code = hl_controller_get_code_by_name((char *)type, (char *)code))) {
-							struct button_trigger *button_trigger = calloc(1, sizeof(struct button_trigger));
+							struct button_trigger *button_trigger = (struct button_trigger *)calloc(1, sizeof(struct button_trigger));
 							button_trigger->code = button_code->code;
 							button_trigger->type = button_code->type;
 							if (xmlStrlen(trigger) > 0) {
@@ -197,7 +197,7 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 				}
 			}
 			if (remap->in && remap->out) {
-				remaps = realloc(remaps, (remap_count + 1) * sizeof(*remaps));
+				remaps = (struct remap **)realloc(remaps, (remap_count + 1) * sizeof(*remaps));
 				remaps[remap_count] = remap;
 				remap_count++;
 

@@ -45,21 +45,26 @@ struct controller_display {
 	const char layout[256];
 };
 
+
+struct shortcut_button {
+	struct button_trigger **triggers;
+	int trigger_count;
+	int state;
+};
+
+enum shortcut_type {
+	simultaneous = 0,
+	consecutive = 1
+};
+
 struct shortcut {
 	const char *name;
-	void (*function) ();
+	void (*function) (...);
 	void *args;
-	enum shortcut_type {
-		simultaneous = 0,
-		consecutive = 1
-	} type;
+	enum shortcut_type type;
 	char **devices;
 	int device_count;
-	struct button {
-		struct button_trigger **triggers;
-		int trigger_count;
-		int state;
-	} **buttons;
+	struct shortcut_button **buttons;
 	int button_count;
 };
 
@@ -68,13 +73,15 @@ struct device {
 	char *uniqueid;
 };
 
+struct codelookup_code {
+	char *codestr;
+	uint16_t code;
+};
+
 struct codelookup {
-	const char *typestr;
-	const uint8_t type;
-	const struct codes {
-		const char *codestr;
-		const uint16_t code;
-	} codes[1024];
+	char *typestr;
+	uint8_t type;
+	struct codelookup_code codes[1024];
 };
 extern struct codelookup codelookups[];
 extern int codelookup_count;

@@ -25,6 +25,7 @@ int codelookup_count = sizeof(codelookups);
 struct controller_display controller_displays[] = {
 	CONTROLLER_DISPLAYS
 };
+int controller_display_count = sizeof(codelookups);
 
 struct remap **remaps;
 int remap_count = 0;
@@ -41,7 +42,7 @@ struct button_code *hl_controller_get_code_by_name(char *type, char *name) {
 		if (code.typestr && !strcmp(code.typestr, type)) {
 			for (int j = 0; j < sizeof(code.codes) / sizeof(*code.codes); j++) {
 				if (code.codes[j].codestr && !strcmp(code.codes[j].codestr, name)) {
-					struct button_code *test = calloc(1, sizeof(*test));
+					struct button_code *test = (struct button_code *)calloc(1, sizeof(*test));
 					test->type = code.type;
 					test->code = code.codes[j].code;
 					return test;
@@ -74,7 +75,7 @@ void controller_shortcut_simultaneous(struct shortcut *shortcut) {
 	int triggered = 1; /* Assume success. */
 
 	for (int i = 0; i < shortcut->button_count; i++) {
-		struct button *button = shortcut->buttons[i];
+		struct shortcut_button *button = shortcut->buttons[i];
 		if (!button) {
 			continue;
 		}
@@ -142,7 +143,7 @@ void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16
 		}
 
 		for (int i = 0; i < shortcut->button_count; i++) {
-			struct button *button = shortcut->buttons[i];
+			struct shortcut_button *button = shortcut->buttons[i];
 			if (!button) {
 				continue;
 			}
@@ -202,7 +203,7 @@ void controller_remaps(int id, uint8_t type, uint16_t code, int16_t value) {
 }
 
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value) {
-	for (int i = 0; i < sizeof(controller_displays) / sizeof(*controller_displays); i++) {
+	for (int i = 0; i < controller_display_count / sizeof(*controller_displays); i++) {
 		struct controller_display *controller = &controller_displays[i];
 
 		if (!controller_check_device(device, controller->devices, sizeof(controller->devices) / sizeof(*controller->devices))) {

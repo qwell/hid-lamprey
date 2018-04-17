@@ -39,6 +39,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
+    <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -102,6 +103,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\north\Downloads\zlib-1.2.8-win32-x86_64\include;C:\Users\north\Downloads\iconv-1.14-win32-x86_64\include;C:\Users\north\Downloads\libxml2-2.9.3-win32-x86_64\include\libxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAsManaged>true</CompileAsManaged>
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Users\north\source\repos\hid-lamprey;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

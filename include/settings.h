@@ -29,9 +29,9 @@
 
 #define CONTROLLER_DISPLAYS \
 	{\
-		.name = "SNES",\
-		.devices = {DEVICE_XBOX, DEVICE_ROCKCANDY, DEVICE_XINPUT0},\
-		.mapping = {\
+		"SNES",\
+		{DEVICE_XBOX, DEVICE_ROCKCANDY, DEVICE_XINPUT0},\
+		{\
 			{"^", {\
 				{EV_KEY, BTN_DPAD_UP},\
 				{EV_ABS, ABS_HAT0Y, -1},\
@@ -61,22 +61,22 @@
 			{"s", {{EV_KEY, BTN_SELECT}}},\
 			{"S", {{EV_KEY, BTN_START}}},\
 		},\
-		.layout = {\
+		{\
 			" _|^|_  [L][R]   (X)  \n"\
 			"|<   >|        (Y) (A)\n"\
 			" ‾|v|‾  /s//S/   (B)  "\
 		},\
 	},\
 	{\
-		.name = "keyboard",\
-		.devices = {DEVICE_KEYBOARD, DEVICE_KEYBOARD2},\
-		.mapping = {\
+		"keyboard",\
+		{DEVICE_KEYBOARD, DEVICE_KEYBOARD2},\
+		{\
 			{"W", {{EV_KEY, KEY_W}}},\
 			{"A", {{EV_KEY, KEY_A}}},\
 			{"S", {{EV_KEY, KEY_S}}},\
 			{"D", {{EV_KEY, KEY_D}}},\
 		},\
-		.layout = {\
+		{\
 			"   [W]   \n"\
 			"[A][S][D]"\
 		},\
