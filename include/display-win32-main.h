@@ -68,14 +68,22 @@ namespace hidlamprey {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(282, 253);
 			this->Controls->Add(this->button1);
+			this->MaximizeBox = false;
 			this->Name = L"formMain";
+			this->ShowIcon = false;
 			this->Text = L"Lamprey";
 			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
+			this->Closed += gcnew System::EventHandler(this, &formMain::formMain_Closed);
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 	private: System::Void formMain_Load(System::Object^  sender, System::EventArgs^  e) {
+	}
+
+	private: System::Void formMain_Closed(System::Object^  sender, System::EventArgs^  e) {
+		//TODO: Exit cleanly.  Kill our thread, send a message from main()?
+		exit(1);
 	}
 	};
 }

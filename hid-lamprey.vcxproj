@@ -119,7 +119,7 @@
     <ClCompile Include="display-gtk.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="display-win32.c" />
+    <ClCompile Include="display-win32.cpp" />
     <ClCompile Include="input-evdev.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>

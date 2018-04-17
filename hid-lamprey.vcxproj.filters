@@ -45,7 +45,7 @@
     <ClCompile Include="xdo.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="display-win32.c">
+    <ClCompile Include="display-win32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
