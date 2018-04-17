@@ -34,8 +34,6 @@
 #include <Windows.h>
 #include <SDKDDKVer.h>
 
-#include "lamprey-rc.h"
-
 #include "config-win.h"
 #else
 #include "config.h"

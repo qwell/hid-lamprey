@@ -93,6 +93,7 @@ void hl_mutex_create(hl_mutex_t *mutex) {
 int hl_condlock_lock(hl_condlock_t *condlock) {
 #if defined(_WIN32)
 	EnterCriticalSection(condlock);
+	return 0;
 #else
 	return hl_mutex_lock(condlock);
 #endif
@@ -101,6 +102,7 @@ int hl_condlock_lock(hl_condlock_t *condlock) {
 int hl_condlock_unlock(hl_condlock_t *condlock) {
 #if defined(_WIN32)
 	LeaveCriticalSection(condlock);
+	return 0;
 #else
 	return hl_mutex_unlock(condlock);
 #endif
