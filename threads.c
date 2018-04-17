@@ -15,36 +15,36 @@
 extern "C" {
 #endif
 
-int hl_thread_create(hl_thread_t *handle, void *func, void *args) {
+int hl_thread_create(hl_thread_t *thread, void *func, void *args) {
 #if defined(_WIN32)
-	if (!(*handle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)func, args, 0, NULL))) {
+	if (!(*thread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)func, args, 0, NULL))) {
 		return -1;
 	}
 
 	return 0;
 #else
-	return pthread_create(handle, NULL, func, args);
+	return pthread_create(thread, NULL, func, args);
 #endif
 }
 
-void hl_thread_destroy(hl_thread_t handle) {
+void hl_thread_destroy(hl_thread_t thread) {
 #if defined(_WIN32)
-	CloseHandle(handle);
+	CloseHandle(thread);
 #else
 	pthread_exit(NULL);
 #endif
 }
 
-int hl_thread_join(hl_thread_t handle) {
+int hl_thread_join(hl_thread_t thread) {
 #if defined(_WIN32)
-	switch (WaitForSingleObject(handle, INFINITE)) {
+	switch (WaitForSingleObject(thread, INFINITE)) {
 	case WAIT_OBJECT_0:
 		return 0;
 	default:
 		return -1;
 	}
 #else
-	return pthread_join(handle, NULL);
+	return pthread_join(thread, NULL);
 #endif
 }
 
@@ -57,9 +57,9 @@ void hl_thread_exit(void) {
 #endif
 }
 
-int hl_mutex_lock(hl_mutex_t *handle) {
+int hl_mutex_lock(hl_mutex_t *mutex) {
 #if defined(_WIN32)
-	DWORD result = WaitForSingleObject(*handle, INFINITE);
+	DWORD result = WaitForSingleObject(*mutex, INFINITE);
 	switch (result) {
 	case WAIT_OBJECT_0:
 		return 0;
@@ -67,26 +67,77 @@ int hl_mutex_lock(hl_mutex_t *handle) {
 		return 1;
 	}
 #else
-	return pthread_mutex_lock(handle);
+	return pthread_mutex_lock(mutex);
 #endif
 }
 
-int hl_mutex_unlock(hl_mutex_t *handle) {
+int hl_mutex_unlock(hl_mutex_t *mutex) {
 #if defined(_WIN32)
-	if (ReleaseMutex(*handle)) {
+	if (ReleaseMutex(*mutex)) {
 		return 0;
 	}
 	return 1;
 #else
-	return pthread_mutex_unlock(handle);
+	return pthread_mutex_unlock(mutex);
 #endif
 }
 
-void hl_mutex_create(hl_mutex_t *handle) {
+void hl_mutex_create(hl_mutex_t *mutex) {
 #if defined(_WIN32)
-	*handle = CreateMutex(NULL, FALSE, NULL);
+	*mutex = CreateMutex(NULL, FALSE, NULL);
 #else
-	pthread_mutex_init(handle, NULL);
+	pthread_mutex_init(mutex, NULL);
+#endif
+}
+
+int hl_condlock_lock(hl_condlock_t *condlock) {
+#if defined(_WIN32)
+	EnterCriticalSection(condlock);
+#else
+	return hl_mutex_lock(condlock);
+#endif
+}
+
+int hl_condlock_unlock(hl_condlock_t *condlock) {
+#if defined(_WIN32)
+	LeaveCriticalSection(condlock);
+#else
+	return hl_mutex_unlock(condlock);
+#endif
+}
+
+void hl_condlock_create(hl_condlock_t *condlock) {
+#if defined(_WIN32)
+	InitializeCriticalSection(condlock);
+#else
+	hl_mutex_create(condlock);
+#endif
+}
+
+int hl_cond_create(hl_cond_t *cond) {
+#if defined(_WIN32)
+	InitializeConditionVariable(cond);
+	return 0;
+#else
+	return pthread_cond_init(cond, NULL);
+#endif
+}
+
+int hl_cond_wait(hl_cond_t *cond, hl_condlock_t *condlock) {
+#if defined(_WIN32)
+	SleepConditionVariableCS(cond, condlock, INFINITE);
+	return 0;
+#else
+	return pthread_cond_wait(cond, condlock);
+#endif
+}
+
+int hl_cond_signal(hl_cond_t *cond) {
+#if defined(_WIN32)
+	WakeConditionVariable(cond);
+	return 0;
+#else
+	return pthread_cond_signal(cond);
 #endif
 }
 
