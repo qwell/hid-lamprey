@@ -19,11 +19,11 @@ endif
 CFLAGS+=-Wall
 SO_LIBS+=-lm
 LIBS+=-L. -llamprey -Wl,-rpath=.
-FILTER_C:=
+FILTER_SRC:=
 
 ifeq ($(OS),windows)
 else
-FILTER_C+=input-xinput.c display-win32.c
+FILTER_SRC+=input-xinput.c display-win32.cpp
 endif
 
 ifeq ($(DEBUG),1)
@@ -33,35 +33,37 @@ ifeq ($(HAVE_EVDEV),1)
 CFLAGS+=$(EVDEV_CFLAGS)
 SO_LIBS+=$(EVDEV_LIBS)
 else
-FILTER_C+=input-evdev.c
+FILTER_SRC+=input-evdev.c
 endif
 ifeq ($(HAVE_XML2),1)
 CFLAGS+=$(XML2_CFLAGS)
 SO_LIBS+=$(XML2_LIBS)
 else
-FILTER_C+=settings-xml2.c
+FILTER_SRC+=settings-xml2.c
 endif
 ifeq ($(HAVE_CLI),1)
 else
-FILTER_C+=display-cli.c
+FILTER_SRC+=display-cli.c
 endif
 ifeq ($(HAVE_GTK3),1)
 CFLAGS+=$(GTK3_CFLAGS)
 SO_LIBS+=$(GTK3_LIBS)
 else
-FILTER_C+=display-gtk.c
+FILTER_SRC+=display-gtk.c
 endif
 ifeq ($(HAVE_XDO),1)
 CFLAGS+=$(XDO_CFLAGS)
 SO_LIBS+=$(XDO_LIBS)
 else
-FILTER_C+=xdo.c
+FILTER_SRC+=xdo.c
 endif
 
-SRCS:=$(filter-out $(FILTER_C),$(wildcard *.c))
-OBJS:=$(SRCS:.c=.o)
+SRCS_C:=$(filter-out $(FILTER_SRC),$(wildcard *.c))
+SRCS_CC:=$(filter-out $(FILTER_SRC),$(wildcard *.cpp))
+OBJS_C:=$(SRCS_C:.c=.o)
+OBJS_CC:=$(SRCS_CC:.cpp=.oo)
 
-ALLFLAGS:=$(CFLAGS) $(LIBS) $(SO_LIBS) $(SRCS)
+ALLFLAGS:=$(CFLAGS) $(LIBS) $(SO_LIBS) $(SRCS_C) $(SRCS_CC)
 
 COLOR_RED=\033[31m
 COLOR_GREEN=\033[32m
@@ -83,14 +85,19 @@ $(APPS:%=%$(APPSUFFIX)):
 
 $(APPS:%=%$(APPSUFFIX)): $(SOS)
 
--include $(patsubst %.o,.%.o.d,$(OBJS))
+-include $(patsubst %.o,.%.o.d,$(OBJS_C))
+-include $(patsubst %.oo,.%.oo.d,$(OBJS_CC))
 
-$(SOS): $(filter-out $(APPS:%$(APPSUFFIX)=%.o),$(OBJS))
+$(SOS): $(filter-out $(APPS:%$(APPSUFFIX)=%.o),$(OBJS_C)) #$(filter-out $(APPS:%$(APPSUFFIX)=%.oo),$(OBJS_CC))
 	@$(CC) -o $@ $^ $(CFLAGS) $(SO_LIBS) -shared
 	@printf "[$(COLOR_RED)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$^$(COLOR_DEFAULT)\n" "$@"
 
 %.o: %.c Makefile.deps
 	@$(CC) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
+	@printf "[$(COLOR_BLUE)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$<$(COLOR_DEFAULT)\n" "$@"
+
+%.oo: %.cpp Makefile.deps
+	@$(CPP) -o $@ -c $< $(MAKE_DEPS) $(CFLAGS)
 	@printf "[$(COLOR_BLUE)%-20s$(COLOR_DEFAULT)] < $(COLOR_GREEN)$<$(COLOR_DEFAULT)\n" "$@"
 
 Makefile.deps: $(REBUILD) config.out

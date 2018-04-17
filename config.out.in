@@ -1,4 +1,5 @@
 CC=@CC@
+CPP=@CPP@
 MAKE=@GNU_MAKE@
 OS=@host_os@
 
