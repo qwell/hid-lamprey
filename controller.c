@@ -25,7 +25,7 @@ int codelookup_count = sizeof(codelookups);
 struct controller_display controller_displays[] = {
 	CONTROLLER_DISPLAYS
 };
-int controller_display_count = sizeof(codelookups);
+int controller_display_count = sizeof(controller_displays);
 
 struct remap **remaps;
 int remap_count = 0;
