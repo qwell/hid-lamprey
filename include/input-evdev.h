@@ -15,8 +15,8 @@
 #include <libevdev/libevdev.h>
 #include <libevdev/libevdev-uinput.h>
 
-extern pthread_t t_evdev;
-extern pthread_mutex_t mutex_evdev;
+extern hl_thread_t t_evdev;
+extern hl_mutex_t mutex_evdev;
 extern struct hl_evdev *hl_evdev;
 
 /* For list of codes, see

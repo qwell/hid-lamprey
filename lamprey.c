@@ -56,7 +56,7 @@ LAMPREY_ENTRY_FUNC {
 
 #if defined(HAVE_EVDEV)
 	if (hl_evdev) {
-		pthread_join(t_evdev, NULL);
+		hl_thread_join(t_evdev);
 	}
 #endif
 

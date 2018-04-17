@@ -11,7 +11,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <math.h>
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,8 +22,8 @@
 #include "include/controller.h"
 #include "include/input.h"
 
-pthread_t t_evdev;
-pthread_mutex_t mutex_evdev = PTHREAD_MUTEX_INITIALIZER;
+hl_thread_t t_evdev;
+hl_mutex_t mutex_evdev;
 struct hl_evdev *hl_evdev = NULL;
 
 int filter_event_files(const struct dirent *entry)
@@ -43,9 +42,10 @@ void hl_input_evdev_init() {
 		return;
 	}
 
-	pthread_mutex_lock(&mutex_evdev);
+	hl_mutex_create(&mutex_evdev);
+	hl_mutex_lock(&mutex_evdev);
 	if (hl_evdev) {
-		pthread_mutex_unlock(&mutex_evdev);
+		hl_mutex_unlock(&mutex_evdev);
 		return;
 	}
 	hl_evdev = malloc(sizeof(struct hl_evdev));
@@ -194,9 +194,9 @@ void hl_input_evdev_init() {
 	}
 
 	/* Spawn off a thread to handle evdev polling. */
-	pthread_create(&t_evdev, NULL, hl_input_evdev_poll, NULL);
+	hl_thread_create(&t_evdev, hl_input_evdev_poll, NULL);
 
-	pthread_mutex_unlock(&mutex_evdev);
+	hl_mutex_unlock(&mutex_evdev);
 
 	return;
 }
@@ -207,9 +207,9 @@ void *hl_input_evdev_poll() {
 	// Poll events
 	do {
 		//TODO Avoid locking around the poll.  This is gross.
-		pthread_mutex_lock(&mutex_evdev);
+		hl_mutex_lock(&mutex_evdev);
 		rc = poll(hl_evdev->fds, sizeof(hl_evdev->fds) / sizeof(struct pollfd), 1000);
-		pthread_mutex_unlock(&mutex_evdev);
+		hl_mutex_unlock(&mutex_evdev);
 		if (rc < 0) {
 			break;
 		}
@@ -217,7 +217,7 @@ void *hl_input_evdev_poll() {
 			continue;
 		}
 
-		pthread_mutex_lock(&mutex_evdev);
+		hl_mutex_lock(&mutex_evdev);
 		for (int i = 0; i < sizeof(hl_evdev->devices) / sizeof(*hl_evdev->devices); i++) {
 			struct libevdev *dev = NULL;
 
@@ -238,10 +238,10 @@ void *hl_input_evdev_poll() {
 				case EV_KEY:
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
 						__attribute__((__unused__)) struct key_data key = hl_evdev->maps.key_map[ev.code - LOW_KEY];
-						pthread_mutex_unlock(&mutex_evdev);
+						hl_mutex_unlock(&mutex_evdev);
 						debug_print("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
 						hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, ev.value);
-						pthread_mutex_lock(&mutex_evdev);
+						hl_mutex_lock(&mutex_evdev);
 					}
 					break;
 				case EV_ABS:
@@ -268,10 +268,10 @@ void *hl_input_evdev_poll() {
 							} else if (ev.value <= relzero - deadsize) {
 								value = (relzero - hat.min) * (ev.value - hat.min) / ((relzero - deadsize) - hat.min) + hat.min;
 							}
-							pthread_mutex_unlock(&mutex_evdev);
+							hl_mutex_unlock(&mutex_evdev);
 							debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
 							hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
-							pthread_mutex_lock(&mutex_evdev);
+							hl_mutex_lock(&mutex_evdev);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -298,10 +298,10 @@ void *hl_input_evdev_poll() {
 							} else if (ev.value <= relzero - deadsize) {
 								value = (relzero - axis.min) * (ev.value - axis.min) / ((relzero - deadsize) - axis.min) + axis.min;
 							}
-							pthread_mutex_unlock(&mutex_evdev);
+							hl_mutex_unlock(&mutex_evdev);
 							debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
 							hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
-							pthread_mutex_lock(&mutex_evdev);
+							hl_mutex_lock(&mutex_evdev);
 						} else {
 							//TODO Do we just never send a zero event?
 						}
@@ -315,7 +315,7 @@ void *hl_input_evdev_poll() {
 				}
 			} while (rc == 0);
 		}
-		pthread_mutex_unlock(&mutex_evdev);
+		hl_mutex_unlock(&mutex_evdev);
 	} while (rc == 1 || rc == 0 || rc == -EAGAIN);
 
 	hl_input_evdev_destroy();
@@ -324,10 +324,10 @@ void *hl_input_evdev_poll() {
 }
 
 void hl_input_evdev_destroy() {
-	pthread_mutex_lock(&mutex_evdev);
+	hl_mutex_lock(&mutex_evdev);
 
 	if (hl_evdev == NULL) {
-		pthread_mutex_unlock(&mutex_evdev);
+		hl_mutex_unlock(&mutex_evdev);
 		return;
 	}
 
@@ -348,13 +348,13 @@ void hl_input_evdev_destroy() {
 	free(hl_evdev);
 	hl_evdev = NULL;
 
-	pthread_mutex_unlock(&mutex_evdev);
+	hl_mutex_unlock(&mutex_evdev);
 
-	pthread_exit(NULL);
+	hl_thread_exit();
 }
 
 void hl_input_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
-	pthread_mutex_lock(&mutex_evdev);
+	hl_mutex_lock(&mutex_evdev);
 	if (hl_evdev->uinput.uidev != NULL) {
 		libevdev_uinput_write_event(hl_evdev->uinput.uidev, type, code, value);
 		libevdev_uinput_write_event(hl_evdev->uinput.uidev, EV_SYN, SYN_REPORT, 0);
@@ -370,5 +370,5 @@ void hl_input_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
 			}
 		}
 	}
-	pthread_mutex_unlock(&mutex_evdev);
+	hl_mutex_unlock(&mutex_evdev);
 }
