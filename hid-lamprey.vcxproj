@@ -120,6 +120,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="display-win32.cpp" />
+    <ClCompile Include="display-win32-main.cpp" />
     <ClCompile Include="input-evdev.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -152,7 +153,6 @@
     <ClInclude Include="include\input-xinput.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\lamprey.h" />
-    <ClInclude Include="include\lamprey-rc.h" />
     <ClInclude Include="include\settings-xml2.h" />
     <ClInclude Include="include\settings.h" />
     <ClInclude Include="include\shortcut_cb.h" />

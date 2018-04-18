@@ -23,6 +23,10 @@ void hl_cli_init(int argc, char **argv) {
 void hl_cli_output_controller(struct controller_display *controller) {
 	char pressed[256] = {0};
 
+	if (!controller) {
+		return;
+	}
+
 	for (int j = 0; j < sizeof(controller->mapping) / sizeof(*controller->mapping); j++) {
 		struct controller_display_mapping *mapping = &controller->mapping[j];
 

@@ -57,9 +57,12 @@ int main(int argc, char **argv) {
 #endif
 
 #if defined(_WIN32)
-if (t_input_xinput) {
-	hl_thread_join(t_input_xinput);
-}
+	if (t_display_win32) {
+		hl_thread_join(t_display_win32);
+	}
+	if (t_input_xinput) {
+		hl_thread_join(t_input_xinput);
+	}
 #endif
 
 

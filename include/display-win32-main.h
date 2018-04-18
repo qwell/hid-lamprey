@@ -15,6 +15,16 @@ namespace hidlamprey {
 	public ref class formMain : public System::Windows::Forms::Form
 	{
 	public:
+		static formMain^ Instance() {
+			if (!instance) {
+				instance = gcnew formMain();
+			}
+			return instance;
+		}
+
+		void output_controller();
+
+	protected:
 		formMain(void)
 		{
 			InitializeComponent();
@@ -23,7 +33,6 @@ namespace hidlamprey {
 			//
 		}
 
-	protected:
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
@@ -38,7 +47,10 @@ namespace hidlamprey {
 	protected:
 
 	private:
-		/// <summary>
+		static formMain^ instance;
+
+
+			 /// <summary>
 		/// Required designer variable.
 		/// </summary>
 		System::ComponentModel::Container ^components;
@@ -61,6 +73,7 @@ namespace hidlamprey {
 			this->button1->TabIndex = 0;
 			this->button1->Text = L"button1";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &formMain::button1_Click);
 			// 
 			// formMain
 			// 
@@ -72,8 +85,8 @@ namespace hidlamprey {
 			this->Name = L"formMain";
 			this->ShowIcon = false;
 			this->Text = L"Lamprey";
-			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
 			this->Closed += gcnew System::EventHandler(this, &formMain::formMain_Closed);
+			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
 			this->ResumeLayout(false);
 
 		}
@@ -82,8 +95,10 @@ namespace hidlamprey {
 	}
 
 	private: System::Void formMain_Closed(System::Object^  sender, System::EventArgs^  e) {
-		//TODO: Exit cleanly.  Kill our thread, send a message from main()?
-		exit(1);
+	}
+
+	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+		button1->Text = L"Apples";
 	}
 	};
 }

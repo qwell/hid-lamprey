@@ -16,18 +16,33 @@
 #include "include/controller.h"
 #include "include/display.h"
 
-using namespace System;
-using namespace System::Windows::Forms;
+#include "include/display-win32-main.h"
 
-void hl_display_win32_init(int argc, char **argv) {
+using namespace hidlamprey;
+
+using namespace System;
+using namespace System::Runtime::InteropServices;
+using namespace System::Threading::Tasks;
+
+hl_thread_t t_display_win32;
+hl_mutex_t mutex_display_win32;
+
+void *display_win32_show_window() {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
-	hidlamprey::formMain form;
-	Application::Run(%form);
+	Application::Run(formMain::Instance());
 
+	exit(1); //TODO: Signal the main thread to die.
+	return NULL;
+}
+
+void hl_display_win32_init(int argc, char **argv) {
+	hl_mutex_create(&mutex_display_win32);
+	hl_thread_create(&t_display_win32, display_win32_show_window, NULL);
 	return;
 }
 
 void hl_display_win32_output_controller(struct controller_display *controller) {
+	formMain^ form = formMain::Instance();
+	form->output_controller();
 }
-

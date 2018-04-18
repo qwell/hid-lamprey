@@ -7,7 +7,8 @@
 * (at your option) any later version.
 */
 
-#include "include/display-win32-main.h"
+extern hl_thread_t t_display_win32;
+extern hl_mutex_t mutex_display_win32;
 
 void hl_display_win32_init(int argc, char **argv);
 void hl_display_win32_output_controller(struct controller_display *controller);

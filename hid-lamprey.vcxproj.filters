@@ -48,6 +48,9 @@
     <ClCompile Include="display-win32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="display-win32-main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\controller.h">
@@ -98,9 +101,6 @@
     <ClInclude Include="include\input-xinput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\lamprey-rc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\display-win32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -130,5 +130,10 @@
     <Image Include="resources\small.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="include\display-win32-main.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
