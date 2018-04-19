@@ -30,7 +30,8 @@ hl_mutex_t mutex_display_win32;
 void *display_win32_show_window() {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
-	Application::Run(formMain::Instance());
+	formMain^ form = formMain::Instance();
+	Application::Run(form);
 
 	exit(1); //TODO: Signal the main thread to die.
 	return NULL;
@@ -43,6 +44,9 @@ void hl_display_win32_init(int argc, char **argv) {
 }
 
 void hl_display_win32_output_controller(struct controller_display *controller) {
-	formMain^ form = formMain::Instance();
-	form->output_controller();
+	if (!controller) {
+		return;
+	}
+
+	formMain::Instance()->output_controller(IntPtr((void *)controller));
 }
