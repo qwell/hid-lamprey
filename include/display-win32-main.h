@@ -78,7 +78,7 @@ namespace hidlamprey {
 			// 
 			// picController
 			// 
-			this->picController->ImageLocation = L"resources/SNES_Simplified_small.png";
+			this->picController->ImageLocation = L"resources/SNES_Simplified.png";
 			this->picController->Location = System::Drawing::Point(12, 12);
 			this->picController->Name = L"picController";
 			this->picController->Size = System::Drawing::Size(640, 284);
