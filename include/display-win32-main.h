@@ -1,7 +1,6 @@
 #pragma once
 
 namespace hidlamprey {
-
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -11,53 +10,44 @@ namespace hidlamprey {
 	using namespace System::Threading;
 
 	/// <summary>
-	/// Summary for MyForm
+	/// Summary for formMain
 	/// </summary>
-	public ref class formMain : public System::Windows::Forms::Form
-	{
+	public ref class formMain : public System::Windows::Forms::Form {
 	public:
 		static formMain^ Instance() {
 			Monitor::Enter(instanceLock);
-			try
-			{
+			try {
 				if (!instance) {
 					instance = gcnew formMain();
 				}
 				return instance;
-				// Do work
-			}
-			finally
-			{
+			} finally {
 				Monitor::Exit(instanceLock);
 			}
 		}
 		
 		void output_controller(IntPtr controller);
 
-
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~formMain()
-		{
-			if (components)
-			{
+		~formMain() {
+			if (components) {
 				delete components;
 			}
 		}
 
 	private:
-		formMain(void)
-		{
+		formMain(void) {
 			InitializeComponent();
 		}
 
-		System::Windows::Forms::Button^  button1;
-		System::Windows::Forms::PictureBox^  picController;
 		static formMain^ instance;
 		static Object^ instanceLock = gcnew Object();
 		Boolean imageControllerLoaded = false;
+		System::Windows::Forms::Button^  button1;
+		System::Windows::Forms::PictureBox^  picController;
 
 		/// <summary>
 		/// Required designer variable.
