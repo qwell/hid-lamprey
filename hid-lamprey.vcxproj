@@ -175,6 +175,7 @@
   <ItemGroup>
     <Image Include="resources\lamprey.ico" />
     <Image Include="resources\small.ico" />
+    <Image Include="resources\SNES_Simplified.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
