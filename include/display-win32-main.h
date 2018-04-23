@@ -41,13 +41,17 @@ namespace hidlamprey {
 	private:
 		formMain(void) {
 			InitializeComponent();
+
+			this->picControllerDisplay->Parent = this->picController;
+			this->picControllerDisplay->Location = System::Drawing::Point(0, 0);
 		}
 
 		static formMain^ instance;
 		static Object^ instanceLock = gcnew Object();
 		Boolean imageControllerLoaded = false;
-		System::Windows::Forms::Button^  button1;
 		System::Windows::Forms::PictureBox^  picController;
+		System::Windows::Forms::PictureBox^  picControllerDisplay;
+
 
 		/// <summary>
 		/// Required designer variable.
@@ -61,20 +65,11 @@ namespace hidlamprey {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->picController = (gcnew System::Windows::Forms::PictureBox());
+			this->picControllerDisplay = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picController))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picControllerDisplay))->BeginInit();
 			this->SuspendLayout();
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(12, 308);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(96, 36);
-			this->button1->TabIndex = 0;
-			this->button1->Text = L"button1";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &formMain::button1_Click);
 			// 
 			// picController
 			// 
@@ -87,13 +82,23 @@ namespace hidlamprey {
 			this->picController->TabStop = false;
 			this->picController->LoadCompleted += gcnew System::ComponentModel::AsyncCompletedEventHandler(this, &formMain::picController_LoadCompleted);
 			// 
+			// picControllerDisplay
+			// 
+			this->picControllerDisplay->BackColor = System::Drawing::Color::Transparent;
+			this->picControllerDisplay->ImageLocation = L"";
+			this->picControllerDisplay->Location = System::Drawing::Point(12, 12);
+			this->picControllerDisplay->Name = L"picControllerDisplay";
+			this->picControllerDisplay->Size = System::Drawing::Size(640, 284);
+			this->picControllerDisplay->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->picControllerDisplay->TabIndex = 2;
+			this->picControllerDisplay->TabStop = false;
+			// 
 			// formMain
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(120, 120);
-			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Dpi;
-			this->ClientSize = System::Drawing::Size(664, 356);
+			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
+			this->ClientSize = System::Drawing::Size(664, 307);
+			this->Controls->Add(this->picControllerDisplay);
 			this->Controls->Add(this->picController);
-			this->Controls->Add(this->button1);
 			this->MaximizeBox = false;
 			this->Name = L"formMain";
 			this->ShowIcon = false;
@@ -101,6 +106,7 @@ namespace hidlamprey {
 			this->Closed += gcnew System::EventHandler(this, &formMain::formMain_Closed);
 			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picController))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picControllerDisplay))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -109,9 +115,6 @@ namespace hidlamprey {
 	}
 
 	private: System::Void formMain_Closed(System::Object^  sender, System::EventArgs^  e) {
-	}
-
-	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 	}
 
 	private: System::Void picController_LoadCompleted(System::Object^  sender, System::ComponentModel::AsyncCompletedEventArgs^  e) {
