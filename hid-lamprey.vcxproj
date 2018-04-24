@@ -108,7 +108,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Users\north\source\repos\hid-lamprey;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;xinput.lib;dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>main</EntryPointSymbol>
     </Link>
@@ -121,6 +121,7 @@
     </ClCompile>
     <ClCompile Include="display-win32.cpp" />
     <ClCompile Include="display-win32-main.cpp" />
+    <ClCompile Include="input-dinput.c" />
     <ClCompile Include="input-evdev.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -147,6 +148,7 @@
     <ClInclude Include="include\display-win32.h" />
     <ClInclude Include="include\display.h" />
     <ClInclude Include="include\input-codetable.h" />
+    <ClInclude Include="include\input-dinput.h" />
     <ClInclude Include="include\input-evdev.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>

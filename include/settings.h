@@ -23,6 +23,7 @@
 
 #define DEVICE_ROCKCANDY "3/e6f-11f:Rock Candy Gamepad Wired Controller"
 #define DEVICE_XBOX "3/45e-2a1:Xbox 360 Wireless Receiver (XBOX)"
+#define DEVICE_DINPUT0 "Dinput 0"
 #define DEVICE_XINPUT0 "Xinput 0"
 #define DEVICE_KEYBOARD "11/1-1:AT Translated Set 2 keyboard"
 #define DEVICE_KEYBOARD2 "3/258a-1:SINO WEALTH USB KEYBOARD"
@@ -30,7 +31,7 @@
 #define CONTROLLER_DISPLAYS \
 	{\
 		"SNES",\
-		{DEVICE_XBOX, DEVICE_ROCKCANDY, DEVICE_XINPUT0},\
+		{DEVICE_XBOX, DEVICE_ROCKCANDY, DEVICE_DINPUT0, DEVICE_XINPUT0},\
 		{\
 			{"^", {\
 				{EV_KEY, BTN_DPAD_UP},\

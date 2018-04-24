@@ -40,12 +40,12 @@ void formMain::output_controller(IntPtr controller) {
 			for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
 				const struct button_trigger *trigger = &mapping->buttons[k];
 
-				if (trigger->code == BTN_NORTH) {
-					path->AddEllipse(Drawing::Rectangle(Point(478, 72), Drawing::Size(48, 48)));
+				if (trigger->code == BTN_SOUTH) {
+					path->AddEllipse(Drawing::Rectangle(Point(478, 167), Drawing::Size(48, 48)));
 				} else if (trigger->code == BTN_EAST) {
 					path->AddEllipse(Drawing::Rectangle(Point(539, 121), Drawing::Size(48, 48)));
-				} else if (trigger->code == BTN_SOUTH) {
-					path->AddEllipse(Drawing::Rectangle(Point(478, 167), Drawing::Size(48, 48)));
+				} else if (trigger->code == BTN_NORTH) {
+					path->AddEllipse(Drawing::Rectangle(Point(478, 72), Drawing::Size(48, 48)));
 				} else if (trigger->code == BTN_WEST) {
 					path->AddEllipse(Drawing::Rectangle(Point(419, 119), Drawing::Size(48, 48)));
 				} else if (trigger->code == BTN_TL) {

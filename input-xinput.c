@@ -120,7 +120,7 @@ void *hl_input_xinput_poll() {
 
 			hl_mutex_unlock(&mutex_input_xinput);
 		}
-		Sleep(100);
+		Sleep(33);
 	} while (res == 0);
 
 	hl_input_xinput_destroy();

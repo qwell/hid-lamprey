@@ -12,14 +12,17 @@
 
 #if defined(HAVE_EVDEV) && defined(_WIN32)
 #include "input-evdev.h"
+#include "input-dinput.h"
 #include "input-xinput.h"
 
 #define hl_input_init(...) {\
 	hl_input_evdev_init(__VA_ARGS__);\
+	hl_input_dinput_init(__VA_ARGS__);\
 	hl_input_xinput_init(__VA_ARGS__);\
 }
 #define hl_input_inject(id, type, code, value) {\
 	hl_input_evdev_inject(id, type, code, value);\
+	hl_input_dinput_inject(id, type, code, value);\
 	hl_input_xinput_inject(id, type, code, value);\
 }
 #elif defined(HAVE_EVDEV)
@@ -28,10 +31,17 @@
 #define hl_input_init(...) hl_input_evdev_init(__VA_ARGS__)
 #define hl_input_inject(id, type, code, value) hl_input_evdev_inject(id, type, code, value)
 #elif defined(_WIN32)
+#include "input-dinput.h"
 #include "input-xinput.h"
 
-#define hl_input_init(...) hl_input_xinput_init(__VA_ARGS__)
-#define hl_input_inject(id, type, code, value) hl_input_xinput_inject(id, type, code, value)
+#define hl_input_init(...) {\
+	hl_input_dinput_init(__VA_ARGS__);\
+	hl_input_xinput_init(__VA_ARGS__);\
+};
+#define hl_input_inject(id, type, code, value) {\
+	hl_input_dinput_inject(id, type, code, value);\
+	hl_input_xinput_inject(id, type, code, value);\
+};
 #else
 #define hl_input_init(...)
 #define hl_input_inject(id, type, code, value)
