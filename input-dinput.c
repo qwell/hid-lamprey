@@ -61,17 +61,25 @@ BOOL CALLBACK input_dinput_enum_devices(const DIDEVICEINSTANCE *instance, void *
 }
 
 void hl_input_dinput_init() {
+	hl_mutex_create(&mutex_input_xinput);
+
+	hl_mutex_lock(&mutex_input_dinput);
+
 	hl_input_dinput = (struct hl_input_dinput *)malloc(sizeof(struct hl_input_dinput));
 
 	if (DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&hl_input_dinput->di, NULL) != DI_OK) {
+		hl_mutex_unlock(&mutex_input_dinput);
 		return;
 	}
 
 	if (hl_input_dinput->di->EnumDevices(DI8DEVCLASS_GAMECTRL, input_dinput_enum_devices, NULL, DIEDFL_ATTACHEDONLY) != DI_OK) {
+		hl_mutex_unlock(&mutex_input_dinput);
 		return;
 	}
 
-	hl_thread_create(&t_input_dinput, hl_input_dinput_poll, NULL);
+	if (hl_input_dinput->joystick != NULL) {
+		hl_thread_create(&t_input_dinput, hl_input_dinput_poll, NULL);
+	}
 
 	hl_mutex_unlock(&mutex_input_dinput);
 
@@ -115,6 +123,8 @@ void *hl_input_dinput_poll() {
 	HRESULT hr;
 	
 	do {
+		hl_mutex_lock(&mutex_input_dinput);
+
 		if ((hr = hl_input_dinput->joystick->Poll()) != DI_OK) {
 			hr = hl_input_dinput->joystick->Acquire();
 			while (hr == DIERR_INPUTLOST) {
@@ -123,6 +133,7 @@ void *hl_input_dinput_poll() {
 		}
 
 		if ((hr == DIERR_INVALIDPARAM) || (hr == DIERR_NOTINITIALIZED)) {
+			hl_mutex_unlock(&mutex_input_dinput);
 			break;
 		}
 
@@ -131,6 +142,7 @@ void *hl_input_dinput_poll() {
 			 * exclusive access, so maybe we just never hit this?
 			 * Keep trying, I suppose.
 			 */
+			hl_mutex_unlock(&mutex_input_dinput);
 			continue;
 		}
 
@@ -244,6 +256,8 @@ void *hl_input_dinput_poll() {
 		}
 
 		hl_input_dinput->state = state;
+		hl_mutex_unlock(&mutex_input_dinput);
+
 		Sleep(33);
 	} while (hr == DI_OK || hr == DIERR_OTHERAPPHASPRIO);
 
