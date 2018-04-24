@@ -82,19 +82,33 @@ void *hl_input_dinput_poll() {
 	struct dinput_button_maps {
 		WORD dinput;
 		int mapto;
-	} dinput_button_maps[] = {
-		{ 0, BTN_WEST },
-		{ 1, BTN_SOUTH },
-		{ 2, BTN_EAST },
-		{ 3, BTN_NORTH },
-		{ 4, BTN_TR },
-		{ 5, BTN_TL },
-		{ 6, BTN_TR2 },
-		{ 7, BTN_TL2 },
-		{ 8, BTN_START },
-		{ 9, BTN_SELECT },
-		{ 10, BTN_THUMBR },
-		{ 11, BTN_THUMBL },
+	} dinput_button_maps[2][16] = {
+		{
+			/* 8 buttons */
+			{ 0, BTN_SOUTH },
+			{ 1, BTN_EAST },
+			{ 2, BTN_WEST },
+			{ 3, BTN_NORTH },
+			{ 4, BTN_TL },
+			{ 5, BTN_TR },
+			{ 6, BTN_SELECT },
+			{ 7, BTN_START },
+		},
+		{
+			/* 12 buttons */
+			{ 0, BTN_WEST },
+			{ 1, BTN_SOUTH },
+			{ 2, BTN_EAST },
+			{ 3, BTN_NORTH },
+			{ 4, BTN_TR },
+			{ 5, BTN_TL },
+			{ 6, BTN_TR2 },
+			{ 7, BTN_TL2 },
+			{ 8, BTN_START },
+			{ 9, BTN_SELECT },
+			{ 10, BTN_THUMBR },
+			{ 11, BTN_THUMBL },
+		}
 	};
 
 	DIJOYSTATE2 state;
@@ -127,16 +141,27 @@ void *hl_input_dinput_poll() {
 			bool pUp = false;
 			bool pDown = false;
 
-			for (int i = 0; i < hl_input_dinput->capabilities.dwButtons; i++) {
-				if (state.rgbButtons[i] != hl_input_dinput->state.rgbButtons[i]) {
-					if (state.rgbButtons[i] & 0x80) {
-						hl_controller_change("Dinput 0", 0, EV_KEY, dinput_button_maps[i].mapto, 1);
-					} else {
-						hl_controller_change("Dinput 0", 0, EV_KEY, dinput_button_maps[i].mapto, 0);
+			int map = -1;
+
+			switch (hl_input_dinput->capabilities.dwButtons) {
+			case 8:
+				map = 0;
+				break;
+			case 12:
+				map = 1;
+				break;
+			}
+			if (map >= 0) {
+				for (int i = 0; i < hl_input_dinput->capabilities.dwButtons; i++) {
+					if (state.rgbButtons[i] != hl_input_dinput->state.rgbButtons[i]) {
+						if (state.rgbButtons[i] & 0x80) {
+							hl_controller_change("Dinput 0", 0, EV_KEY, dinput_button_maps[map][i].mapto, 1);
+						} else {
+							hl_controller_change("Dinput 0", 0, EV_KEY, dinput_button_maps[map][i].mapto, 0);
+						}
 					}
 				}
 			}
-
 			for (int i = 0; i < hl_input_dinput->capabilities.dwPOVs; i++) {
 				if (state.rgdwPOV[i] != hl_input_dinput->state.rgdwPOV[i]) {
 					dpadChanged = true;
