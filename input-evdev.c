@@ -247,15 +247,15 @@ void *hl_input_evdev_poll() {
 				case EV_ABS:
 					if (ev.code >= LOW_HAT && ev.code <= HIGH_HAT) {
 						struct hat_data hat = hl_evdev->maps.hat_map[ev.code - LOW_HAT];
-						int value = hl_controller_scale_range(ev.value, ev.min, ev.max);
-						
+						int value = hl_controller_scale_range(ev.value, hat.min, hat.max);
+
 						hl_mutex_unlock(&mutex_evdev);
 						debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
 						hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
 						hl_mutex_lock(&mutex_evdev);
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
 						struct axis_data axis = hl_evdev->maps.abs_map[ev.code - LOW_AXIS];
-						int value = hl_controller_scale_range(ev.value, ev.min, ev.max);
+						int value = hl_controller_scale_range(ev.value, axis.min, axis.max);
 
 						hl_mutex_unlock(&mutex_evdev);
 						debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
