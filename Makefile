@@ -23,7 +23,7 @@ FILTER_SRC:=
 
 ifeq ($(OS),windows)
 else
-FILTER_SRC+=input-xinput.c display-win32.cpp
+FILTER_SRC+=input-dinput.c input-xinput.c display-win32.cpp
 endif
 
 ifeq ($(DEBUG),1)
