@@ -32,50 +32,50 @@
 			<button>
 				<trigger type="EV_KEY" code="KEY_UP"/>
 				<trigger type="EV_KEY" code="BTN_DPAD_UP"/>
-				<trigger type="EV_KEY" code="ABS_HAT0Y" trigger="-1"/>
-				<trigger type="EV_KEY" code="ABS_Y" trigger="-16384"/>
+				<trigger type="EV_KEY" code="ABS_HAT0Y" trigger="-128"/>
+				<trigger type="EV_KEY" code="ABS_Y" trigger="-128"/>
 			</button>
 			<button>
 				<trigger type="EV_KEY" code="KEY_UP"/>
 				<trigger type="EV_KEY" code="BTN_DPAD_UP"/>
-				<trigger type="EV_KEY" code="ABS_HAT0Y" trigger="-1"/>
-				<trigger type="EV_KEY" code="ABS_Y" trigger="-16384"/>
+				<trigger type="EV_KEY" code="ABS_HAT0Y" trigger="-128"/>
+				<trigger type="EV_KEY" code="ABS_Y" trigger="-128"/>
 			</button>
 			<button>
 				<trigger type="EV_KEY" code="KEY_DOWN"/>
 				<trigger type="EV_KEY" code="BTN_DPAD_DOWN"/>
-				<trigger type="EV_KEY" code="ABS_HAT0Y" trigger="1"/>
-				<trigger type="EV_KEY" code="ABS_Y" trigger="16384"/>
+				<trigger type="EV_KEY" code="ABS_HAT0Y" trigger="128"/>
+				<trigger type="EV_KEY" code="ABS_Y" trigger="128"/>
 			</button>
 			<button>
 				<trigger type="EV_KEY" code="KEY_DOWN"/>
 				<trigger type="EV_KEY" code="BTN_DPAD_DOWN"/>
-				<trigger type="EV_KEY" code="ABS_HAT0Y" trigger="1"/>
-				<trigger type="EV_KEY" code="ABS_Y" trigger="16384"/>
+				<trigger type="EV_KEY" code="ABS_HAT0Y" trigger="128"/>
+				<trigger type="EV_KEY" code="ABS_Y" trigger="128"/>
 			</button>
 			<button>
 				<trigger type="EV_KEY" code="KEY_LEFT"/>
 				<trigger type="EV_KEY" code="BTN_DPAD_LEFT"/>
-				<trigger type="EV_KEY" code="ABS_HAT0X" trigger="-1"/>
-				<trigger type="EV_KEY" code="ABS_X" trigger="-16384"/>
+				<trigger type="EV_KEY" code="ABS_HAT0X" trigger="-128"/>
+				<trigger type="EV_KEY" code="ABS_X" trigger="-128"/>
 			</button>
 			<button>
 				<trigger type="EV_KEY" code="KEY_RIGHT"/>
 				<trigger type="EV_KEY" code="BTN_DPAD_RIGHT"/>
-				<trigger type="EV_KEY" code="ABS_HAT0X" trigger="1"/>
-				<trigger type="EV_KEY" code="ABS_X" trigger="16384"/>
+				<trigger type="EV_KEY" code="ABS_HAT0X" trigger="128"/>
+				<trigger type="EV_KEY" code="ABS_X" trigger="128"/>
 			</button>
 			<button>
 				<trigger type="EV_KEY" code="KEY_LEFT"/>
 				<trigger type="EV_KEY" code="BTN_DPAD_LEFT"/>
-				<trigger type="EV_KEY" code="ABS_HAT0X" trigger="-1"/>
-				<trigger type="EV_KEY" code="ABS_X" trigger="-16384"/>
+				<trigger type="EV_KEY" code="ABS_HAT0X" trigger="-128"/>
+				<trigger type="EV_KEY" code="ABS_X" trigger="-128"/>
 			</button>
 			<button>
 				<trigger type="EV_KEY" code="KEY_RIGHT"/>
 				<trigger type="EV_KEY" code="BTN_DPAD_RIGHT"/>
-				<trigger type="EV_KEY" code="ABS_HAT0X" trigger="1"/>
-				<trigger type="EV_KEY" code="ABS_X" trigger="16384"/>
+				<trigger type="EV_KEY" code="ABS_HAT0X" trigger="128"/>
+				<trigger type="EV_KEY" code="ABS_X" trigger="128"/>
 			</button>
 			<button>
 				<trigger type="EV_KEY" code="KEY_B"/>
@@ -90,19 +90,19 @@
 	<remaps>
 		<remap>
 			<in type="EV_KEY" code="BTN_THUMBL"/>
-			<out type="EV_KEY" code="KEY_1" trigger="1"/>
+			<out type="EV_KEY" code="KEY_1"/>
 		</remap>
 		<remap>
 			<in type="EV_KEY" code="BTN_THUMBR"/>
-			<out type="EV_KEY" code="KEY_3" trigger="1"/>
+			<out type="EV_KEY" code="KEY_3"/>
 		</remap>
 		<remap>
 			<in type="EV_KEY" code="BTN_SELECT"/>
-			<out type="EV_ABS" code="ABS_X" trigger="-1"/>
+			<out type="EV_ABS" code="ABS_X" trigger="-128"/>
 		</remap>
 		<remap>
 			<in type="EV_KEY" code="BTN_START"/>
-			<out type="EV_ABS" code="ABS_X" trigger="1"/>
+			<out type="EV_ABS" code="ABS_X" trigger="128"/>
 		</remap>
 		<remap>
 			<in type="EV_KEY" code="BTN_MODE"/>

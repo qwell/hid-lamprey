@@ -147,7 +147,8 @@ void *hl_input_dinput_poll() {
 		}
 
 		if ((hr = hl_input_dinput->joystick->GetDeviceState(sizeof(DIJOYSTATE2), &state)) == DI_OK) {
-			bool dpadChanged = false;
+			bool dpadHChanged = false;
+			bool dpadVChanged = false;
 			bool pRight = false;
 			bool pLeft = false;
 			bool pUp = false;
@@ -176,35 +177,45 @@ void *hl_input_dinput_poll() {
 			}
 			for (int i = 0; i < hl_input_dinput->capabilities.dwPOVs; i++) {
 				if (state.rgdwPOV[i] != hl_input_dinput->state.rgdwPOV[i]) {
-					dpadChanged = true;
-
 					/* What the fuck?  This is weeeeeird... */
 					switch (state.rgdwPOV[i]) {
 					case 0:
+						dpadVChanged = true;
 						pUp = true;
 						break;
 					case 4500:
+						dpadVChanged = true;
+						dpadHChanged = true;
 						pUp = true;
 						pRight = true;
 						break;
 					case 9000:
+						dpadHChanged = true;
 						pRight = true;
 						break;
 					case 13500:
+						dpadVChanged = true;
+						dpadHChanged = true;
 						pDown = true;
 						pRight = true;
 						break;
 					case 18000:
+						dpadVChanged = true;
 						pDown = true;
 						break;
 					case 22500:
+						dpadVChanged = true;
+						dpadHChanged = true;
 						pDown = true;
 						pLeft = true;
 						break;
 					case 27000:
+						dpadHChanged = true;
 						pLeft = true;
 						break;
 					case 31500:
+						dpadVChanged = true;
+						dpadHChanged = true;
 						pUp = true;
 						pLeft = true;
 						break;
@@ -212,25 +223,26 @@ void *hl_input_dinput_poll() {
 				}
 			}
 
-			if (state.lX != hl_input_dinput->state.lX) {
-				dpadChanged = true;
-				if (state.lX > (256 * AXIS_DEADZONE)) {
+			//TODO Send off axis/hat messages.
+			if (hl_controller_scale_range(state.lX, -256, 256) != hl_controller_scale_range(hl_input_dinput->state.lX, -256, 256)) {
+				dpadHChanged = true;
+				if (hl_controller_scale_range(state.lX, -256, 256) > 64) {
 					pRight = true;
-				} else if (state.lX < (-256 * AXIS_DEADZONE)) {
+				} else if (hl_controller_scale_range(state.lX, -256, 256) < -64) {
 					pLeft = true;
 				}
 			}
 
-			if (state.lY != hl_input_dinput->state.lY) {
-				dpadChanged = true;
-				if (state.lY >(256 * AXIS_DEADZONE)) {
+			if (hl_controller_scale_range(state.lY, -256, 256) != hl_controller_scale_range(hl_input_dinput->state.lY, -256, 256)) {
+				dpadVChanged = true;
+				if (hl_controller_scale_range(state.lY, -256, 256) > 64) {
 					pDown = true;
-				} else if (state.lY < (-256 * AXIS_DEADZONE)) {
+				} else if (hl_controller_scale_range(state.lY, -256, 256) < -64) {
 					pUp = true;
 				}
 			}
 
-			if (dpadChanged) {
+			if (dpadHChanged) {
 				if (pRight) {
 					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_RIGHT, 1);
 					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_LEFT, 0);
@@ -241,7 +253,9 @@ void *hl_input_dinput_poll() {
 					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_LEFT, 0);
 					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_RIGHT, 0);
 				}
+			}
 
+			if (dpadVChanged) {
 				if (pDown) {
 					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_DOWN, 1);
 					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_UP, 0);

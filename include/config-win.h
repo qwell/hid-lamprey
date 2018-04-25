@@ -1,4 +1,4 @@
-#define HAVE_CLI
+#undef HAVE_CLI
 #define HAVE_INTTYPES_H
 #define HAVE_MALLOC
 #define HAVE_MEMORY_H
@@ -13,6 +13,5 @@
 #define HAVE__BOOL
 #define PACKAGE_NAME "lamprey"
 #define PACKAGE_VERSION "0.0.1"
-#define PTHREAD_CREATE_JOINABLE
 #define STDC_HEADERS
 #define LIBXML_STATIC

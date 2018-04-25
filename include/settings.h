@@ -35,23 +35,23 @@
 		{\
 			{"^", {\
 				{EV_KEY, BTN_DPAD_UP},\
-				{EV_ABS, ABS_HAT0Y, -1},\
-				{EV_ABS, ABS_Y, -16834},\
+				{EV_ABS, ABS_HAT0Y, -64},\
+				{EV_ABS, ABS_Y, -64},\
 			}},\
 			{"v", {\
 				{EV_KEY, BTN_DPAD_DOWN},\
-				{EV_ABS, ABS_HAT0Y, 1},\
-				{EV_ABS, ABS_Y, 16834},\
+				{EV_ABS, ABS_HAT0Y, 64},\
+				{EV_ABS, ABS_Y, 64},\
 			}},\
 			{"<", {\
 				{EV_KEY, BTN_DPAD_LEFT},\
-				{EV_ABS, ABS_HAT0X, -1},\
-				{EV_ABS, ABS_X, -16834},\
+				{EV_ABS, ABS_HAT0X, -64},\
+				{EV_ABS, ABS_X, -64},\
 			}},\
 			{">", {\
 				{EV_KEY, BTN_DPAD_RIGHT},\
-				{EV_ABS, ABS_HAT0X, 1},\
-				{EV_ABS, ABS_X, 16834},\
+				{EV_ABS, ABS_HAT0X, 64},\
+				{EV_ABS, ABS_X, 64},\
 			}},\
 			{"L", {{EV_KEY, BTN_TL}}},\
 			{"R", {{EV_KEY, BTN_TR}}},\

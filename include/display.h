@@ -46,6 +46,11 @@
 
 #define hl_display_init(...) hl_gtk_init(__VA_ARGS__)
 #define hl_display_output_controller(controller) hl_gtk_output_controller(controller);
+#elif defined(_WIN32)
+#include "display-win32.h"
+
+#define hl_display_init(...) hl_display_win32_init(__VA_ARGS__)
+#define hl_display_output_controller(controller) hl_display_win32_output_controller(controller)
 #else
 #define hl_display_init(...)
 #define hl_display_output_controller(controller)

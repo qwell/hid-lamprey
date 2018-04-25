@@ -247,64 +247,20 @@ void *hl_input_evdev_poll() {
 				case EV_ABS:
 					if (ev.code >= LOW_HAT && ev.code <= HIGH_HAT) {
 						struct hat_data hat = hl_evdev->maps.hat_map[ev.code - LOW_HAT];
-						/* Find midpoint of possible range.
-						 * 0 -> 255 = 128
-						 * -32768 -> 32767 = 0
-						 */
-						int zeroish = hat.min + hat.max;
-						/* Make it even. */
-						zeroish = zeroish % 2 ? zeroish : zeroish + 1;
-						/* Div 2 to get the midpoint. */
-						int relzero = zeroish ? round(zeroish / 2) : zeroish;
-
-						int rangesize = (hat.max - hat.min);
-						int deadsize = ((rangesize % 2 ? rangesize : rangesize + 1) / 2) * HAT_DEADZONE;
-
-						if (ev.value >= relzero + deadsize || ev.value <= relzero - deadsize) {
-							int value = 0;
-							//Scale from min > relzero +/- deadsize > max.
-							if (ev.value >= relzero + deadsize) {
-								value = (hat.max - relzero) * (ev.value - (relzero + deadsize)) / (hat.max - (relzero + deadsize)) + relzero;
-							} else if (ev.value <= relzero - deadsize) {
-								value = (relzero - hat.min) * (ev.value - hat.min) / ((relzero - deadsize) - hat.min) + hat.min;
-							}
-							hl_mutex_unlock(&mutex_evdev);
-							debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
-							hl_mutex_lock(&mutex_evdev);
-						} else {
-							//TODO Do we just never send a zero event?
-						}
+						int value = hl_controller_scale_range(ev.value, ev.min, ev.max);
+						
+						hl_mutex_unlock(&mutex_evdev);
+						debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
+						hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
+						hl_mutex_lock(&mutex_evdev);
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
 						struct axis_data axis = hl_evdev->maps.abs_map[ev.code - LOW_AXIS];
-						/* Find midpoint of possible range.
-						 * 0 -> 255 = 128
-						 * -32768 -> 32767 = 0
-						 */
-						int zeroish = axis.min + axis.max;
-						/* Make it even. */
-						zeroish = zeroish % 2 ? zeroish : zeroish + 1;
-						/* Div 2 to get the midpoint. */
-						int relzero = zeroish ? round(zeroish / 2) : zeroish;
+						int value = hl_controller_scale_range(ev.value, ev.min, ev.max);
 
-						int rangesize = (axis.max - axis.min);
-						int deadsize = ((rangesize % 2 ? rangesize : rangesize + 1) / 2) * AXIS_DEADZONE;
-
-						if (ev.value >= relzero + deadsize || ev.value <= relzero - deadsize) {
-							int value = 0;
-							//Scale from min > relzero +/- deadsize > max.
-							if (ev.value >= relzero + deadsize) {
-								value = (axis.max - relzero) * (ev.value - (relzero + deadsize)) / (axis.max - (relzero + deadsize)) + relzero;
-							} else if (ev.value <= relzero - deadsize) {
-								value = (relzero - axis.min) * (ev.value - axis.min) / ((relzero - deadsize) - axis.min) + axis.min;
-							}
-							hl_mutex_unlock(&mutex_evdev);
-							debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-							hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
-							hl_mutex_lock(&mutex_evdev);
-						} else {
-							//TODO Do we just never send a zero event?
-						}
+						hl_mutex_unlock(&mutex_evdev);
+						debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
+						hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
+						hl_mutex_lock(&mutex_evdev);
 					}
 					break;
 				case EV_REL:

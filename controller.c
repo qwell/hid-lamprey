@@ -7,6 +7,7 @@
  * (at your option) any later version.
  */
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,6 +52,40 @@ struct button_code *hl_controller_get_code_by_name(char *type, char *name) {
 		}
 	}
 	return NULL;
+}
+
+int hl_controller_scale_range(int curvalue, int curmin, int curmax) {
+	int newmin = -256;
+	int newmax = 255;
+	int value = 0;
+
+	/* Find midpoint of possible range.
+	* 0 -> 255 = 128
+	* -32768 -> 32767 = 0
+	*/
+	int zeroish = curmin + curmax;
+	/* Make it even. */
+	zeroish = zeroish % 2 ? zeroish : zeroish + 1;
+	/* Div 2 to get the midpoint. */
+	int relzero = zeroish ? round(zeroish / 2) : zeroish;
+
+	int rangesize = (curmax - curmin);
+	int deadsize = ((rangesize % 2 ? rangesize : rangesize + 1) / 2) * AXIS_DEADZONE;
+
+	if (curvalue >= relzero + deadsize || curvalue <= relzero - deadsize) {
+		/* Scale value
+		 * from min > relzero +/- deadsize > max
+		 * to newmin > 0 > newmax
+		 */
+		//TODO Have somebody else verify this math.
+		if (curvalue >= relzero + deadsize) {
+			value = (newmax - relzero) * (curvalue - (relzero + deadsize)) / (curmax - (relzero + deadsize));
+		} else if (curvalue <= relzero - deadsize) {
+			value = (relzero + newmin) * ((relzero - deadsize) - curvalue) / ((relzero - deadsize) - curmin);
+		}
+	}
+
+	return value;
 }
 
 int controller_check_device(const char *device, char *device_list[], int count) {
@@ -228,7 +263,6 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 						mapping->value = value ? 1 : 0;
 					}
 				}
-
 			}
 		}
 

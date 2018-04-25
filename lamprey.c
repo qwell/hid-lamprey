@@ -25,6 +25,13 @@
 int main(void) {
 	int argc = 0;
 	char **argv = NULL;
+
+#if defined(HAVE_CLI)
+	AllocConsole();
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+#endif
 #else
 int main(int argc, char **argv) {
 #endif
