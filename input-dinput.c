@@ -16,7 +16,9 @@ hl_thread_t t_input_dinput;
 hl_mutex_t mutex_input_dinput;
 struct hl_input_dinput *hl_input_dinput = NULL;
 
-BOOL CALLBACK input_dinput_enum_axis(const DIDEVICEOBJECTINSTANCE *instance, void *context) {
+BOOL CALLBACK input_dinput_enum_axis(const DIDEVICEOBJECTINSTANCE *instance, void *ptr) {
+	LPDIRECTINPUTDEVICE8 device = (LPDIRECTINPUTDEVICE8)ptr;
+
 	if (instance->dwType & DIDFT_AXIS) {
 		DIPROPRANGE propRange;
 		propRange.diph.dwSize = sizeof(DIPROPRANGE);
@@ -24,10 +26,10 @@ BOOL CALLBACK input_dinput_enum_axis(const DIDEVICEOBJECTINSTANCE *instance, voi
 		propRange.diph.dwHow = DIPH_BYID;
 		propRange.diph.dwObj = instance->dwType;
 		propRange.lMin = -256;
-		propRange.lMax = +256;
+		propRange.lMax = 256;
 
 		// Set the range for the axis
-		if (hl_input_dinput->joystick->SetProperty(DIPROP_RANGE, &propRange.diph) != DI_OK) {
+		if (device->SetProperty(DIPROP_RANGE, &propRange.diph) != DI_OK) {
 			return DIENUM_STOP;
 		}
 	}
@@ -36,28 +38,85 @@ BOOL CALLBACK input_dinput_enum_axis(const DIDEVICEOBJECTINSTANCE *instance, voi
 }
 
 BOOL CALLBACK input_dinput_enum_devices(const DIDEVICEINSTANCE *instance, void *context) {
-	if (hl_input_dinput->di->CreateDevice(instance->guidInstance, &hl_input_dinput->joystick, NULL) != DI_OK) {
+	struct dinput_device *input = (struct dinput_device *)calloc(1, sizeof(struct dinput_device));
+
+	int devtype = GET_DIDEVICE_TYPE(instance->dwDevType);
+	int devsubtype = GET_DIDEVICE_SUBTYPE(instance->dwDevType);
+
+	if (hl_input_dinput->di->CreateDevice(instance->guidInstance, &input->device, NULL) != DI_OK) {
+		free(input);
 		return DIENUM_CONTINUE;
 	}
 
-	if (hl_input_dinput->joystick->SetDataFormat(&c_dfDIJoystick2) != DI_OK) {
+	switch (devtype) {
+	case DI8DEVTYPE_GAMEPAD:
+	case DI8DEVTYPE_JOYSTICK:
+		if (input->device->SetDataFormat(&c_dfDIJoystick2) != DI_OK) {
+			free(input);
+			return DIENUM_CONTINUE;
+		}
+		if (input->device->EnumObjects(input_dinput_enum_axis, input->device, DIDFT_AXIS) != DI_OK) {
+			free(input);
+			return DIENUM_CONTINUE;
+		}
+		break;
+	case DI8DEVTYPE_MOUSE:
+	case DI8DEVTYPE_SCREENPOINTER:
+		if (input->device->SetDataFormat(&c_dfDIMouse2) != DI_OK) {
+			free(input);
+			return DIENUM_CONTINUE;
+		}
+		if (input->device->EnumObjects(input_dinput_enum_axis, input->device, DIDFT_AXIS) != DI_OK) {
+			free(input);
+			return DIENUM_CONTINUE;
+		}
+		break;
+	case DI8DEVTYPE_KEYBOARD:
+		if (input->device->SetDataFormat(&c_dfDIKeyboard) != DI_OK) {
+			free(input);
+			return DIENUM_CONTINUE;
+		}
+		break;
+	default:
+		free(input);
 		return DIENUM_CONTINUE;
 	}
 
-	if (hl_input_dinput->joystick->SetCooperativeLevel(NULL, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND) != DI_OK) {
+	if (input->device->SetCooperativeLevel(NULL, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND) != DI_OK) {
+		free(input);
 		return DIENUM_CONTINUE;
 	}
 
-	hl_input_dinput->capabilities.dwSize = sizeof(DIDEVCAPS);
-	if (hl_input_dinput->joystick->GetCapabilities(&hl_input_dinput->capabilities) != DI_OK) {
+	input->capabilities.dwSize = sizeof(DIDEVCAPS);
+	if (input->device->GetCapabilities(&input->capabilities) != DI_OK) {
+		free(input);
 		return DIENUM_CONTINUE;
 	}
 
-	if (hl_input_dinput->joystick->EnumObjects(input_dinput_enum_axis, NULL, DIDFT_AXIS) != DI_OK) {
-		return DIENUM_CONTINUE;
+	input->type = devtype;
+
+	switch (input->type) {
+	case DI8DEVTYPE_GAMEPAD:
+	case DI8DEVTYPE_JOYSTICK:
+		snprintf(input->name, sizeof(input->name) - 1, "Dinput gamepad%d", hl_input_dinput->gamepad_count);
+		hl_input_dinput->gamepad_count++;
+		break;
+	case DI8DEVTYPE_MOUSE:
+	case DI8DEVTYPE_SCREENPOINTER:
+		snprintf(input->name, sizeof(input->name) - 1, "Dinput mouse%d", hl_input_dinput->mouse_count);
+		hl_input_dinput->mouse_count++;
+		break;
+	case DI8DEVTYPE_KEYBOARD:
+		snprintf(input->name, sizeof(input->name) - 1, "Dinput keyboard%d", hl_input_dinput->keyboard_count);
+		hl_input_dinput->keyboard_count++;
+		break;
 	}
 
-	return DIENUM_STOP;
+	hl_input_dinput->devices = (struct dinput_device **)realloc(hl_input_dinput->devices, (hl_input_dinput->device_count + 1) * sizeof(*hl_input_dinput->devices));
+	hl_input_dinput->devices[hl_input_dinput->device_count] = input;
+	hl_input_dinput->device_count++;
+
+	return DIENUM_CONTINUE;
 }
 
 void hl_input_dinput_init() {
@@ -65,19 +124,19 @@ void hl_input_dinput_init() {
 
 	hl_mutex_lock(&mutex_input_dinput);
 
-	hl_input_dinput = (struct hl_input_dinput *)malloc(sizeof(struct hl_input_dinput));
+	hl_input_dinput = (struct hl_input_dinput *)calloc(1, sizeof(struct hl_input_dinput));
 
 	if (DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&hl_input_dinput->di, NULL) != DI_OK) {
 		hl_mutex_unlock(&mutex_input_dinput);
 		return;
 	}
 
-	if (hl_input_dinput->di->EnumDevices(DI8DEVCLASS_GAMECTRL, input_dinput_enum_devices, NULL, DIEDFL_ATTACHEDONLY) != DI_OK) {
+	if (hl_input_dinput->di->EnumDevices(DI8DEVCLASS_ALL, input_dinput_enum_devices, NULL, DIEDFL_ATTACHEDONLY) != DI_OK) {
 		hl_mutex_unlock(&mutex_input_dinput);
 		return;
 	}
 
-	if (hl_input_dinput->joystick != NULL) {
+	if (hl_input_dinput->device_count > 0) {
 		hl_thread_create(&t_input_dinput, hl_input_dinput_poll, NULL);
 	}
 
@@ -90,8 +149,8 @@ void *hl_input_dinput_poll() {
 	struct dinput_button_maps {
 		WORD dinput;
 		int mapto;
-	} dinput_button_maps[2][16] = {
-		{
+	};
+	struct dinput_button_maps dinput_gamepad_button_maps[2][16] = { {
 			/* 8 buttons */
 			{ 0, BTN_SOUTH },
 			{ 1, BTN_EAST },
@@ -101,8 +160,7 @@ void *hl_input_dinput_poll() {
 			{ 5, BTN_TR },
 			{ 6, BTN_SELECT },
 			{ 7, BTN_START },
-		},
-		{
+		},{
 			/* 12 buttons */
 			{ 0, BTN_WEST },
 			{ 1, BTN_SOUTH },
@@ -118,161 +176,239 @@ void *hl_input_dinput_poll() {
 			{ 11, BTN_THUMBL },
 		}
 	};
+	struct dinput_button_maps dinput_keyboard_button_maps[256] = {
+		{ DIK_LEFT, BTN_DPAD_LEFT },
+		{ DIK_RIGHT, BTN_DPAD_RIGHT },
+		{ DIK_UP, BTN_DPAD_UP },
+		{ DIK_DOWN, BTN_DPAD_DOWN },
+		{ DIK_LSHIFT, BTN_TL },
+		{ DIK_RSHIFT, BTN_TR },
+		{ DIK_MINUS, BTN_SELECT },
+		{ DIK_EQUALS, BTN_START },
+		{ DIK_1, BTN_NORTH },
+		{ DIK_2, BTN_EAST },
+		{ DIK_3, BTN_SOUTH },
+		{ DIK_4, BTN_WEST },
+	};
 
-	DIJOYSTATE2 state;
-	HRESULT hr;
-	
-	do {
-		hl_mutex_lock(&mutex_input_dinput);
+	HRESULT hr = DI_OK;
 
-		if ((hr = hl_input_dinput->joystick->Poll()) != DI_OK) {
-			hr = hl_input_dinput->joystick->Acquire();
-			while (hr == DIERR_INPUTLOST) {
-				hr = hl_input_dinput->joystick->Acquire();
-			}
-		}
+	HANDLE events[32] = {};
 
-		if ((hr == DIERR_INVALIDPARAM) || (hr == DIERR_NOTINITIALIZED)) {
-			hl_mutex_unlock(&mutex_input_dinput);
-			break;
-		}
-
-		if (hr == DIERR_OTHERAPPHASPRIO) {
-			/* Somebody else has control.  What do we do?  We don't ask for
-			 * exclusive access, so maybe we just never hit this?
-			 * Keep trying, I suppose.
-			 */
-			hl_mutex_unlock(&mutex_input_dinput);
+	hl_mutex_lock(&mutex_input_dinput);
+	for (int i = 0; i < hl_input_dinput->device_count; i++) {
+		HANDLE event = CreateEvent(NULL, false, false, NULL);
+		if (!event) {
 			continue;
 		}
 
-		if ((hr = hl_input_dinput->joystick->GetDeviceState(sizeof(DIJOYSTATE2), &state)) == DI_OK) {
-			bool dpadHChanged = false;
-			bool dpadVChanged = false;
-			bool pRight = false;
-			bool pLeft = false;
-			bool pUp = false;
-			bool pDown = false;
+		if (hl_input_dinput->devices[i]->device->SetEventNotification(event) != DI_OK) {
+			continue;
+		}
+		hr = hl_input_dinput->devices[i]->device->Acquire();
+		while (hr == DIERR_INPUTLOST) {
+			hr = hl_input_dinput->devices[i]->device->Acquire();
+		}
 
-			int map = -1;
+		hl_input_dinput->devices[i]->event = event;
+		events[i] = event;
+	}
+	hl_mutex_unlock(&mutex_input_dinput);
 
-			switch (hl_input_dinput->capabilities.dwButtons) {
-			case 8:
-				map = 0;
-				break;
-			case 12:
-				map = 1;
-				break;
-			}
-			if (map >= 0) {
-				for (int i = 0; i < hl_input_dinput->capabilities.dwButtons; i++) {
-					if (state.rgbButtons[i] != hl_input_dinput->state.rgbButtons[i]) {
-						if (state.rgbButtons[i] & 0x80) {
-							hl_controller_change("Dinput 0", 0, EV_KEY, dinput_button_maps[map][i].mapto, 1);
-						} else {
-							hl_controller_change("Dinput 0", 0, EV_KEY, dinput_button_maps[map][i].mapto, 0);
+	do {
+		DWORD msg;
+
+		msg = MsgWaitForMultipleObjects(hl_input_dinput->device_count, events, false, INFINITE, QS_ALLINPUT);
+		if (msg >= WAIT_OBJECT_0 && msg <= WAIT_OBJECT_0 + hl_input_dinput->device_count) {
+			int devnum = msg - WAIT_OBJECT_0;
+			struct dinput_device *input;
+
+			BYTE state[256];
+
+			hl_mutex_lock(&mutex_input_dinput);
+
+			input = hl_input_dinput->devices[devnum];
+
+			switch (input->type) {
+			case DI8DEVTYPE_GAMEPAD:
+			case DI8DEVTYPE_JOYSTICK:
+			{
+				DIJOYSTATE2 oldstate;
+				DIJOYSTATE2 newstate;
+
+				if ((hr = input->device->GetDeviceState(sizeof(DIJOYSTATE2), &newstate)) == DI_OK) {
+					bool dpadHChanged = false;
+					bool dpadVChanged = false;
+					bool pRight = false;
+					bool pLeft = false;
+					bool pUp = false;
+					bool pDown = false;
+
+					int map = -1;
+
+					memcpy(&oldstate, &hl_input_dinput->devices[devnum]->state, sizeof(oldstate));
+					memcpy(&state, &newstate, sizeof(newstate));
+
+					switch (input->capabilities.dwButtons) {
+					case 8:
+						map = 0;
+						break;
+					case 12:
+						map = 1;
+						break;
+					}
+					if (map >= 0) {
+						for (int i = 0; i < input->capabilities.dwButtons; i++) {
+							if (newstate.rgbButtons[i] != oldstate.rgbButtons[i]) {
+								if (newstate.rgbButtons[i] & 0x80) {
+									hl_controller_change(input->name, 0, EV_KEY, dinput_gamepad_button_maps[map][i].mapto, 1);
+								} else {
+									hl_controller_change(input->name, 0, EV_KEY, dinput_gamepad_button_maps[map][i].mapto, 0);
+								}
+							}
+						}
+					}
+					for (int i = 0; i < input->capabilities.dwPOVs; i++) {
+						if (newstate.rgdwPOV[i] != oldstate.rgdwPOV[i]) {
+							/* What the fuck?  This is weeeeeird... */
+							switch (newstate.rgdwPOV[i]) {
+							case 0:
+								dpadVChanged = true;
+								pUp = true;
+								break;
+							case 4500:
+								dpadVChanged = true;
+								dpadHChanged = true;
+								pUp = true;
+								pRight = true;
+								break;
+							case 9000:
+								dpadHChanged = true;
+								pRight = true;
+								break;
+							case 13500:
+								dpadVChanged = true;
+								dpadHChanged = true;
+								pDown = true;
+								pRight = true;
+								break;
+							case 18000:
+								dpadVChanged = true;
+								pDown = true;
+								break;
+							case 22500:
+								dpadVChanged = true;
+								dpadHChanged = true;
+								pDown = true;
+								pLeft = true;
+								break;
+							case 27000:
+								dpadHChanged = true;
+								pLeft = true;
+								break;
+							case 31500:
+								dpadVChanged = true;
+								dpadHChanged = true;
+								pUp = true;
+								pLeft = true;
+								break;
+							}
+						}
+					}
+
+					//TODO Send off axis/hat messages.
+					if (hl_controller_scale_range(newstate.lX, -256, 256) != hl_controller_scale_range(oldstate.lX, -256, 256)) {
+						dpadHChanged = true;
+						if (hl_controller_scale_range(newstate.lX, -256, 256) > 64) {
+							pRight = true;
+						}
+						else if (hl_controller_scale_range(newstate.lX, -256, 256) < -64) {
+							pLeft = true;
+						}
+					}
+
+					if (hl_controller_scale_range(newstate.lY, -256, 256) != hl_controller_scale_range(oldstate.lY, -256, 256)) {
+						dpadVChanged = true;
+						if (hl_controller_scale_range(newstate.lY, -256, 256) > 64) {
+							pDown = true;
+						}
+						else if (hl_controller_scale_range(newstate.lY, -256, 256) < -64) {
+							pUp = true;
+						}
+					}
+
+					if (dpadHChanged) {
+						if (pRight) {
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 1);
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 0);
+						}
+						else if (pLeft) {
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 1);
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 0);
+						}
+						else {
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 0);
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 0);
+						}
+					}
+
+					if (dpadVChanged) {
+						if (pDown) {
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 1);
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 0);
+						}
+						else if (pUp) {
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 1);
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 0);
+						}
+						else {
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 0);
+							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 0);
 						}
 					}
 				}
+				break;
 			}
-			for (int i = 0; i < hl_input_dinput->capabilities.dwPOVs; i++) {
-				if (state.rgdwPOV[i] != hl_input_dinput->state.rgdwPOV[i]) {
-					/* What the fuck?  This is weeeeeird... */
-					switch (state.rgdwPOV[i]) {
-					case 0:
-						dpadVChanged = true;
-						pUp = true;
-						break;
-					case 4500:
-						dpadVChanged = true;
-						dpadHChanged = true;
-						pUp = true;
-						pRight = true;
-						break;
-					case 9000:
-						dpadHChanged = true;
-						pRight = true;
-						break;
-					case 13500:
-						dpadVChanged = true;
-						dpadHChanged = true;
-						pDown = true;
-						pRight = true;
-						break;
-					case 18000:
-						dpadVChanged = true;
-						pDown = true;
-						break;
-					case 22500:
-						dpadVChanged = true;
-						dpadHChanged = true;
-						pDown = true;
-						pLeft = true;
-						break;
-					case 27000:
-						dpadHChanged = true;
-						pLeft = true;
-						break;
-					case 31500:
-						dpadVChanged = true;
-						dpadHChanged = true;
-						pUp = true;
-						pLeft = true;
-						break;
+			case DI8DEVTYPE_MOUSE:
+			case DI8DEVTYPE_SCREENPOINTER:
+			{
+				DIMOUSESTATE2 oldstate;
+				DIMOUSESTATE2 newstate;
+				if ((hr = input->device->GetDeviceState(sizeof(DIMOUSESTATE2), &newstate)) == DI_OK) {
+					memcpy(&oldstate, &hl_input_dinput->devices[devnum]->state, sizeof(oldstate));
+					memcpy(&state, &newstate, sizeof(newstate));
+				}
+			}
+
+				break;
+			case DI8DEVTYPE_KEYBOARD:
+			{
+				BYTE oldstate[256];
+				BYTE newstate[256];
+				if ((hr = input->device->GetDeviceState(sizeof(newstate), &newstate)) == DI_OK) {
+					memcpy(&oldstate, &hl_input_dinput->devices[devnum]->state, sizeof(oldstate));
+					memcpy(&state, &newstate, sizeof(newstate));
+
+					for (int i = 0; i < sizeof(dinput_keyboard_button_maps) / sizeof(*dinput_keyboard_button_maps); i++) {
+						BYTE aold = oldstate[dinput_keyboard_button_maps[i].dinput];
+						BYTE anew = newstate[dinput_keyboard_button_maps[i].dinput];
+						if (newstate[dinput_keyboard_button_maps[i].dinput] != oldstate[dinput_keyboard_button_maps[i].dinput]) {
+							if (newstate[dinput_keyboard_button_maps[i].dinput] & 0x80) {
+								hl_controller_change(input->name, 0, EV_KEY, dinput_keyboard_button_maps[i].mapto, 1);
+							} else {
+								hl_controller_change(input->name, 0, EV_KEY, dinput_keyboard_button_maps[i].mapto, 0);
+							}
+						}
 					}
 				}
+				break;
+			}
 			}
 
-			//TODO Send off axis/hat messages.
-			if (hl_controller_scale_range(state.lX, -256, 256) != hl_controller_scale_range(hl_input_dinput->state.lX, -256, 256)) {
-				dpadHChanged = true;
-				if (hl_controller_scale_range(state.lX, -256, 256) > 64) {
-					pRight = true;
-				} else if (hl_controller_scale_range(state.lX, -256, 256) < -64) {
-					pLeft = true;
-				}
-			}
+			memcpy(&hl_input_dinput->devices[devnum]->state, &state, sizeof(hl_input_dinput->devices[devnum]->state));
 
-			if (hl_controller_scale_range(state.lY, -256, 256) != hl_controller_scale_range(hl_input_dinput->state.lY, -256, 256)) {
-				dpadVChanged = true;
-				if (hl_controller_scale_range(state.lY, -256, 256) > 64) {
-					pDown = true;
-				} else if (hl_controller_scale_range(state.lY, -256, 256) < -64) {
-					pUp = true;
-				}
-			}
-
-			if (dpadHChanged) {
-				if (pRight) {
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_RIGHT, 1);
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_LEFT, 0);
-				} else if (pLeft) {
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_LEFT, 1);
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_RIGHT, 0);
-				} else {
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_LEFT, 0);
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_RIGHT, 0);
-				}
-			}
-
-			if (dpadVChanged) {
-				if (pDown) {
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_DOWN, 1);
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_UP, 0);
-				} else if (pUp) {
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_UP, 1);
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_DOWN, 0);
-				} else {
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_UP, 0);
-					hl_controller_change("Dinput 0", 0, EV_KEY, BTN_DPAD_DOWN, 0);
-				}
-			}
+			hl_mutex_unlock(&mutex_input_dinput);
 		}
-
-		hl_input_dinput->state = state;
-		hl_mutex_unlock(&mutex_input_dinput);
-
-		Sleep(33);
 	} while (hr == DI_OK || hr == DIERR_OTHERAPPHASPRIO);
 
 	hl_input_dinput_destroy();
@@ -288,8 +424,12 @@ void hl_input_dinput_destroy() {
 		return;
 	}
 
-	hl_input_dinput->joystick->Unacquire();
+	for (int i = 0; i < hl_input_dinput->device_count; i++) {
+		hl_input_dinput->devices[i]->device->Unacquire();
+		free(hl_input_dinput->devices[i]);
+	}
 
+	free(hl_input_dinput->devices);
 	free(hl_input_dinput);
 	hl_input_dinput = NULL;
 

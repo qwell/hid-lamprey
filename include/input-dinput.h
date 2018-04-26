@@ -17,11 +17,22 @@
 
 #include "threads.h"
 
+struct dinput_device {
+	char name[32];
+	DWORD type;
+	LPDIRECTINPUTDEVICE8 device;
+	DIDEVCAPS capabilities;
+	HANDLE event;
+	BYTE state[256];
+};
+
 struct hl_input_dinput {
 	LPDIRECTINPUT8 di;
-	LPDIRECTINPUTDEVICE8 joystick;
-	DIDEVCAPS capabilities;
-	DIJOYSTATE2 state;
+	struct dinput_device **devices;
+	int device_count;
+	int gamepad_count;
+	int mouse_count;
+	int keyboard_count;
 };
 
 extern hl_thread_t t_input_dinput;
