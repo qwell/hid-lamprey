@@ -125,11 +125,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\libxml2-win-build\build-VS2017\x64\Debug\libxml2-static.lib" />
-    <Library Include="..\libiconv-win-build\build-VS2017\x64\Debug\libiconv-static.lib" />
-    <Library Include="..\zlib-win-build\build-VS2017\x64\Debug\libz-static.lib" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="resources\lamprey.ico">
       <Filter>Resource Files</Filter>
     </Image>

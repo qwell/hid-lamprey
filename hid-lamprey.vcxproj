@@ -29,6 +29,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
+    <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -72,17 +73,24 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level1</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\zlib-win-build;..\libiconv-win-build\include;..\libxml2-win-build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAsManaged>true</CompileAsManaged>
+      <OmitFramePointers />
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>..\libxml2-win-build\build-VS2017\Debug;..\zlib-win-build\build-VS2017\Debug;..\libiconv-win-build\build-VS2017\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;xinput.lib;dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>main</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -102,12 +110,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\north\Downloads\zlib-1.2.8-win32-x86_64\include;C:\Users\north\Downloads\iconv-1.14-win32-x86_64\include;C:\Users\north\Downloads\libxml2-2.9.3-win32-x86_64\include\libxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\zlib-win-build;..\libiconv-win-build\include;..\libxml2-win-build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsManaged>true</CompileAsManaged>
       <CompileAs>CompileAsCpp</CompileAs>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Users\north\source\repos\hid-lamprey;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\libxml2-win-build\build-VS2017\x64\Debug;..\zlib-win-build\build-VS2017\x64\Debug;..\libiconv-win-build\build-VS2017\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;xinput.lib;dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>main</EntryPointSymbol>
@@ -118,12 +127,14 @@
     <ClCompile Include="display-cli.c" />
     <ClCompile Include="display-gtk.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="display-win32.cpp" />
     <ClCompile Include="display-win32-main.cpp" />
     <ClCompile Include="input-dinput.c" />
     <ClCompile Include="input-evdev.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="input-xinput.c" />
     <ClCompile Include="lamprey.c" />
@@ -132,6 +143,7 @@
     <ClCompile Include="threads.c" />
     <ClCompile Include="xdo.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,11 +182,6 @@
     <None Include="settings.xsd" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\libiconv-win-build\build-VS2017\x64\Debug\libiconv-static.lib" />
-    <Library Include="..\libxml2-win-build\build-VS2017\x64\Debug\libxml2-static.lib" />
-    <Library Include="..\zlib-win-build\build-VS2017\x64\Debug\libz-static.lib" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="resources\lamprey.ico" />
     <Image Include="resources\small.ico" />
     <Image Include="resources\SNES_Simplified.png" />
@@ -190,6 +197,17 @@
     <EmbeddedResource Include="include\display-win32-main.resx">
       <DependentUpon>include\display-win32-main.h</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libiconv-win-build\build-VS2017\libiconv-static\libiconv-static.vcxproj">
+      <Project>{46cafe4a-b5bd-4422-acc6-117d4ad041e2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\libxml2-win-build\build-VS2017\libxml2-static\libxml2-static.vcxproj">
+      <Project>{8eee40e4-037a-4dc5-b598-f9381f7372e6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\zlib-win-build\build-VS2017\libz-static\libz-static.vcxproj">
+      <Project>{b56d17bc-072b-42f3-844a-870a07afbaaa}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
