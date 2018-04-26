@@ -25,6 +25,12 @@
 			<button>
 				<trigger type="EV_KEY" code="KEY_D"/>
 			</button>
+			<button>
+				<trigger type="EV_KEY" code="KEY_UP"/>
+				<trigger type="EV_KEY" code="BTN_DPAD_UP"/>
+				<trigger type="EV_KEY" code="ABS_HAT0Y" trigger="-128"/>
+				<trigger type="EV_KEY" code="ABS_Y" trigger="-128"/>
+			</button>
 		</shortcut>
 		<shortcut name="konami" type="consecutive">
 			<device name="xbox"/>
