@@ -9,6 +9,11 @@
 		<device name="keyboard2">3/258a-1:SINO WEALTH USB KEYBOARD</device>
 	</devices>
 	<shortcuts>
+		<!--
+		Remove <function/>, move to <shortcut/> attribute.
+		Provide (platform-dependent when necessary) named functions with known arg lists.
+		Remove <shortcut/> name attribute?
+		-->
 		<shortcut name="simultest" type="simultaneous">
 			<device name="keyboard"/>
 			<device name="keyboard2"/>
