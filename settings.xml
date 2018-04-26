@@ -12,6 +12,7 @@
 		<shortcut name="simultest" type="simultaneous">
 			<device name="keyboard"/>
 			<device name="keyboard2"/>
+			<device name="rockcandy"/>
 			<function name="test">
 				<arg name="foo">Some args</arg>
 				<arg name="bar">99</arg>
