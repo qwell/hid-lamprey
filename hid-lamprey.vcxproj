@@ -140,6 +140,7 @@
     <ClCompile Include="lamprey.c" />
     <ClCompile Include="settings-xml2.c" />
     <ClCompile Include="shortcut_cb.c" />
+    <ClCompile Include="skin.c" />
     <ClCompile Include="threads.c" />
     <ClCompile Include="xdo.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -170,6 +171,7 @@
     <ClInclude Include="include\settings-xml2.h" />
     <ClInclude Include="include\settings.h" />
     <ClInclude Include="include\shortcut_cb.h" />
+    <ClInclude Include="include\skin.h" />
     <ClInclude Include="include\threads.h" />
     <ClInclude Include="include\xdo.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

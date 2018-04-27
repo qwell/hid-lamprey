@@ -27,6 +27,7 @@ namespace hidlamprey {
 		}
 		
 		void output_controller(IntPtr controller);
+		void loadSkinImages();
 
 	protected:
 		/// <summary>
@@ -42,13 +43,14 @@ namespace hidlamprey {
 		formMain(void) {
 			InitializeComponent();
 
-			this->picControllerDisplay->Parent = this->picController;
-			this->picControllerDisplay->Location = System::Drawing::Point(0, 0);
+			//this->picControllerDisplay->Parent = this->picController;
+			//this->picControllerDisplay->Location = System::Drawing::Point(0, 0);
 		}
 
 		static formMain^ instance;
 		static Object^ instanceLock = gcnew Object();
 		Boolean imageControllerLoaded = false;
+		array<System::Windows::Forms::PictureBox^>^ skinButtons;
 		System::Windows::Forms::PictureBox^  picController;
 		System::Windows::Forms::PictureBox^  picControllerDisplay;
 
@@ -73,7 +75,7 @@ namespace hidlamprey {
 			// 
 			// picController
 			// 
-			this->picController->ImageLocation = L"resources/SNES_Simplified.png";
+			this->picController->ImageLocation = L"skins/lamprey-SNES/controller_alpha.png";
 			this->picController->Location = System::Drawing::Point(12, 12);
 			this->picController->Name = L"picController";
 			this->picController->Size = System::Drawing::Size(640, 284);
@@ -86,12 +88,13 @@ namespace hidlamprey {
 			// 
 			this->picControllerDisplay->BackColor = System::Drawing::Color::Transparent;
 			this->picControllerDisplay->ImageLocation = L"";
-			this->picControllerDisplay->Location = System::Drawing::Point(12, 12);
+			this->picControllerDisplay->Location = System::Drawing::Point(1012, 1012);
 			this->picControllerDisplay->Name = L"picControllerDisplay";
 			this->picControllerDisplay->Size = System::Drawing::Size(640, 284);
 			this->picControllerDisplay->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 			this->picControllerDisplay->TabIndex = 2;
 			this->picControllerDisplay->TabStop = false;
+			this->picControllerDisplay->Visible = false;
 			// 
 			// formMain
 			// 
@@ -118,6 +121,8 @@ namespace hidlamprey {
 	}
 
 	private: System::Void picController_LoadCompleted(System::Object^  sender, System::ComponentModel::AsyncCompletedEventArgs^  e) {
+		this->loadSkinImages();
+
 		this->imageControllerLoaded = true;
 	}
 };

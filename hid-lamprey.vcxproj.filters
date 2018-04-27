@@ -54,6 +54,9 @@
     <ClCompile Include="input-dinput.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="skin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\controller.h">
@@ -111,6 +114,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\input-dinput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\skin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

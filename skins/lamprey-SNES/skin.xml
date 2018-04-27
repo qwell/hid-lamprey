@@ -1,0 +1,19 @@
+<skin name="lamprey-SNES">
+	<controller image="controller_alpha.png"/>
+
+	<button image="up.png" code="BTN_DPAD_UP" x="0" y="0"/>
+	<button image="right.png" code="BTN_DPAD_RIGHT" x="0" y="0"/>
+	<button image="down.png" code="BTN_DPAD_DOWN" x="0" y="0"/>
+	<button image="left.png" code="BTN_DPAD_LEFT" x="0" y="0"/>
+
+	<button image="ABXY.png" code="BTN_NORTH" x="0" y="0"/>
+	<button image="ABXY.png" code="BTN_EAST" x="0" y="0"/>
+	<button image="ABXY.png" code="BTN_SOUTH" x="0" y="0"/>
+	<button image="ABXY.png" code="BTN_WEST" x="0" y="0"/>
+
+	<button image="select.png" code="BTN_SELECT" x="0" y="0"/>
+	<button image="start.png" code="BTN_START" x="0" y="0"/>
+
+	<button image="L.png" code="BTN_TL" x="0" y="0"/>
+	<button image="R.png" code="BTN_TR" x="0" y="0"/>
+</skin>
