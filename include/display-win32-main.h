@@ -42,9 +42,6 @@ namespace hidlamprey {
 	private:
 		formMain(void) {
 			InitializeComponent();
-
-			//this->picControllerDisplay->Parent = this->picController;
-			//this->picControllerDisplay->Location = System::Drawing::Point(0, 0);
 		}
 
 		static formMain^ instance;
@@ -52,7 +49,7 @@ namespace hidlamprey {
 		Boolean imageControllerLoaded = false;
 		array<System::Windows::Forms::PictureBox^>^ skinButtons;
 		System::Windows::Forms::PictureBox^  picController;
-		System::Windows::Forms::PictureBox^  picControllerDisplay;
+
 
 
 		/// <summary>
@@ -68,9 +65,7 @@ namespace hidlamprey {
 		void InitializeComponent(void)
 		{
 			this->picController = (gcnew System::Windows::Forms::PictureBox());
-			this->picControllerDisplay = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picController))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picControllerDisplay))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// picController
@@ -84,23 +79,10 @@ namespace hidlamprey {
 			this->picController->TabStop = false;
 			this->picController->LoadCompleted += gcnew System::ComponentModel::AsyncCompletedEventHandler(this, &formMain::picController_LoadCompleted);
 			// 
-			// picControllerDisplay
-			// 
-			this->picControllerDisplay->BackColor = System::Drawing::Color::Transparent;
-			this->picControllerDisplay->ImageLocation = L"";
-			this->picControllerDisplay->Location = System::Drawing::Point(1012, 1012);
-			this->picControllerDisplay->Name = L"picControllerDisplay";
-			this->picControllerDisplay->Size = System::Drawing::Size(640, 284);
-			this->picControllerDisplay->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
-			this->picControllerDisplay->TabIndex = 2;
-			this->picControllerDisplay->TabStop = false;
-			this->picControllerDisplay->Visible = false;
-			// 
 			// formMain
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
 			this->ClientSize = System::Drawing::Size(664, 307);
-			this->Controls->Add(this->picControllerDisplay);
 			this->Controls->Add(this->picController);
 			this->MaximizeBox = false;
 			this->Name = L"formMain";
@@ -109,7 +91,6 @@ namespace hidlamprey {
 			this->Closed += gcnew System::EventHandler(this, &formMain::formMain_Closed);
 			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picController))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picControllerDisplay))->EndInit();
 			this->ResumeLayout(false);
 
 		}
