@@ -218,8 +218,8 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 }
 
 void hl_settings_xml_load() {
-	char *xmlfilename = "settings.xml";
-	char *xsdfilename = "settings.xsd";
+	char *xmlfilename = "settings/settings.xml";
+	char *xsdfilename = "settings/settings.xsd";
 	xmlDoc *doc;
 	xmlSchemaParserCtxt *parser_context;
 	xmlSchema *schema;
