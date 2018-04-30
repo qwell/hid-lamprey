@@ -70,7 +70,7 @@ namespace hidlamprey {
 			// 
 			// picController
 			// 
-			this->picController->ImageLocation = L"skins/lamprey-SNES/controller_alpha.png";
+			this->picController->ImageLocation = L"skins/snes-lamprey/controller_alpha.png";
 			this->picController->Location = System::Drawing::Point(12, 12);
 			this->picController->Name = L"picController";
 			this->picController->Size = System::Drawing::Size(640, 284);

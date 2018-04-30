@@ -68,7 +68,7 @@ void formMain::loadSkinImages() {
 	for (int i = 0; i < count; i++) {
 		System::Windows::Forms::PictureBox^  picTestButton = (gcnew System::Windows::Forms::PictureBox());
 
-		Drawing::Bitmap ^testimage = gcnew Bitmap(String::Concat(gcnew String(L"skins/lamprey-SNES/"), gcnew String(testbuttons[i].name)));
+		Drawing::Bitmap ^testimage = gcnew Bitmap(String::Concat(gcnew String(L"skins/snes-lamprey/"), gcnew String(testbuttons[i].name)));
 		testimage->MakeTransparent(Color::White);
 
 		picTestButton->BackColor = Color::Transparent;
