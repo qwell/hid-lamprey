@@ -1,19 +1,19 @@
 <skin name="snes-lamprey">
-	<background name "default" image="controller_alpha.png"/>
+	<background name="default" image="controller_alpha.png"/>
 
-	<button image="up.png" code="BTN_DPAD_UP" x="117" y="92"/>
-	<button image="right.png" code="BTN_DPAD_RIGHT" x="155" y="126"/>
-	<button image="down.png" code="BTN_DPAD_DOWN" x="117" y="166"/>
-	<button image="left.png" code="BTN_DPAD_LEFT" x="82" y="126"/>
+	<button image="up.png" type="EV_KEY" code="BTN_DPAD_UP" x="117" y="92"/>
+	<button image="right.png" type="EV_KEY" code="BTN_DPAD_RIGHT" x="155" y="126"/>
+	<button image="down.png" type="EV_KEY" code="BTN_DPAD_DOWN" x="117" y="166"/>
+	<button image="left.png" type="EV_KEY" code="BTN_DPAD_LEFT" x="82" y="126"/>
 
-	<button image="ABXY.png" code="BTN_NORTH" x="482" y="74"/>
-	<button image="ABXY.png" code="BTN_EAST" x="542" y="124"/>
-	<button image="ABXY.png" code="BTN_SOUTH" x="484" y="171"/>
-	<button image="ABXY.png" code="BTN_WEST" x="423" y="123"/>
+	<button image="ABXY.png" type="EV_KEY" code="BTN_NORTH" x="482" y="74"/>
+	<button image="ABXY.png" type="EV_KEY" code="BTN_EAST" x="542" y="124"/>
+	<button image="ABXY.png" type="EV_KEY" code="BTN_SOUTH" x="484" y="171"/>
+	<button image="ABXY.png" type="EV_KEY" code="BTN_WEST" x="423" y="123"/>
 
-	<button image="L.png" code="BTN_TL" x="72" y="4"/>
-	<button image="R.png" code="BTN_TR" x="430" y="4"/>
+	<button image="L.png" type="EV_KEY" code="BTN_TL" x="72" y="4"/>
+	<button image="R.png" type="EV_KEY" code="BTN_TR" x="430" y="4"/>
 
-	<button image="select.png" code="BTN_SELECT" x="239" y="146"/>
-	<button image="start.png" code="BTN_START" x="308" y="146"/>
+	<button image="select.png" type="EV_KEY" code="BTN_SELECT" x="239" y="146"/>
+	<button image="start.png" type="EV_KEY" code="BTN_START" x="308" y="146"/>
 </skin>

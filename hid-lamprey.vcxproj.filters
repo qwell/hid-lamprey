@@ -57,6 +57,9 @@
     <ClCompile Include="skin.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="settings.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\controller.h">

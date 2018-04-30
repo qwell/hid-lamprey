@@ -11,23 +11,8 @@ using namespace System::Windows::Forms;
 
 using namespace hidlamprey;
 
-struct hl_skin_button testbuttons[] = {
-	{ "up.png", "EV_KEY", "BTN_DPAD_UP", 117, 92 },
-	{ "right.png", "EV_KEY", "BTN_DPAD_RIGHT", 155, 126 },
-	{ "down.png", "EV_KEY", "BTN_DPAD_DOWN", 117, 166 },
-	{ "left.png", "EV_KEY", "BTN_DPAD_LEFT", 82, 126 },
-	{ "ABXY.png", "EV_KEY", "BTN_NORTH", 482, 74 },
-	{ "ABXY.png", "EV_KEY", "BTN_EAST", 542, 124 },
-	{ "ABXY.png", "EV_KEY", "BTN_SOUTH", 484, 171 },
-	{ "ABXY.png", "EV_KEY", "BTN_WEST", 423, 123 },
-	{ "L.png", "EV_KEY", "BTN_TL", 72, 4 },
-	{ "R.png", "EV_KEY", "BTN_TR", 430, 4 },
-	{ "select.png", "EV_KEY", "BTN_SELECT", 239, 146 },
-	{ "start.png", "EV_KEY", "BTN_START", 308, 146 },
-};
-
 void formMain::output_controller(IntPtr controller) {
-	if (!this->imageControllerLoaded) {
+	if (!hl_active_skin) {
 		return;
 	}
 
@@ -42,11 +27,8 @@ void formMain::output_controller(IntPtr controller) {
 			for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
 				const struct button_trigger *trigger = &mapping->buttons[k];
 
-				int count = sizeof(testbuttons) / sizeof(*testbuttons);
-
-				for (int l = 0; l < count; l++) {
-					struct button_code *code = hl_controller_get_code_by_name(testbuttons[l].type, testbuttons[l].code);
-					if (trigger->type == code->type && trigger->code == code->code) {
+				for (int l = 0; l < hl_active_skin->button_count; l++) {
+					if (trigger->type == hl_active_skin->buttons[l]->type && trigger->code == hl_active_skin->buttons[l]->code) {
 						if (mapping->value) {
 							this->skinButtons[l]->Visible = true;
 						} else {
@@ -60,32 +42,46 @@ void formMain::output_controller(IntPtr controller) {
 }
 
 void formMain::loadSkinImages() {
-	int count = sizeof(testbuttons) / sizeof(*testbuttons);
+	if (this->skinButtons) {
+		delete(this->skinButtons);
+	}
 
-	delete(this->skinButtons);
-	this->skinButtons = gcnew array<System::Windows::Forms::PictureBox^>(count);
+	if (!hl_active_skin) {
+		return;
+	}
 
-	for (int i = 0; i < count; i++) {
-		System::Windows::Forms::PictureBox^  picTestButton = (gcnew System::Windows::Forms::PictureBox());
+	Drawing::Bitmap ^backgroundImage = gcnew Bitmap(String::Concat(gcnew String(hl_active_skin->path), gcnew String(hl_active_skin->background.filename)));
+	//backgroundImage->MakeTransparent(Color::White);
 
-		Drawing::Bitmap ^testimage = gcnew Bitmap(String::Concat(gcnew String(L"skins/snes-lamprey/"), gcnew String(testbuttons[i].name)));
-		testimage->MakeTransparent(Color::White);
+	//this->Size = backgroundImage->Size + Drawing::Size(48, 48);
 
-		picTestButton->BackColor = Color::Transparent;
-		picTestButton->BackgroundImage = testimage;
-		picTestButton->Location = this->picController->Location;
-		picTestButton->Name = L"picTestButton";
-		picTestButton->Name += i;
-		picTestButton->Size = testimage->Size;
-		picTestButton->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Normal;
-		picTestButton->Visible = false;
+	picController->Image = backgroundImage;
+	picController->Size = backgroundImage->Size;
+	picController->Visible = true;
 
-		picTestButton->Location = System::Drawing::Point(testbuttons[i].x, testbuttons[i].y);
+	this->skinButtons = gcnew array<System::Windows::Forms::PictureBox^>(hl_active_skin->button_count);
 
-		this->skinButtons[i] = picTestButton;
+	for (int i = 0; i < hl_active_skin->button_count; i++) {
+		System::Windows::Forms::PictureBox^  picButton = (gcnew System::Windows::Forms::PictureBox());
 
-		this->Controls->Add(picTestButton);
+		Drawing::Bitmap ^buttonImage = gcnew Bitmap(String::Concat(gcnew String(hl_active_skin->path), gcnew String(hl_active_skin->buttons[i]->filename)));
+		buttonImage->MakeTransparent(Color::White);
 
-		picTestButton->Parent = this->picController;
+		picButton->BackColor = Color::Transparent;
+		picButton->BackgroundImage = buttonImage;
+		picButton->Location = this->picController->Location;
+		picButton->Name = L"picButton";
+		picButton->Name += i;
+		picButton->Size = buttonImage->Size;
+		picButton->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Normal;
+		picButton->Visible = false;
+
+		picButton->Location = System::Drawing::Point(hl_active_skin->buttons[i]->x, hl_active_skin->buttons[i]->y);
+
+		this->skinButtons[i] = picButton;
+
+		this->Controls->Add(picButton);
+
+		picButton->Parent = this->picController;
 	}
 }

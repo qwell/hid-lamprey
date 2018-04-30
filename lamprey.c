@@ -15,6 +15,11 @@
 
 #include "include/controller.h"
 #include "include/display.h"
+
+#if defined(HAVE_XML2)
+#include "include/skin.h"
+#endif
+
 #if defined(HAVE_XDO)
 #include "include/xdo.h"
 #endif
@@ -45,6 +50,12 @@ int main(int argc, char **argv) {
 
 	hl_settings_load();
 
+#if defined(HAVE_XML2)
+	if (hl_settings->skin) {
+		hl_skin_load(hl_settings->skin->name, hl_settings->skin->background);
+	}
+#endif
+
 	/* Initialize input data. */
 	hl_input_init();
 
@@ -72,7 +83,6 @@ int main(int argc, char **argv) {
 	}
 #endif
 
-
 #if defined(HAVE_GTK3)
 	hl_thread_join(t_gtk);
 #endif
@@ -80,6 +90,8 @@ int main(int argc, char **argv) {
 #if defined(HAVE_XDO)
 	free(hl_xdo);
 #endif
+
+	hl_settings_destroy();
 
 	return 0;
 }

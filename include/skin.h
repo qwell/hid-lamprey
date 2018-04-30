@@ -10,12 +10,36 @@
 #ifndef LAMPREY_SKIN_H
 #define LAMPREY_SKIN_H
 
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+#include <libxml/xmlschemas.h>
+#include <libxml/xpath.h>
+
+#include "input.h"
+
+struct hl_skin_background {
+	char name[64];
+	char filename[64];
+};
+
 struct hl_skin_button {
-	char *name;
-	char *type;
-	char *code;
+	char filename[64];
+	uint8_t type;
+	uint16_t code;
 	int x;
 	int y;
 };
+
+struct hl_active_skin {
+	char path[64];
+	char name[64];
+	struct hl_skin_background background;
+	struct hl_skin_button **buttons;
+	int button_count;
+};
+
+extern struct hl_active_skin *hl_active_skin;
+
+void hl_skin_load(char *name, char *background);
 
 #endif

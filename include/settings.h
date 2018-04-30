@@ -10,16 +10,29 @@
 #ifndef LAMPREY_SETTINGS_H
 #define LAMPREY_SETTINGS_H
 
+struct hl_settings_skin {
+	char *name;
+	char *background;
+};
+
+struct hl_settings {
+	struct hl_settings_skin *skin;
+	float deadzone_axis;
+	float deadzone_hat;
+};
+
+extern struct hl_settings *hl_settings;
+
 #if defined(HAVE_XML2)
 #include "settings-xml2.h"
-
 #define hl_settings_load(...) hl_settings_xml_load(__VA_ARGS__)
+#define hl_settings_save(...) hl_settings_xml_save(__VA_ARGS__)
+#define hl_settings_destroy(...) hl_settings_xml_destroy(__VA_ARGS__)
 #else
 #define hl_settings_load(...)
+#define hl_settings_save(...)
+#define hl_settings_destroy(...)
 #endif
-
-// #define AXIS_DEADZONE .2
-// #define HAT_DEADZONE 0
 
 #define DEVICE_ROCKCANDY "3/e6f-11f:Rock Candy Gamepad Wired Controller"
 #define DEVICE_XBOX "3/45e-2a1:Xbox 360 Wireless Receiver (XBOX)"

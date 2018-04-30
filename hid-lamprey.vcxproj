@@ -139,6 +139,7 @@
     <ClCompile Include="input-xinput.c" />
     <ClCompile Include="lamprey.c" />
     <ClCompile Include="settings-xml2.c" />
+    <ClCompile Include="settings.c" />
     <ClCompile Include="shortcut_cb.c" />
     <ClCompile Include="skin.c" />
     <ClCompile Include="threads.c" />
@@ -178,14 +179,14 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="settings\remaps.xml"/>
+    <Xml Include="settings\remaps.xml" />
     <Xml Include="settings\settings.xml" />
-    <Xml Include="settings\shortcuts.xml"/>
+    <Xml Include="settings\shortcuts.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="settings\remaps.xsd"/>
+    <None Include="settings\remaps.xsd" />
     <None Include="settings\settings.xsd" />
-    <None Include="settings\shortcuts.xsd"/>
+    <None Include="settings\shortcuts.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\lamprey.ico" />

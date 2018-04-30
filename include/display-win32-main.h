@@ -46,7 +46,6 @@ namespace hidlamprey {
 
 		static formMain^ instance;
 		static Object^ instanceLock = gcnew Object();
-		Boolean imageControllerLoaded = false;
 		array<System::Windows::Forms::PictureBox^>^ skinButtons;
 		System::Windows::Forms::PictureBox^  picController;
 
@@ -70,19 +69,19 @@ namespace hidlamprey {
 			// 
 			// picController
 			// 
-			this->picController->ImageLocation = L"skins/snes-lamprey/controller_alpha.png";
-			this->picController->Location = System::Drawing::Point(12, 12);
+			this->picController->Location = System::Drawing::Point(0, 0);
 			this->picController->Name = L"picController";
-			this->picController->Size = System::Drawing::Size(640, 284);
+			this->picController->Size = System::Drawing::Size(0, 0);
 			this->picController->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 			this->picController->TabIndex = 1;
 			this->picController->TabStop = false;
-			this->picController->LoadCompleted += gcnew System::ComponentModel::AsyncCompletedEventHandler(this, &formMain::picController_LoadCompleted);
 			// 
 			// formMain
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
-			this->ClientSize = System::Drawing::Size(664, 307);
+			this->AutoSize = true;
+			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->ClientSize = System::Drawing::Size(148, 36);
 			this->Controls->Add(this->picController);
 			this->MaximizeBox = false;
 			this->Name = L"formMain";
@@ -90,6 +89,7 @@ namespace hidlamprey {
 			this->Text = L"Lamprey";
 			this->Closed += gcnew System::EventHandler(this, &formMain::formMain_Closed);
 			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
+			this->Shown += gcnew System::EventHandler(this, &formMain::formMain_Shown);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picController))->EndInit();
 			this->ResumeLayout(false);
 
@@ -101,10 +101,8 @@ namespace hidlamprey {
 	private: System::Void formMain_Closed(System::Object^  sender, System::EventArgs^  e) {
 	}
 
-	private: System::Void picController_LoadCompleted(System::Object^  sender, System::ComponentModel::AsyncCompletedEventArgs^  e) {
+	private: System::Void formMain_Shown(System::Object^  sender, System::EventArgs^  e) {
 		this->loadSkinImages();
-
-		this->imageControllerLoaded = true;
 	}
-};
+	};
 }

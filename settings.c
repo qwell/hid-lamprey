@@ -7,11 +7,8 @@
  * (at your option) any later version.
  */
 
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-#include <libxml/xmlschemas.h>
-#include <libxml/xpath.h>
+#include "include/lamprey.h"
 
-void hl_settings_xml_load();
-void hl_settings_xml_save();
-void hl_settings_xml_destroy();
+#include "include/controller.h"
+
+struct hl_settings *hl_settings;
