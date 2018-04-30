@@ -132,7 +132,13 @@
     </Xml>
   </ItemGroup>
   <ItemGroup>
+    <None Include="settings\remaps.xsd">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="settings\settings.xsd">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="settings\shortcuts.xsd">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -151,13 +157,5 @@
     <EmbeddedResource Include="include\display-win32-main.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Xsd Include="settings\remaps.xsd">
-      <Filter>Resource Files</Filter>
-    </Xsd>
-    <Xsd Include="settings\shortcuts.xsd">
-      <Filter>Resource Files</Filter>
-    </Xsd>
   </ItemGroup>
 </Project>

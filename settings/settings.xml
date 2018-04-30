@@ -1,12 +1,12 @@
 <settings>
 	<skin name="snes-lamprey" background="default"/>
+
 	<option name="deadzone_hat">0</option>
 	<option name="deadzone_axis">0.2</option>
-	<devices>
-		<device name="rockcandy">3/e6f-11f:Rock Candy Gamepad Wired Controller</device>
-		<device name="xbox">3/45e-2a1:Xbox 360 Wireless Receiver (XBOX)</device>
-		<device name="xinput0">Xinput 0</device>
-		<device name="keyboard">11/1-1:AT Translated Set 2 keyboard</device>
-		<device name="keyboard2">3/258a-1:SINO WEALTH USB KEYBOARD</device>
-	</devices>
+
+	<device name="rockcandy">3/e6f-11f:Rock Candy Gamepad Wired Controller</device>
+	<device name="xbox">3/45e-2a1:Xbox 360 Wireless Receiver (XBOX)</device>
+	<device name="xinput0">Xinput 0</device>
+	<device name="keyboard">11/1-1:AT Translated Set 2 keyboard</device>
+	<device name="keyboard2">3/258a-1:SINO WEALTH USB KEYBOARD</device>
 </settings>

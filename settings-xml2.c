@@ -28,11 +28,11 @@ char *xml_debug_node(xmlDoc *doc, xmlNode *node) {
 }
 
 void settings_xml_load_settings(xmlXPathContext *context) {
-	xmlChar *xpath = (xmlChar *)"/settings/devices/device";
+	xmlChar *xpath = (xmlChar *)"/settings/device";
 	xmlXPathObject *result;
 
 	if (!(result = xmlXPathEvalExpression(xpath, context))) {
-		printf("Settings file has no category 'devices'.\n");
+		printf("Settings file has no category 'device'.\n");
 	} else {
 		xmlNodeSet *nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {
@@ -62,7 +62,7 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 	xmlXPathObject *result;
 
 	if (!(result = xmlXPathEvalExpression(xpath, context))) {
-		printf("Settings file has no category 'shortcuts'.\n");
+		printf("Settings file has no category 'shortcut'.\n");
 	} else {
 		xmlNodeSet *nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {
@@ -157,7 +157,7 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 	xmlXPathObject *result;
 
 	if (!(result = xmlXPathEvalExpression(xpath, context))) {
-		printf("Settings file has no category 'remaps'.\n");
+		printf("Settings file has no category 'remap'.\n");
 	} else {
 		xmlNodeSet *nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {

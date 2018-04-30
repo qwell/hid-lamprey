@@ -27,19 +27,13 @@
 						</xs:simpleContent>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="devices">
+				<xs:element name="device" minOccurs="0" maxOccurs="unbounded">
 					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="device" minOccurs="0" maxOccurs="unbounded">
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:string">
-											<xs:attribute type="nonEmptyString" name="name" use="required"/>
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute type="nonEmptyString" name="name" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
