@@ -27,7 +27,7 @@ char *xml_debug_node(xmlDoc *doc, xmlNode *node) {
 	return strdup((char *)buffer->content);
 }
 
-void settings_xml_load_devices(xmlXPathContext *context) {
+void settings_xml_load_settings(xmlXPathContext *context) {
 	xmlChar *xpath = (xmlChar *)"/settings/devices/device";
 	xmlXPathObject *result;
 
@@ -58,7 +58,7 @@ void settings_xml_load_devices(xmlXPathContext *context) {
 }
 
 void settings_xml_load_shortcuts(xmlXPathContext *context) {
-	xmlChar *xpath = (xmlChar *)"/settings/shortcuts/shortcut";
+	xmlChar *xpath = (xmlChar *)"/shortcuts/shortcut";
 	xmlXPathObject *result;
 
 	if (!(result = xmlXPathEvalExpression(xpath, context))) {
@@ -153,7 +153,7 @@ struct shortcut {
 }
 
 void settings_xml_load_remaps(xmlXPathContext *context) {
-	xmlChar *xpath = (xmlChar *)"/settings/remaps/remap";
+	xmlChar *xpath = (xmlChar *)"/remaps/remap";
 	xmlXPathObject *result;
 
 	if (!(result = xmlXPathEvalExpression(xpath, context))) {
@@ -217,66 +217,122 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 	}
 }
 
-void hl_settings_xml_load() {
-	char *xmlfilename = "settings/settings.xml";
-	char *xsdfilename = "settings/settings.xsd";
-	xmlDoc *doc;
-	xmlSchemaParserCtxt *parser_context;
-	xmlSchema *schema;
-	xmlSchemaValidCtxt *valid_context;
-	xmlXPathContext *context;
+bool settings_xml_verify(xmlDoc *doc, char *xml_file, char *xsd_file) {
+	if (!xsd_file) {
+		printf("No schema file given for '%s'.  Skipping verification.\n", xml_file);
+	} else {
+		xmlSchemaParserCtxt *parser_context;
+		xmlSchema *schema;
+		xmlSchemaValidCtxt *valid_context;
 
-	xmlSetGenericErrorFunc(NULL, xml_generic_error_func);
-
-	if (!(doc = xmlParseFile(xmlfilename))) {
-		printf("Settings file '%s' is missing or invalid.\n", xmlfilename);
-		return;
-	}
-
-	if (!(parser_context = xmlSchemaNewParserCtxt(xsdfilename))) {
-		printf("Settings file schema '%s' could not be loaded.\n", xsdfilename);
-		xmlFreeDoc(doc);
-		return;
-	}
-	if (!(schema = xmlSchemaParse(parser_context))) {
-		printf("Settings file schema '%s' could not be loaded.\n", xsdfilename);
-		xmlSchemaFreeParserCtxt(parser_context);
-		xmlFreeDoc(doc);
-		return;
-	}
-	if (!(valid_context = xmlSchemaNewValidCtxt(schema))) {
-		printf("Settings file schema '%s' could not be loaded.\n", xsdfilename);
-		xmlSchemaFreeParserCtxt(parser_context);
-		xmlSchemaFree(schema);
-		xmlFreeDoc(doc);
-		return;
-	}
-	if (xmlSchemaValidateDoc(valid_context, doc)) {
-		printf("Settings file '%s' did not validate against %s.\n", xmlfilename, xsdfilename);
+		if (!(parser_context = xmlSchemaNewParserCtxt(xsd_file))) {
+			printf("Settings file schema '%s' could not be loaded.\n", xsd_file);
+			xmlFreeDoc(doc);
+			return false;
+		}
+		if (!(schema = xmlSchemaParse(parser_context))) {
+			printf("Settings file schema '%s' could not be loaded.\n", xsd_file);
+			xmlSchemaFreeParserCtxt(parser_context);
+			xmlFreeDoc(doc);
+			return false;
+		}
+		if (!(valid_context = xmlSchemaNewValidCtxt(schema))) {
+			printf("Settings file schema '%s' could not be loaded.\n", xsd_file);
+			xmlSchemaFreeParserCtxt(parser_context);
+			xmlSchemaFree(schema);
+			xmlFreeDoc(doc);
+			return false;
+		}
+		if (xmlSchemaValidateDoc(valid_context, doc)) {
+			printf("Settings file '%s' did not validate against %s.\n", xml_file, xsd_file);
+			xmlSchemaFreeParserCtxt(parser_context);
+			xmlSchemaFree(schema);
+			xmlSchemaFreeValidCtxt(valid_context);
+			xmlFreeDoc(doc);
+			return false;
+		}
 		xmlSchemaFreeParserCtxt(parser_context);
 		xmlSchemaFree(schema);
 		xmlSchemaFreeValidCtxt(valid_context);
-		xmlFreeDoc(doc);
-		return;
-	}
-	xmlSchemaFreeParserCtxt(parser_context);
-	xmlSchemaFree(schema);
-	xmlSchemaFreeValidCtxt(valid_context);
-
-	if (!(context = xmlXPathNewContext(doc))) {
-		printf("Settings file '%s' could not be loaded.\n", xmlfilename);
-		xmlFreeDoc(doc);
-		return;
 	}
 
-	settings_xml_load_devices(context);
-	settings_xml_load_shortcuts(context);
-	settings_xml_load_remaps(context);
+	return true;
+}
 
-	printf("Settings file '%s' loaded successfully.\n", xmlfilename);
+void hl_settings_xml_load() {
+	char *settings_xml_file = "settings/settings.xml";
+	char *settings_xsd_file = "settings/settings.xsd";
 
-	xmlFree(context);
-	xmlFreeDoc(doc);
+	char *shortcuts_xml_file = "settings/shortcuts.xml";
+	char *shortcuts_xsd_file = "settings/shortcuts.xsd";
+
+	char *remaps_xml_file = "settings/remaps.xml";
+	char *remaps_xsd_file = "settings/remaps.xsd";
+
+	xmlDoc *doc;
+
+	xmlSetGenericErrorFunc(NULL, xml_generic_error_func);
+
+	if (!(doc = xmlParseFile(settings_xml_file))) {
+		printf("Settings file '%s' is missing or invalid.\n", settings_xml_file);
+		return;
+	} else {
+		if (settings_xml_verify(doc, settings_xml_file, settings_xsd_file)) {
+			xmlXPathContext *context;
+
+			if (!(context = xmlXPathNewContext(doc))) {
+				printf("Settings file '%s' could not be loaded.\n", settings_xml_file);
+				xmlFreeDoc(doc);
+				return;
+			}
+
+			settings_xml_load_settings(context);
+
+			xmlFree(context);
+		}
+		xmlFreeDoc(doc);
+	}
+
+	if (!(doc = xmlParseFile(shortcuts_xml_file))) {
+		printf("Settings file '%s' is missing or invalid.\n", shortcuts_xml_file);
+		return;
+	} else {
+		if (settings_xml_verify(doc, shortcuts_xml_file, shortcuts_xsd_file)) {
+			xmlXPathContext *context;
+
+			if (!(context = xmlXPathNewContext(doc))) {
+				printf("Settings file '%s' could not be loaded.\n", shortcuts_xml_file);
+				xmlFreeDoc(doc);
+				return;
+			}
+
+			settings_xml_load_shortcuts(context);
+
+			xmlFree(context);
+		}
+		xmlFreeDoc(doc);
+	}
+
+	if (!(doc = xmlParseFile(remaps_xml_file))) {
+		printf("Settings file '%s' is missing or invalid.\n", remaps_xml_file);
+		return;
+	} else {
+		if (settings_xml_verify(doc, remaps_xml_file, remaps_xsd_file)) {
+			xmlXPathContext *context;
+
+			if (!(context = xmlXPathNewContext(doc))) {
+				printf("Settings file '%s' could not be loaded.\n", remaps_xml_file);
+				xmlFreeDoc(doc);
+				return;
+			}
+
+			settings_xml_load_remaps(context);
+
+			xmlFree(context);
+		}
+		xmlFreeDoc(doc);
+	}
+
 	xmlCleanupParser();
 }
 

@@ -178,7 +178,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="settings\remaps.xml">
+      <DeploymentContent>false</DeploymentContent>
+    </Xml>
     <Xml Include="settings\settings.xml" />
+    <Xml Include="settings\shortcuts.xml">
+      <DeploymentContent>false</DeploymentContent>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <None Include="settings\settings.xsd" />
@@ -210,6 +216,14 @@
     <ProjectReference Include="..\zlib-win-build\build-VS2017\libz-static\libz-static.vcxproj">
       <Project>{b56d17bc-072b-42f3-844a-870a07afbaaa}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="settings\remaps.xsd">
+      <DeploymentContent>false</DeploymentContent>
+    </Xsd>
+    <Xsd Include="settings\shortcuts.xsd">
+      <DeploymentContent>false</DeploymentContent>
+    </Xsd>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
