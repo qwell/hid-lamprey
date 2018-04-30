@@ -44,8 +44,11 @@ namespace hidlamprey {
 			InitializeComponent();
 		}
 
+		System::Void formMain::formMain_onPaint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e);
+
 		static formMain^ instance;
 		static Object^ instanceLock = gcnew Object();
+		struct controller_display *controller;
 		array<System::Windows::Forms::PictureBox^>^ skinButtons;
 		System::Windows::Forms::PictureBox^  picController;
 
@@ -90,12 +93,14 @@ namespace hidlamprey {
 			this->Closed += gcnew System::EventHandler(this, &formMain::formMain_Closed);
 			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
 			this->Shown += gcnew System::EventHandler(this, &formMain::formMain_Shown);
+			this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &formMain::formMain_onPaint);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picController))->EndInit();
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 	private: System::Void formMain_Load(System::Object^  sender, System::EventArgs^  e) {
+		this->DoubleBuffered = true;
 	}
 
 	private: System::Void formMain_Closed(System::Object^  sender, System::EventArgs^  e) {

@@ -11,34 +11,37 @@ using namespace System::Windows::Forms;
 
 using namespace hidlamprey;
 
-void formMain::output_controller(IntPtr controller) {
-	if (!hl_active_skin) {
+System::Void formMain::formMain_onPaint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+	if (!controller) {
 		return;
 	}
 
-	if (picController->InvokeRequired) {
-		picController->Invoke(gcnew Action<IntPtr>(this, &formMain::output_controller), controller);
-	} else {
-		struct controller_display *c = (struct controller_display *)controller.ToPointer();
+	for (int j = 0; j < sizeof(controller->mapping) / sizeof(*controller->mapping); j++) {
+		struct controller_display_mapping *mapping = &controller->mapping[j];
 
-		for (int j = 0; j < sizeof(c->mapping) / sizeof(*c->mapping); j++) {
-			struct controller_display_mapping *mapping = &c->mapping[j];
+		for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
+			const struct button_trigger *trigger = &mapping->buttons[k];
 
-			for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
-				const struct button_trigger *trigger = &mapping->buttons[k];
-
-				for (int l = 0; l < hl_active_skin->button_count; l++) {
-					if (trigger->type == hl_active_skin->buttons[l]->type && trigger->code == hl_active_skin->buttons[l]->code) {
-						if (mapping->value) {
-							this->skinButtons[l]->Visible = true;
-						} else {
-							this->skinButtons[l]->Visible = false;
-						}
+			for (int l = 0; l < hl_active_skin->button_count; l++) {
+				if (trigger->type == hl_active_skin->buttons[l]->type && trigger->code == hl_active_skin->buttons[l]->code) {
+					if (mapping->value) {
+						this->skinButtons[l]->Visible = true;
+					} else {
+						this->skinButtons[l]->Visible = false;
 					}
 				}
 			}
 		}
 	}
+}
+
+void formMain::output_controller(IntPtr c) {
+	if (!hl_active_skin) {
+		return;
+	}
+
+	this->controller = (struct controller_display *)c.ToPointer();
+	this->Invalidate();
 }
 
 void formMain::loadSkinImages() {
