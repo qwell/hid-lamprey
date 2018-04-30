@@ -7,6 +7,8 @@
 * (at your option) any later version.
 */
 
+#include <string.h>
+
 #include "include/lamprey.h"
 
 #include "include/controller.h"
@@ -60,7 +62,7 @@ void hl_skin_load(char *skin_name, char *background_name) {
 #if defined(_WIN32)
 	WIN32_FIND_DATA ffd;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
-	TCHAR scanPath[MAX_PATH];
+	TCHAR scanPath[64];
 	snprintf(scanPath, sizeof(scanPath) - 1, "skins\\*");
 
 	if ((hFind = FindFirstFile(scanPath, &ffd)) != INVALID_HANDLE_VALUE) {
@@ -83,7 +85,7 @@ void hl_skin_load(char *skin_name, char *background_name) {
 	xmlSetGenericErrorFunc(NULL, xml_generic_skin_error_func);
 
 	for (int z = 0; z < skin_count; z++) {
-		char skin_path[MAX_PATH];
+		char skin_path[128];
 		snprintf(skin_path, sizeof(skin_path) - 1, "skins/%s/%s", skin_list[z], skin_xml_file);
 
 		if (!(doc = xmlParseFile(skin_path))) {
@@ -115,7 +117,7 @@ void hl_skin_load(char *skin_name, char *background_name) {
 					if (!xmlStrcmp(nodename, (const xmlChar *)skin_name)) {
 						hl_active_skin = (struct hl_active_skin *)calloc(1, sizeof(struct hl_active_skin));
 						snprintf(hl_active_skin->path, sizeof(hl_active_skin->path) - 1, "skins/%s/", skin_list[z]);
-						snprintf(hl_active_skin->name, sizeof(hl_active_skin->name) - 1, (char *)nodename);
+						strncpy(hl_active_skin->name, (char *)nodename, sizeof(hl_active_skin->name) - 1);
 
 						for (xmlNode *cur = node->children; cur; cur = cur->next) {
 							if (cur->type == XML_ELEMENT_NODE) {
@@ -124,8 +126,8 @@ void hl_skin_load(char *skin_name, char *background_name) {
 									xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
 
 									if (!xmlStrcmp(name, (xmlChar *)background_name)) {
-										snprintf(hl_active_skin->background.name, sizeof(hl_active_skin->background.name) - 1, (char *)name);
-										snprintf(hl_active_skin->background.filename, sizeof(hl_active_skin->background.filename) - 1, (char *)image);
+										strncpy(hl_active_skin->background.name, (char *)name, sizeof(hl_active_skin->background.name) - 1);
+										strncpy(hl_active_skin->background.filename, (char *)image, sizeof(hl_active_skin->background.filename) - 1);
 									}
 
 									xmlFree(name);
@@ -153,7 +155,7 @@ void hl_skin_load(char *skin_name, char *background_name) {
 									if (button_code) {
 										struct hl_skin_button *button = (struct hl_skin_button *)calloc(1, sizeof(struct hl_skin_button));
 
-										snprintf(button->filename, sizeof(button->filename) - 1, (char *)image);
+										strncpy(button->filename, (char *)image, sizeof(button->filename) - 1);
 										button->code = button_code->code;
 										button->type = button_code->type;
 										button->x = atoi((char *)pos_x);
