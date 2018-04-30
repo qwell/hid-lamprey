@@ -86,6 +86,7 @@ namespace hidlamprey {
 			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(148, 36);
 			this->Controls->Add(this->picController);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->MaximizeBox = false;
 			this->Name = L"formMain";
 			this->ShowIcon = false;
