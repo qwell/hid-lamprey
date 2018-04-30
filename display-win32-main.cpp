@@ -35,12 +35,12 @@ System::Void formMain::formMain_onPaint(System::Object^ sender, System::Windows:
 	}
 }
 
-void formMain::output_controller(IntPtr c) {
+void formMain::output_controller(struct controller_display *c) {
 	if (!hl_active_skin) {
 		return;
 	}
 
-	this->controller = (struct controller_display *)c.ToPointer();
+	this->controller = c;
 	this->Invalidate();
 }
 

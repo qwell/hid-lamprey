@@ -48,5 +48,5 @@ void hl_display_win32_output_controller(struct controller_display *controller) {
 		return;
 	}
 
-	formMain::Instance()->output_controller(IntPtr((void *)controller));
+	formMain::Instance()->output_controller(controller);
 }

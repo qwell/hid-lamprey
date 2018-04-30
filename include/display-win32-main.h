@@ -26,7 +26,7 @@ namespace hidlamprey {
 			}
 		}
 		
-		void output_controller(IntPtr controller);
+		void output_controller(struct controller_display *controller);
 		void loadSkinImages();
 
 	protected:
