@@ -291,6 +291,8 @@ void hl_settings_xml_load() {
 			xmlFree(context);
 		}
 		xmlFreeDoc(doc);
+
+		printf("Settings file '%s loaded.\n", settings_xml_file);
 	}
 
 	if (!(doc = xmlParseFile(shortcuts_xml_file))) {
@@ -311,6 +313,8 @@ void hl_settings_xml_load() {
 			xmlFree(context);
 		}
 		xmlFreeDoc(doc);
+
+		printf("Settings file '%s loaded.\n", shortcuts_xml_file);
 	}
 
 	if (!(doc = xmlParseFile(remaps_xml_file))) {
@@ -331,6 +335,8 @@ void hl_settings_xml_load() {
 			xmlFree(context);
 		}
 		xmlFreeDoc(doc);
+
+		printf("Settings file '%s loaded.\n", remaps_xml_file);
 	}
 
 	xmlCleanupParser();
