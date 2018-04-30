@@ -20,31 +20,120 @@ void xml_generic_skin_error_func(void *ctx, const char *msg, ...) {
 	return;
 }
 
-struct button_code *skin_lookup_button(char *compat_name) {
-	struct compat_list {
+struct button_code *skin_lookup_button(char *compat_type, char *compat_name) {
+	struct compat_input {
 		char *name;
 		uint8_t type;
 		uint16_t code;
+	};
+	struct compat_list {
+		char *type;
+		struct compat_input inputs[32];
 	} compat_list[] = {
-		{ "up", EV_KEY, BTN_DPAD_UP },
-		{ "right", EV_KEY, BTN_DPAD_RIGHT },
-		{ "down", EV_KEY, BTN_DPAD_DOWN },
-		{ "left", EV_KEY, BTN_DPAD_LEFT },
-		{ "x", EV_KEY, BTN_NORTH },
-		{ "y", EV_KEY, BTN_WEST },
-		{ "a", EV_KEY, BTN_EAST },
-		{ "b", EV_KEY, BTN_SOUTH },
-		{ "l", EV_KEY, BTN_TL },
-		{ "r", EV_KEY, BTN_TR},
-		{ "select", EV_KEY, BTN_SELECT },
-		{ "start", EV_KEY, BTN_START },
+		{ "snes",{
+			{ "up", EV_KEY, BTN_DPAD_UP },
+			{ "right", EV_KEY, BTN_DPAD_RIGHT },
+			{ "down", EV_KEY, BTN_DPAD_DOWN },
+			{ "left", EV_KEY, BTN_DPAD_LEFT },
+			{ "a", EV_KEY, BTN_EAST },
+			{ "b", EV_KEY, BTN_SOUTH },
+			{ "select", EV_KEY, BTN_SELECT },
+			{ "start", EV_KEY, BTN_START },
+		} },
+		{ "snes", {
+			{ "up", EV_KEY, BTN_DPAD_UP },
+			{ "right", EV_KEY, BTN_DPAD_RIGHT },
+			{ "down", EV_KEY, BTN_DPAD_DOWN },
+			{ "left", EV_KEY, BTN_DPAD_LEFT },
+			{ "x", EV_KEY, BTN_NORTH },
+			{ "y", EV_KEY, BTN_WEST },
+			{ "a", EV_KEY, BTN_EAST },
+			{ "b", EV_KEY, BTN_SOUTH },
+			{ "l", EV_KEY, BTN_TL },
+			{ "r", EV_KEY, BTN_TR },
+			{ "select", EV_KEY, BTN_SELECT },
+			{ "start", EV_KEY, BTN_START },
+		} },
+		{ "n64", {
+			{ "up", EV_KEY, BTN_DPAD_UP },
+			{ "right", EV_KEY, BTN_DPAD_RIGHT },
+			{ "down", EV_KEY, BTN_DPAD_DOWN },
+			{ "left", EV_KEY, BTN_DPAD_LEFT },
+			{ "cup", EV_KEY, BTN_NORTH },
+			{ "cleft", EV_KEY, BTN_WEST },
+			{ "cright", EV_KEY, BTN_EAST },
+			{ "cdown", EV_KEY, BTN_SOUTH },
+			{ "z", EV_KEY, BTN_Z },
+			{ "l", EV_KEY, BTN_TL },
+			{ "r", EV_KEY, BTN_TR },
+			{ "start", EV_KEY, BTN_START },
+		} },
+		{ "gamecube",{
+			{ "up", EV_KEY, BTN_DPAD_UP },
+			{ "right", EV_KEY, BTN_DPAD_RIGHT },
+			{ "down", EV_KEY, BTN_DPAD_DOWN },
+			{ "left", EV_KEY, BTN_DPAD_LEFT },
+			{ "x", EV_KEY, BTN_NORTH },
+			{ "y", EV_KEY, BTN_WEST },
+			{ "a", EV_KEY, BTN_EAST },
+			{ "b", EV_KEY, BTN_SOUTH },
+			{ "z", EV_KEY, BTN_Z },
+			{ "l", EV_KEY, BTN_TL },
+			{ "r", EV_KEY, BTN_TR },
+			{ "start", EV_KEY, BTN_START },
+		} },
+		{ "playstation",{
+			{ "up", EV_KEY, BTN_DPAD_UP },
+			{ "right", EV_KEY, BTN_DPAD_RIGHT },
+			{ "down", EV_KEY, BTN_DPAD_DOWN },
+			{ "left", EV_KEY, BTN_DPAD_LEFT },
+			{ "triangle", EV_KEY, BTN_NORTH },
+			{ "square", EV_KEY, BTN_WEST },
+			{ "circle", EV_KEY, BTN_EAST },
+			{ "x", EV_KEY, BTN_SOUTH },
+			{ "l1", EV_KEY, BTN_TL },
+			{ "r1", EV_KEY, BTN_TR },
+			{ "l2", EV_KEY, BTN_TL2 },
+			{ "r2", EV_KEY, BTN_TR2 },
+			{ "select", EV_KEY, BTN_SELECT },
+			{ "start", EV_KEY, BTN_START },
+		} },
+		{ "sega", {
+			{ "up", EV_KEY, BTN_DPAD_UP },
+			{ "right", EV_KEY, BTN_DPAD_RIGHT },
+			{ "down", EV_KEY, BTN_DPAD_DOWN },
+			{ "left", EV_KEY, BTN_DPAD_LEFT },
+			{ "a", EV_KEY, BTN_WEST },
+			{ "b", EV_KEY, BTN_SOUTH },
+			{ "c", EV_KEY, BTN_EAST },
+			{ "x", EV_KEY, BTN_NORTH },
+			{ "y", EV_KEY, BTN_C },
+			{ "z", EV_KEY, BTN_Z },
+			{ "start", EV_KEY, BTN_START },
+		} },
+		{ "classic", {
+			{ "up", EV_KEY, BTN_DPAD_UP },
+			{ "right", EV_KEY, BTN_DPAD_RIGHT },
+			{ "down", EV_KEY, BTN_DPAD_DOWN },
+			{ "left", EV_KEY, BTN_DPAD_LEFT },
+			{ "1", EV_KEY, BTN_SOUTH },
+			{ "2", EV_KEY, BTN_EAST },
+		}},
 	};
 
 	for (int i = 0; i < sizeof(compat_list) / sizeof(*compat_list); i++) {
-		if (!strcmp(compat_list[i].name, compat_name)) {
+		if (!compat_list[i].type || strcmp(compat_list[i].type, compat_type)) {
+			continue;
+		}
+
+		for (int j = 0; j < sizeof(compat_list[i].inputs) / sizeof(*compat_list[i].inputs); j++) {
+			if (!compat_list[i].inputs[j].name || strcmp(compat_list[i].inputs[j].name, compat_name)) {
+				continue;
+			}
+
 			struct button_code *button = (struct button_code *)calloc(1, sizeof(*button));
-			button->type = compat_list[i].type;
-			button->code = compat_list[i].code;
+			button->type = compat_list[i].inputs[j].type;
+			button->code = compat_list[i].inputs[j].code;
 			return button;
 		}
 	}
@@ -112,12 +201,13 @@ void hl_skin_load(char *skin_name, char *background_name) {
 				for (int i = 0; i < nodeset->nodeNr; i++) {
 					xmlNode *node = nodeset->nodeTab[i];
 
-					xmlChar *nodename = xmlGetProp(node, (const xmlChar *)"name");
+					xmlChar *skinname = xmlGetProp(node, (const xmlChar *)"name");
+					xmlChar *skintype = xmlGetProp(node, (const xmlChar *)"type");
 
-					if (!xmlStrcmp(nodename, (const xmlChar *)skin_name)) {
+					if (!xmlStrcmp(skinname, (const xmlChar *)skin_name)) {
 						hl_active_skin = (struct hl_active_skin *)calloc(1, sizeof(struct hl_active_skin));
 						snprintf(hl_active_skin->path, sizeof(hl_active_skin->path) - 1, "skins/%s/", skin_list[z]);
-						strncpy(hl_active_skin->name, (char *)nodename, sizeof(hl_active_skin->name) - 1);
+						strncpy(hl_active_skin->name, (char *)skinname, sizeof(hl_active_skin->name) - 1);
 
 						for (xmlNode *cur = node->children; cur; cur = cur->next) {
 							if (cur->type == XML_ELEMENT_NODE) {
@@ -144,11 +234,10 @@ void hl_skin_load(char *skin_name, char *background_name) {
 
 									if (type && code) {
 										button_code = hl_controller_get_code_by_name((char *)type, (char *)code);
-									}
-									else {
-										// For compatibility with NintendoSpy skins, lookup type and code for button "name".
+									} else if (skintype) {
+										// For compatibility with NintendoSpy skins, lookup type and code for button "name" on controller "type".
 										xmlChar *compat_name = xmlGetProp(cur, (const xmlChar *)"name");
-										button_code = skin_lookup_button((char *)compat_name);
+										button_code = skin_lookup_button((char *)skintype, (char *)compat_name);
 										xmlFree(compat_name);
 									}
 
@@ -182,7 +271,8 @@ void hl_skin_load(char *skin_name, char *background_name) {
 							hl_active_skin = NULL;
 						}
 					}
-					xmlFree(nodename);
+					xmlFree(skinname);
+					xmlFree(skintype);
 				}
 				xmlXPathFreeObject(result);
 			}
