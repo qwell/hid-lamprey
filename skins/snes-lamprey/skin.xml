@@ -1,5 +1,5 @@
-<skin name="lamprey-SNES">
-	<controller image="controller_alpha.png"/>
+<skin name="snes-lamprey">
+	<background name "default" image="controller_alpha.png"/>
 
 	<button image="up.png" code="BTN_DPAD_UP" x="117" y="92"/>
 	<button image="right.png" code="BTN_DPAD_RIGHT" x="155" y="126"/>

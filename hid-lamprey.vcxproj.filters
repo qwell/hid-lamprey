@@ -121,12 +121,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="settings.xml">
+    <Xml Include="settings\settings.xml">
       <Filter>Resource Files</Filter>
     </Xml>
   </ItemGroup>
   <ItemGroup>
-    <None Include="settings.xsd">
+    <None Include="settings\settings.xsd">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

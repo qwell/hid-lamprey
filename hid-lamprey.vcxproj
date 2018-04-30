@@ -178,10 +178,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="settings.xml" />
+    <Xml Include="settings\settings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="settings.xsd" />
+    <None Include="settings\settings.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\lamprey.ico" />

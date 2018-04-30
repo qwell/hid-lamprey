@@ -1,4 +1,5 @@
 <settings>
+	<skin name="snes-lamprey" background="default"/>
 	<option name="deadzone_hat">0</option>
 	<option name="deadzone_axis">0.2</option>
 	<devices>
