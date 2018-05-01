@@ -30,7 +30,7 @@ struct button_code *skin_lookup_button(char *compat_type, char *compat_name) {
 		char *type;
 		struct compat_input inputs[32];
 	} compat_list[] = {
-		{ "snes",{
+		{ "nes",{
 			{ "up", EV_KEY, BTN_DPAD_UP },
 			{ "right", EV_KEY, BTN_DPAD_RIGHT },
 			{ "down", EV_KEY, BTN_DPAD_DOWN },
