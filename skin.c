@@ -91,6 +91,8 @@ struct button_code *skin_lookup_button(char *compat_type, char *compat_name) {
 			{ "square", EV_KEY, BTN_WEST },
 			{ "circle", EV_KEY, BTN_EAST },
 			{ "x", EV_KEY, BTN_SOUTH },
+			{ "lstick", EV_KEY, BTN_THUMBL },
+			{ "rstick", EV_KEY, BTN_THUMBR },
 			{ "l1", EV_KEY, BTN_TL },
 			{ "r1", EV_KEY, BTN_TR },
 			{ "l2", EV_KEY, BTN_TL2 },
