@@ -25,18 +25,26 @@ struct button_code {
 struct button_trigger {
 	uint8_t type;
 	uint16_t code;
-	int16_t triggervalue;
+	int16_t trigger_low;
+	int16_t trigger_high;
+};
+
+struct button_trigger_out {
+	uint8_t type;
+	uint16_t code;
+	int16_t trigger;
 };
 
 struct remap {
 	struct button_trigger *in;
-	struct button_trigger *out;
+	struct button_trigger_out *out;
 };
 
 struct controller_display_mapping {
 	const char *display;
 	struct button_trigger buttons[8];
 	bool value;
+	int16_t realvalue;
 };
 
 struct controller_display {

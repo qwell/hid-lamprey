@@ -60,13 +60,18 @@ struct button_code *skin_lookup_button(char *compat_type, char *compat_name) {
 			{ "down", EV_KEY, BTN_DPAD_DOWN },
 			{ "left", EV_KEY, BTN_DPAD_LEFT },
 			{ "cup", EV_KEY, BTN_NORTH },
-			{ "cleft", EV_KEY, BTN_WEST },
 			{ "cright", EV_KEY, BTN_EAST },
 			{ "cdown", EV_KEY, BTN_SOUTH },
-			{ "z", EV_KEY, BTN_Z },
+			{ "cleft", EV_KEY, BTN_WEST },
+			{ "b", EV_KEY, BTN_C },
+			{ "a", EV_KEY, BTN_Z },
+			{ "z", EV_KEY, BTN_TL2 },
+			{ "start", EV_KEY, BTN_START },
 			{ "l", EV_KEY, BTN_TL },
 			{ "r", EV_KEY, BTN_TR },
 			{ "start", EV_KEY, BTN_START },
+			{ "stick_x", EV_ABS, ABS_X },
+			{ "stick_y", EV_ABS, ABS_Y },
 		} },
 		{ "gamecube",{
 			{ "up", EV_KEY, BTN_DPAD_UP },
@@ -224,8 +229,7 @@ void hl_skin_load(char *skin_name, char *background_name) {
 
 									xmlFree(name);
 									xmlFree(image);
-								}
-								else if (!xmlStrcmp(cur->name, (const xmlChar *)"button")) {
+								} else if (!xmlStrcmp(cur->name, (const xmlChar *)"button")) {
 									struct button_code *button_code;
 
 									xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
@@ -264,6 +268,111 @@ void hl_skin_load(char *skin_name, char *background_name) {
 									xmlFree(code);
 									xmlFree(pos_x);
 									xmlFree(pos_y);
+								} else if (!xmlStrcmp(cur->name, (const xmlChar *)"axis")) {
+									struct button_code *button_code_x;
+									struct button_code *button_code_y;
+
+									xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
+
+									xmlChar *type_x = xmlGetProp(cur, (const xmlChar *)"type_x");
+									xmlChar *code_x = xmlGetProp(cur, (const xmlChar *)"code_x");
+									xmlChar *pos_x = xmlGetProp(cur, (const xmlChar *)"x");
+									xmlChar *offset_x = xmlGetProp(cur, (const xmlChar *)"xoffset");
+
+									xmlChar *type_y = xmlGetProp(cur, (const xmlChar *)"type_y");
+									xmlChar *code_y = xmlGetProp(cur, (const xmlChar *)"code_y");
+									xmlChar *pos_y = xmlGetProp(cur, (const xmlChar *)"y");
+									xmlChar *offset_y = xmlGetProp(cur, (const xmlChar *)"yoffset");
+
+									button_code_x = hl_controller_get_code_by_name((char *)type_x, (char *)code_x);
+									button_code_y = hl_controller_get_code_by_name((char *)type_y, (char *)code_y);
+
+									if (button_code_x || button_code_y) {
+										struct hl_skin_axis *axis = (struct hl_skin_axis *)calloc(1, sizeof(struct hl_skin_axis));
+
+										strncpy(axis->filename, (char *)image, sizeof(axis->filename) - 1);
+										axis->x = atoi((char *)pos_x);
+										axis->y = atoi((char *)pos_y);
+										axis->offset_x = atoi((char *)offset_x);
+										axis->offset_y = atoi((char *)offset_y);
+
+										if (button_code_x) {
+											axis->code_x = button_code_x->code;
+											axis->type_x = button_code_x->type;
+											free(button_code_x);
+										}
+										if (button_code_y) {
+											axis->code_y = button_code_y->code;
+											axis->type_y = button_code_y->type;
+											free(button_code_y);
+										}
+
+										hl_active_skin->axes = (struct hl_skin_axis **)realloc(hl_active_skin->axes, (hl_active_skin->axis_count + 1) * sizeof(*hl_active_skin->axes));
+										hl_active_skin->axes[hl_active_skin->axis_count] = axis;
+										hl_active_skin->axis_count++;
+									}
+
+									xmlFree(image);
+									xmlFree(type_x);
+									xmlFree(code_x);
+									xmlFree(pos_x);
+									xmlFree(offset_x);
+									xmlFree(type_y);
+									xmlFree(code_y);
+									xmlFree(pos_y);
+									xmlFree(offset_y);
+								} else if (!xmlStrcmp(cur->name, (const xmlChar *)"stick")) {
+									/* For compatibility. */
+									struct button_code *button_code_x;
+									struct button_code *button_code_y;
+
+									xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
+
+									xmlChar *xname = xmlGetProp(cur, (const xmlChar *)"xname");
+									xmlChar *pos_x = xmlGetProp(cur, (const xmlChar *)"x");
+									xmlChar *range_x = xmlGetProp(cur, (const xmlChar *)"xrange");
+
+									xmlChar *yname = xmlGetProp(cur, (const xmlChar *)"yname");
+									xmlChar *pos_y = xmlGetProp(cur, (const xmlChar *)"y");
+									xmlChar *range_y = xmlGetProp(cur, (const xmlChar *)"yrange");
+
+									if (skintype) {
+										button_code_x = skin_lookup_button((char *)skintype, (char *)xname);
+										button_code_y = skin_lookup_button((char *)skintype, (char *)yname);
+									}
+
+									if (button_code_x || button_code_y) {
+										struct hl_skin_axis *axis = (struct hl_skin_axis *)calloc(1, sizeof(struct hl_skin_axis));
+
+										strncpy(axis->filename, (char *)image, sizeof(axis->filename) - 1);
+										axis->x = atoi((char *)pos_x);
+										axis->y = atoi((char *)pos_y);
+										axis->offset_x = atoi((char *)range_x);
+										axis->offset_y = atoi((char *)range_y);
+
+										if (button_code_x) {
+											axis->code_x = button_code_x->code;
+											axis->type_x = button_code_x->type;
+											free(button_code_x);
+										}
+										if (button_code_y) {
+											axis->code_y = button_code_y->code;
+											axis->type_y = button_code_y->type;
+											free(button_code_y);
+										}
+
+										hl_active_skin->axes = (struct hl_skin_axis **)realloc(hl_active_skin->axes, (hl_active_skin->axis_count + 1) * sizeof(*hl_active_skin->axes));
+										hl_active_skin->axes[hl_active_skin->axis_count] = axis;
+										hl_active_skin->axis_count++;
+									}
+
+									xmlFree(image);
+									xmlFree(xname);
+									xmlFree(yname);
+									xmlFree(pos_x);
+									xmlFree(pos_y);
+									xmlFree(range_x);
+									xmlFree(range_y);
 								}
 							}
 						}

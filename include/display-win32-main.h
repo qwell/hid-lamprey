@@ -49,7 +49,9 @@ namespace hidlamprey {
 		static formMain^ instance;
 		static Object^ instanceLock = gcnew Object();
 		struct controller_display *controller;
+
 		array<System::Windows::Forms::PictureBox^>^ skinButtons;
+		array<System::Windows::Forms::PictureBox^>^ skinAxes;
 		System::Windows::Forms::PictureBox^  picController;
 
 
@@ -73,9 +75,9 @@ namespace hidlamprey {
 			// picController
 			// 
 			this->picController->Location = System::Drawing::Point(0, 0);
+			this->picController->Margin = System::Windows::Forms::Padding(1);
 			this->picController->Name = L"picController";
 			this->picController->Size = System::Drawing::Size(0, 0);
-			this->picController->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 			this->picController->TabIndex = 1;
 			this->picController->TabStop = false;
 			// 

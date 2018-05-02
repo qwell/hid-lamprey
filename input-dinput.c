@@ -148,47 +148,53 @@ void hl_input_dinput_init() {
 void *hl_input_dinput_poll() {
 	struct dinput_button_maps {
 		WORD dinput;
-		int mapto;
+		int maptype;
+		int mapcode;
+		int mapvalue;
 	};
 	struct dinput_button_maps dinput_gamepad_button_maps[2][16] = { {
 			/* 8 buttons */
-			{ 0, BTN_SOUTH },
-			{ 1, BTN_EAST },
-			{ 2, BTN_WEST },
-			{ 3, BTN_NORTH },
-			{ 4, BTN_TL },
-			{ 5, BTN_TR },
-			{ 6, BTN_SELECT },
-			{ 7, BTN_START },
+			{ 0, EV_KEY, BTN_SOUTH },
+			{ 1, EV_KEY, BTN_EAST },
+			{ 2, EV_KEY, BTN_WEST },
+			{ 3, EV_KEY, BTN_NORTH },
+			{ 4, EV_KEY, BTN_TL },
+			{ 5, EV_KEY, BTN_TR },
+			{ 6, EV_KEY, BTN_SELECT },
+			{ 7, EV_KEY, BTN_START },
 		},{
 			/* 12 buttons */
-			{ 0, BTN_WEST },
-			{ 1, BTN_SOUTH },
-			{ 2, BTN_EAST },
-			{ 3, BTN_NORTH },
-			{ 4, BTN_TR },
-			{ 5, BTN_TL },
-			{ 6, BTN_TR2 },
-			{ 7, BTN_TL2 },
-			{ 8, BTN_START },
-			{ 9, BTN_SELECT },
-			{ 10, BTN_THUMBR },
-			{ 11, BTN_THUMBL },
+			{ 0, EV_KEY, BTN_WEST },
+			{ 1, EV_KEY, BTN_SOUTH },
+			{ 2, EV_KEY, BTN_EAST },
+			{ 3, EV_KEY, BTN_NORTH },
+			{ 4, EV_KEY, BTN_TR },
+			{ 5, EV_KEY, BTN_TL },
+			{ 6, EV_KEY, BTN_TR2 },
+			{ 7, EV_KEY, BTN_TL2 },
+			{ 8, EV_KEY, BTN_START },
+			{ 9, EV_KEY, BTN_SELECT },
+			{ 10, EV_KEY, BTN_THUMBR },
+			{ 11, EV_KEY, BTN_THUMBL },
 		}
 	};
 	struct dinput_button_maps dinput_keyboard_button_maps[256] = {
-		{ DIK_LEFT, BTN_DPAD_LEFT },
-		{ DIK_RIGHT, BTN_DPAD_RIGHT },
-		{ DIK_UP, BTN_DPAD_UP },
-		{ DIK_DOWN, BTN_DPAD_DOWN },
-		{ DIK_LSHIFT, BTN_TL },
-		{ DIK_RSHIFT, BTN_TR },
-		{ DIK_MINUS, BTN_SELECT },
-		{ DIK_EQUALS, BTN_START },
-		{ DIK_1, BTN_NORTH },
-		{ DIK_2, BTN_EAST },
-		{ DIK_3, BTN_SOUTH },
-		{ DIK_4, BTN_WEST },
+		{ DIK_LEFT, EV_KEY, BTN_DPAD_LEFT },
+		{ DIK_RIGHT, EV_KEY, BTN_DPAD_RIGHT },
+		{ DIK_UP, EV_KEY, BTN_DPAD_UP },
+		{ DIK_DOWN, EV_KEY, BTN_DPAD_DOWN },
+		{ DIK_LSHIFT, EV_KEY, BTN_TL },
+		{ DIK_RSHIFT, EV_KEY, BTN_TR },
+		{ DIK_MINUS, EV_KEY, BTN_SELECT },
+		{ DIK_EQUALS, EV_KEY, BTN_START },
+		{ DIK_1, EV_KEY, BTN_NORTH },
+		{ DIK_2, EV_KEY, BTN_EAST },
+		{ DIK_3, EV_KEY, BTN_SOUTH },
+		{ DIK_4, EV_KEY, BTN_WEST },
+		{ DIK_I, EV_ABS, ABS_Y, -128 },
+		{ DIK_J, EV_ABS, ABS_X, -128 },
+		{ DIK_K, EV_ABS, ABS_Y, 128 },
+		{ DIK_L, EV_ABS, ABS_X, 128 },
 	};
 
 	HRESULT hr = DI_OK;
@@ -239,6 +245,8 @@ void *hl_input_dinput_poll() {
 				if ((hr = input->device->GetDeviceState(sizeof(DIJOYSTATE2), &newstate)) == DI_OK) {
 					bool dpadHChanged = false;
 					bool dpadVChanged = false;
+					bool axisHChanged = false;
+					bool axisVChanged = false;
 					bool pRight = false;
 					bool pLeft = false;
 					bool pUp = false;
@@ -259,11 +267,12 @@ void *hl_input_dinput_poll() {
 					}
 					if (map >= 0) {
 						for (int i = 0; i < input->capabilities.dwButtons; i++) {
+							struct dinput_button_maps curmap = dinput_gamepad_button_maps[map][i];
 							if (newstate.rgbButtons[i] != oldstate.rgbButtons[i]) {
 								if (newstate.rgbButtons[i] & 0x80) {
-									hl_controller_change(input->name, 0, EV_KEY, dinput_gamepad_button_maps[map][i].mapto, 1);
+									hl_controller_change(input->name, 0, curmap.maptype, curmap.mapcode, curmap.mapvalue ? curmap.mapvalue : 1);
 								} else {
-									hl_controller_change(input->name, 0, EV_KEY, dinput_gamepad_button_maps[map][i].mapto, 0);
+									hl_controller_change(input->name, 0, curmap.maptype, curmap.mapcode, 0);
 								}
 							}
 						}
@@ -316,37 +325,14 @@ void *hl_input_dinput_poll() {
 						}
 					}
 
-					//TODO Send off axis/hat messages.
-					if (hl_controller_scale_range(newstate.lX, -256, 256) != hl_controller_scale_range(oldstate.lX, -256, 256)) {
-						dpadHChanged = true;
-						if (hl_controller_scale_range(newstate.lX, -256, 256) > 64) {
-							pRight = true;
-						}
-						else if (hl_controller_scale_range(newstate.lX, -256, 256) < -64) {
-							pLeft = true;
-						}
-					}
-
-					if (hl_controller_scale_range(newstate.lY, -256, 256) != hl_controller_scale_range(oldstate.lY, -256, 256)) {
-						dpadVChanged = true;
-						if (hl_controller_scale_range(newstate.lY, -256, 256) > 64) {
-							pDown = true;
-						}
-						else if (hl_controller_scale_range(newstate.lY, -256, 256) < -64) {
-							pUp = true;
-						}
-					}
-
 					if (dpadHChanged) {
 						if (pRight) {
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 1);
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 0);
-						}
-						else if (pLeft) {
+						} else if (pLeft) {
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 1);
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 0);
-						}
-						else {
+						} else {
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 0);
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 0);
 						}
@@ -356,16 +342,31 @@ void *hl_input_dinput_poll() {
 						if (pDown) {
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 1);
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 0);
-						}
-						else if (pUp) {
+						} else if (pUp) {
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 1);
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 0);
-						}
-						else {
+						} else {
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 0);
 							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 0);
 						}
 					}
+
+					if (hl_controller_scale_range(newstate.lX, -256, 256) != hl_controller_scale_range(oldstate.lX, -256, 256)) {
+						if (hl_controller_scale_range(newstate.lX, -256, 256) > 64) {
+							hl_controller_change(input->name, 0, EV_ABS, ABS_X, hl_controller_scale_range(newstate.lX, -256, 256));
+						} else if (hl_controller_scale_range(newstate.lX, -256, 256) < -64) {
+							hl_controller_change(input->name, 0, EV_ABS, ABS_X, hl_controller_scale_range(newstate.lX, -256, 256));
+						}
+					}
+					if (hl_controller_scale_range(newstate.lY, -256, 256) != hl_controller_scale_range(oldstate.lY, -256, 256)) {
+						if (hl_controller_scale_range(newstate.lY, -256, 256) > 64) {
+							hl_controller_change(input->name, 0, EV_ABS, ABS_Y, hl_controller_scale_range(newstate.lY, -256, 256));
+						} else if (hl_controller_scale_range(newstate.lY, -256, 256) < -64) {
+							hl_controller_change(input->name, 0, EV_ABS, ABS_Y, hl_controller_scale_range(newstate.lY, -256, 256));
+						}
+					}
+
+					//TODO Send off hat messages?
 				}
 				break;
 			}
@@ -390,13 +391,14 @@ void *hl_input_dinput_poll() {
 					memcpy(&state, &newstate, sizeof(newstate));
 
 					for (int i = 0; i < sizeof(dinput_keyboard_button_maps) / sizeof(*dinput_keyboard_button_maps); i++) {
-						BYTE aold = oldstate[dinput_keyboard_button_maps[i].dinput];
-						BYTE anew = newstate[dinput_keyboard_button_maps[i].dinput];
-						if (newstate[dinput_keyboard_button_maps[i].dinput] != oldstate[dinput_keyboard_button_maps[i].dinput]) {
-							if (newstate[dinput_keyboard_button_maps[i].dinput] & 0x80) {
-								hl_controller_change(input->name, 0, EV_KEY, dinput_keyboard_button_maps[i].mapto, 1);
+						struct dinput_button_maps curmap = dinput_keyboard_button_maps[i];
+						BYTE aold = oldstate[curmap.dinput];
+						BYTE anew = newstate[curmap.dinput];
+						if (newstate[curmap.dinput] != oldstate[curmap.dinput]) {
+							if (newstate[curmap.dinput] & 0x80) {
+								hl_controller_change(input->name, 0, curmap.maptype, curmap.mapcode, curmap.mapvalue ? curmap.mapvalue : 1);
 							} else {
-								hl_controller_change(input->name, 0, EV_KEY, dinput_keyboard_button_maps[i].mapto, 0);
+								hl_controller_change(input->name, 0, curmap.maptype, curmap.mapcode, 0);
 							}
 						}
 					}

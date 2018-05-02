@@ -45,27 +45,27 @@ extern struct hl_settings *hl_settings;
 #define CONTROLLER_DISPLAYS \
 	{\
 		"SNES",\
-		{DEVICE_XBOX, DEVICE_ROCKCANDY, DEVICE_DINPUT_GAMEPAD0, DEVICE_DINPUT_KEYBOARD0, DEVICE_XINPUT0},\
+		{DEVICE_XBOX, DEVICE_ROCKCANDY, DEVICE_DINPUT_GAMEPAD0, DEVICE_XINPUT0},\
 		{\
 			{"^", {\
 				{EV_KEY, BTN_DPAD_UP},\
-				{EV_ABS, ABS_HAT0Y, -64},\
-				{EV_ABS, ABS_Y, -64},\
+				{EV_ABS, ABS_HAT0Y, -64, 0},\
+				/*{EV_ABS, ABS_Y, -64, 0},*/\
 			}},\
 			{"v", {\
 				{EV_KEY, BTN_DPAD_DOWN},\
-				{EV_ABS, ABS_HAT0Y, 64},\
-				{EV_ABS, ABS_Y, 64},\
+				{EV_ABS, ABS_HAT0Y, 0, 64},\
+				/*{EV_ABS, ABS_Y, 0, 64},*/\
 			}},\
 			{"<", {\
 				{EV_KEY, BTN_DPAD_LEFT},\
-				{EV_ABS, ABS_HAT0X, -64},\
-				{EV_ABS, ABS_X, -64},\
+				{EV_ABS, ABS_HAT0X, -64, 0},\
+				/*{EV_ABS, ABS_X, -64, 0},*/\
 			}},\
 			{">", {\
 				{EV_KEY, BTN_DPAD_RIGHT},\
-				{EV_ABS, ABS_HAT0X, 64},\
-				{EV_ABS, ABS_X, 64},\
+				{EV_ABS, ABS_HAT0X, 0, 64},\
+				/*{EV_ABS, ABS_X, 0, 64},*/\
 			}},\
 			{"L", {{EV_KEY, BTN_TL}}},\
 			{"R", {{EV_KEY, BTN_TR}}},\
@@ -84,12 +84,14 @@ extern struct hl_settings *hl_settings;
 	},\
 	{\
 		"keyboard",\
-		{DEVICE_KEYBOARD, DEVICE_KEYBOARD2},\
+		{DEVICE_KEYBOARD, DEVICE_KEYBOARD2, DEVICE_DINPUT_KEYBOARD0},\
 		{\
 			{"W", {{EV_KEY, KEY_W}}},\
 			{"A", {{EV_KEY, KEY_A}}},\
 			{"S", {{EV_KEY, KEY_S}}},\
 			{"D", {{EV_KEY, KEY_D}}},\
+			{"", {{EV_ABS, ABS_Y, -128, 128}}},\
+			{"", {{EV_ABS, ABS_X, -128, 128}}},\
 		},\
 		{\
 			"   [W]   \n"\

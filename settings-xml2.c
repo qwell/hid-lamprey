@@ -139,16 +139,20 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 
 								xmlChar *code = xmlGetProp(tchild, (const xmlChar *)"code");
 								xmlChar *type = xmlGetProp(tchild, (const xmlChar *)"type");
-								xmlChar *trigger = xmlGetProp(tchild, (const xmlChar *)"trigger");
+								xmlChar *trigger_low = xmlGetProp(tchild, (const xmlChar *)"trigger_low");
+								xmlChar *trigger_high = xmlGetProp(tchild, (const xmlChar *)"trigger_high");
 
 								if ((button_code = hl_controller_get_code_by_name((char *)type, (char *)code))) {
 									struct button_trigger *button_trigger = (struct button_trigger *)calloc(1, sizeof(struct button_trigger));
 									button_trigger->code = button_code->code;
 									button_trigger->type = button_code->type;
-									if (xmlStrlen(trigger) > 0) {
-										button_trigger->triggervalue = atol((char *)trigger);
-									} else {
-										button_trigger->triggervalue = 0;
+									button_trigger->trigger_low = 0;
+									button_trigger->trigger_high = 0;
+
+									if (xmlStrlen(trigger_low) > 0) {
+										button_trigger->trigger_low = atol((char *)trigger_low);
+									} else if (xmlStrlen(trigger_high) > 0) {
+										button_trigger->trigger_high = atol((char *)trigger_high);
 									}
 
 									button->triggers = (struct button_trigger **)realloc(button->triggers, (button->trigger_count + 1) * sizeof(*button->triggers));
@@ -158,7 +162,8 @@ void settings_xml_load_shortcuts(xmlXPathContext *context) {
 
 								xmlFree(code);
 								xmlFree(type);
-								xmlFree(trigger);
+								xmlFree(trigger_low);
+								xmlFree(trigger_high);
 							}
 						}
 
@@ -206,27 +211,46 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 
 						xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
 						xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
-						xmlChar *trigger = xmlGetProp(cur, (const xmlChar *)"trigger");
 
 						if ((button_code = hl_controller_get_code_by_name((char *)type, (char *)code))) {
-							struct button_trigger *button_trigger = (struct button_trigger *)calloc(1, sizeof(struct button_trigger));
-							button_trigger->code = button_code->code;
-							button_trigger->type = button_code->type;
-							if (xmlStrlen(trigger) > 0) {
-								button_trigger->triggervalue = atol((char *)trigger);
-							} else {
-								button_trigger->triggervalue = 0;
-							}
 							if (!xmlStrcmp(cur->name, (const xmlChar *)"in")) {
+								struct button_trigger *button_trigger = (struct button_trigger *)calloc(1, sizeof(struct button_trigger));
+								
+								xmlChar *trigger_low = xmlGetProp(cur, (const xmlChar *)"trigger_low");
+								xmlChar *trigger_high = xmlGetProp(cur, (const xmlChar *)"trigger_high");
+
+								button_trigger->code = button_code->code;
+								button_trigger->type = button_code->type;
+								if (xmlStrlen(trigger_low) > 0) {
+									button_trigger->trigger_low = atol((char *)trigger_low);
+								} else if (xmlStrlen(trigger_high) > 0) {
+									button_trigger->trigger_high = atol((char *)trigger_high);
+								} else {
+									button_trigger->trigger_low = 0;
+									button_trigger->trigger_high = 0;
+								}
 								remap->in = button_trigger;
+								xmlFree(trigger_low);
+								xmlFree(trigger_high);
 							} else if (!xmlStrcmp(cur->name, (const xmlChar *)"out")) {
-								remap->out = button_trigger;
+								struct button_trigger_out *button_trigger_out = (struct button_trigger_out *)calloc(1, sizeof(struct button_trigger_out));
+
+								xmlChar *trigger = xmlGetProp(cur, (const xmlChar *)"trigger");
+
+								button_trigger_out->code = button_code->code;
+								button_trigger_out->type = button_code->type;
+								if (xmlStrlen(trigger) > 0) {
+									button_trigger_out->trigger = atol((char *)trigger);
+								} else {
+									button_trigger_out->trigger = 0;
+								}
+								remap->out = button_trigger_out;
+								xmlFree(trigger);
 							}
 						}
 
 						xmlFree(code);
 						xmlFree(type);
-						xmlFree(trigger);
 					}
 				}
 			}

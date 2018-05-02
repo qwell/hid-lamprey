@@ -30,12 +30,26 @@ struct hl_skin_button {
 	int y;
 };
 
+struct hl_skin_axis {
+	char filename[64];
+	uint8_t type_x;
+	uint16_t code_x;
+	int x;
+	int offset_x;
+	uint8_t type_y;
+	uint16_t code_y;
+	int y;
+	int offset_y;
+};
+
 struct hl_active_skin {
 	char path[64];
 	char name[64];
 	struct hl_skin_background background;
 	struct hl_skin_button **buttons;
+	struct hl_skin_axis **axes;
 	int button_count;
+	int axis_count;
 };
 
 extern struct hl_active_skin *hl_active_skin;

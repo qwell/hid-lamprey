@@ -190,12 +190,16 @@ void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16
 				}
 
 				if (type == trigger->type && code == trigger->code) {
-					if (trigger->triggervalue < 0) {
-						button->state = (value <= trigger->triggervalue);
-					} else if (trigger->triggervalue > 0) {
-						button->state = (value >= trigger->triggervalue);
+					if (trigger->trigger_low < 0 || trigger->trigger_high > 0) {
+						if (trigger->trigger_low < 0 && value <= trigger->trigger_low) {
+							button->state = true;
+						} else if (trigger->trigger_high > 0 && value >= trigger->trigger_high) {
+							button->state = true;
+						} else {
+							button->state = false;
+						}
 					} else {
-						button->state = value ? 1 : 0;
+						button->state = value ? true : false;
 					}
 				}
 			}
@@ -218,15 +222,19 @@ void controller_remaps(int id, uint8_t type, uint16_t code, int16_t value) {
 		struct remap *emu = remaps[i];
 		if (type == emu->in->type && code == emu->in->code) {
 			int emuvalue = 0;
-			if (emu->in->triggervalue < 0) {
-				emuvalue = (value <= emu->in->triggervalue);
-			} else if (emu->in->triggervalue > 0) {
-				emuvalue = (value >= emu->in->triggervalue);
+			if (emu->in->trigger_low < 0 || emu->in->trigger_high > 0) {
+				if (emu->in->trigger_low < 0 && value <= emu->in->trigger_low) {
+					emuvalue = true;
+				} else if (emu->in->trigger_high > 0 && value >= emu->in->trigger_high) {
+					emuvalue = true;
+				} else {
+					emuvalue = false;
+				}
 			} else {
-				emuvalue = value ? 1 : 0;
+				emuvalue = value ? true : false;
 			}
-			if (emuvalue && emu->out->triggervalue) {
-				emuvalue = emu->out->triggervalue;
+			if (emuvalue && emu->out->trigger) {
+				emuvalue = emu->out->trigger;
 			}
 
 			hl_input_inject(id, emu->out->type, emu->out->code, emuvalue);
@@ -255,12 +263,20 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 					/* Things may not work properly if you have multiple buttons
 					 * assigned to a mapping that are concurrently triggered.
 					 */
-					if (trigger->triggervalue < 0) {
-						mapping->value = (value <= trigger->triggervalue);
-					} else if (trigger->triggervalue > 0) {
-						mapping->value = (value >= trigger->triggervalue);
+					if (trigger->trigger_low < 0 || trigger->trigger_high > 0) {
+						if (trigger->trigger_low < 0 && value <= trigger->trigger_low) {
+							mapping->value = true;
+							mapping->realvalue = value;
+						} else if (trigger->trigger_high > 0 && value >= trigger->trigger_high) {
+							mapping->value = true;
+							mapping->realvalue = value;
+						} else {
+							mapping->value = false;
+							mapping->realvalue = 1;
+						}
 					} else {
-						mapping->value = value ? 1 : 0;
+						mapping->value = value ? true : false;
+						mapping->realvalue = value ? 1 : 0;
 					}
 				}
 			}
