@@ -86,10 +86,22 @@ extern struct hl_settings *hl_settings;
 		"keyboard",\
 		{DEVICE_KEYBOARD, DEVICE_KEYBOARD2, DEVICE_DINPUT_KEYBOARD0},\
 		{\
-			{"W", {{EV_KEY, KEY_W}}},\
-			{"A", {{EV_KEY, KEY_A}}},\
-			{"S", {{EV_KEY, KEY_S}}},\
-			{"D", {{EV_KEY, KEY_D}}},\
+			{"W", {\
+				{EV_KEY, KEY_W},\
+				{EV_KEY, BTN_DPAD_UP},\
+			}}, \
+			{"A", {\
+				{EV_KEY, KEY_A},\
+				{EV_KEY, BTN_DPAD_LEFT},\
+			}},\
+			{"S", {\
+				{EV_KEY, KEY_S},\
+				{EV_KEY, BTN_DPAD_DOWN},\
+			}},\
+			{"D", {\
+				{EV_KEY, KEY_D},\
+				{EV_KEY, BTN_DPAD_RIGHT},\
+			}},\
 			{"", {{EV_ABS, ABS_Y, -128, 128}}},\
 			{"", {{EV_ABS, ABS_X, -128, 128}}},\
 		},\
