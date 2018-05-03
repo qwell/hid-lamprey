@@ -79,7 +79,7 @@
       <WarningLevel>Level1</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\zlib-win-build;..\libiconv-win-build\include;..\libxml2-win-build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>third-party\zlib-win-build;third-party\libiconv-win-build\include;third-party\libxml2-win-build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsManaged>true</CompileAsManaged>
       <OmitFramePointers />
       <CompileAs>CompileAsCpp</CompileAs>
@@ -88,7 +88,7 @@
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>..\libxml2-win-build\build-VS2017\Debug;..\zlib-win-build\build-VS2017\Debug;..\libiconv-win-build\build-VS2017\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>third-party\libxml2-win-build\build-VS2017\Debug;third-party\zlib-win-build\build-VS2017\Debug;third-party\libiconv-win-build\build-VS2017\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;xinput.lib;dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>main</EntryPointSymbol>
     </Link>
@@ -110,13 +110,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\zlib-win-build;..\libiconv-win-build\include;..\libxml2-win-build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>third-party\zlib-win-build;third-party\libiconv-win-build\include;third-party\libxml2-win-build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsManaged>true</CompileAsManaged>
       <CompileAs>CompileAsCpp</CompileAs>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\libxml2-win-build\build-VS2017\x64\Debug;..\zlib-win-build\build-VS2017\x64\Debug;..\libiconv-win-build\build-VS2017\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>third-party\libxml2-win-build\build-VS2017\x64\Debug;third-party\zlib-win-build\build-VS2017\x64\Debug;third-party\libiconv-win-build\build-VS2017\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;xinput.lib;dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>main</EntryPointSymbol>
@@ -206,13 +206,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\libiconv-win-build\build-VS2017\libiconv-static\libiconv-static.vcxproj">
+    <ProjectReference Include="third-party\libiconv-win-build\build-VS2017\libiconv-static\libiconv-static.vcxproj">
       <Project>{46cafe4a-b5bd-4422-acc6-117d4ad041e2}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\libxml2-win-build\build-VS2017\libxml2-static\libxml2-static.vcxproj">
+    <ProjectReference Include="third-party\libxml2-win-build\build-VS2017\libxml2-static\libxml2-static.vcxproj">
       <Project>{8eee40e4-037a-4dc5-b598-f9381f7372e6}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\zlib-win-build\build-VS2017\libz-static\libz-static.vcxproj">
+    <ProjectReference Include="third-party\zlib-win-build\build-VS2017\libz-static\libz-static.vcxproj">
       <Project>{b56d17bc-072b-42f3-844a-870a07afbaaa}</Project>
     </ProjectReference>
   </ItemGroup>

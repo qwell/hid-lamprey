@@ -1,0 +1,9 @@
+[submodule "third-party/zlib-win-build"]
+	path = third-party/zlib-win-build
+	url = https://github.com/kiyolee/zlib-win-build
+[submodule "third-party/libxml2-win-build"]
+	path = third-party/libxml2-win-build
+	url = https://github.com/kiyolee/libxml2-win-build
+[submodule "third-party/libiconv-win-build"]
+	path = third-party/libiconv-win-build
+	url = https://github.com/kiyolee/libiconv-win-build
