@@ -74,6 +74,7 @@ namespace hidlamprey {
 			// 
 			// picController
 			// 
+			this->picController->Enabled = false;
 			this->picController->Location = System::Drawing::Point(0, 0);
 			this->picController->Margin = System::Windows::Forms::Padding(1);
 			this->picController->Name = L"picController";
@@ -88,7 +89,7 @@ namespace hidlamprey {
 			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(148, 36);
 			this->Controls->Add(this->picController);
-			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->MaximizeBox = false;
 			this->Name = L"formMain";
 			this->ShowIcon = false;
@@ -97,6 +98,7 @@ namespace hidlamprey {
 			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
 			this->Shown += gcnew System::EventHandler(this, &formMain::formMain_Shown);
 			this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &formMain::formMain_onPaint);
+			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &formMain::formMain_MouseDown);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picController))->EndInit();
 			this->ResumeLayout(false);
 
@@ -111,6 +113,13 @@ namespace hidlamprey {
 
 	private: System::Void formMain_Shown(System::Object^  sender, System::EventArgs^  e) {
 		this->loadSkinImages();
+	}
+	private: System::Void formMain_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+		if (e->Button == System::Windows::Forms::MouseButtons::Left) {
+			const int HT_CAPTION = 2;
+			ReleaseCapture();
+			SendMessage(static_cast<HWND>(this->Handle.ToPointer()), WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+		}
 	}
 	};
 }

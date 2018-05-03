@@ -123,6 +123,7 @@ void formMain::loadSkinImages() {
 		buttonImage->MakeTransparent(Color::White);
 
 		picButton->BackColor = Color::Transparent;
+		picButton->Enabled = false;
 		picButton->Image = buttonImage;
 		picButton->Location = System::Drawing::Point(hl_active_skin->buttons[i]->x, hl_active_skin->buttons[i]->y);
 		picButton->Name = L"picButton";
@@ -147,6 +148,7 @@ void formMain::loadSkinImages() {
 		axisImage->MakeTransparent(Color::White);
 
 		picAxis->BackColor = Color::Transparent;
+		picAxis->Enabled = false;
 		picAxis->Image = axisImage;
 		picAxis->Location = System::Drawing::Point(hl_active_skin->axes[i]->x, hl_active_skin->axes[i]->y);
 		picAxis->Name = L"picAxis";
