@@ -6,9 +6,9 @@
 	<cli_layout> ‾|v|‾  /s//S/   (B)  </cli_layout>
 
 	<button image="up.png" type="EV_KEY" code="BTN_DPAD_UP" x="117" y="92" cli_char="^"/>
-	<button image="right.png" type="EV_KEY" code="BTN_DPAD_RIGHT" x="155" y="126" cli_char=">"/>
+	<button image="right.png" type="EV_KEY" code="BTN_DPAD_RIGHT" x="155" y="126" cli_char="&gt;"/>
 	<button image="down.png" type="EV_KEY" code="BTN_DPAD_DOWN" x="117" y="166" cli_char="v"/>
-	<button image="left.png" type="EV_KEY" code="BTN_DPAD_LEFT" x="82" y="126" cli_char="<"/>
+	<button image="left.png" type="EV_KEY" code="BTN_DPAD_LEFT" x="82" y="126" cli_char="&lt;"/>
 
 	<button image="ABXY.png" type="EV_KEY" code="BTN_NORTH" x="482" y="74" cli_char="X"/>
 	<button image="ABXY.png" type="EV_KEY" code="BTN_EAST" x="542" y="124" cli_char="A"/>
