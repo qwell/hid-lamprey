@@ -24,6 +24,7 @@ struct hl_skin_background {
 
 struct hl_skin_button {
 	char filename[64];
+	char cli_char[2];
 	uint8_t type;
 	uint16_t code;
 	int x;
@@ -32,6 +33,7 @@ struct hl_skin_button {
 
 struct hl_skin_axis {
 	char filename[64];
+	char cli_char[2];
 	uint8_t type_x;
 	uint16_t code_x;
 	int x;
@@ -46,6 +48,7 @@ struct hl_active_skin {
 	char path[64];
 	char name[64];
 	struct hl_skin_background background;
+	char cli_layout[256];
 	struct hl_skin_button **buttons;
 	struct hl_skin_axis **axes;
 	int button_count;

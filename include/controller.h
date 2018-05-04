@@ -12,6 +12,7 @@
 
 #include "input.h"
 #include "shortcut_cb.h"
+#include "skin.h"
 
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value);
 struct button_code *hl_controller_get_code_by_name(char *type, char *name);
@@ -20,6 +21,17 @@ int hl_controller_scale_range(int curvalue, int curmin, int curmax);
 struct button_code {
 	uint8_t type;
 	uint16_t code;
+};
+
+struct button_state {
+	uint8_t type;
+	uint16_t code;
+	int16_t value;
+};
+
+struct controller {
+	struct button_state **buttons;
+	int button_count;
 };
 
 struct button_trigger {
@@ -38,20 +50,6 @@ struct button_trigger_out {
 struct remap {
 	struct button_trigger *in;
 	struct button_trigger_out *out;
-};
-
-struct controller_display_mapping {
-	const char *display;
-	struct button_trigger buttons[8];
-	bool value;
-	int16_t realvalue;
-};
-
-struct controller_display {
-	const char *name;
-	char *devices[18];
-	struct controller_display_mapping mapping[64];
-	const char layout[256];
 };
 
 

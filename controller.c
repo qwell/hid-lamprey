@@ -23,11 +23,6 @@ struct codelookup codelookups[] = {
 };
 int codelookup_count = sizeof(codelookups);
 
-struct controller_display controller_displays[] = {
-	CONTROLLER_DISPLAYS
-};
-int controller_display_count = sizeof(controller_displays);
-
 struct remap **remaps;
 int remap_count = 0;
 
@@ -77,7 +72,6 @@ int hl_controller_scale_range(int curvalue, int curmin, int curmax) {
 		 * from min > relzero +/- deadsize > max
 		 * to newmin > 0 > newmax
 		 */
-		//TODO Have somebody else verify this math.
 		if (curvalue >= relzero + deadsize) {
 			value = (newmax - relzero) * (curvalue - (relzero + deadsize)) / (curmax - (relzero + deadsize));
 		} else if (curvalue <= relzero - deadsize) {
@@ -245,45 +239,56 @@ void controller_remaps(int id, uint8_t type, uint16_t code, int16_t value) {
 	}
 }
 
-void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value) {
-	for (int i = 0; i < controller_display_count / sizeof(*controller_displays); i++) {
-		struct controller_display *controller = &controller_displays[i];
+void controller_set_button(struct controller *controller, uint8_t type, uint16_t code, int16_t value) {
+	struct button_state *button;
 
-		if (!controller_check_device(device, controller->devices, sizeof(controller->devices) / sizeof(*controller->devices))) {
-			continue;
+	/* Check whether this button is already in our list. */
+	for (int j = 0; j < controller->button_count; j++) {
+		if (type == controller->buttons[j]->type && code == controller->buttons[j]->code) {
+			/* We're good.  Set it and bail out. */
+			controller->buttons[j]->value = value;
+
+			return;
 		}
-
-		for (int j = 0; j < sizeof(controller->mapping) / sizeof(*controller->mapping); j++) {
-			struct controller_display_mapping *mapping = &controller->mapping[j];
-
-			for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
-				const struct button_trigger *trigger = &mapping->buttons[k];
-
-				if (code == trigger->code && type == trigger->type) {
-					/* Things may not work properly if you have multiple buttons
-					 * assigned to a mapping that are concurrently triggered.
-					 */
-					if (trigger->trigger_low < 0 || trigger->trigger_high > 0) {
-						if (trigger->trigger_low < 0 && value <= trigger->trigger_low) {
-							mapping->value = true;
-							mapping->realvalue = value;
-						} else if (trigger->trigger_high > 0 && value >= trigger->trigger_high) {
-							mapping->value = true;
-							mapping->realvalue = value;
-						} else {
-							mapping->value = false;
-							mapping->realvalue = 1;
-						}
-					} else {
-						mapping->value = value ? true : false;
-						mapping->realvalue = value ? 1 : 0;
-					}
-				}
-			}
-		}
-
-		hl_display_output_controller(controller);
 	}
+
+	/* Button doesn't exist.  Create it. */
+	button = (struct button_state *)calloc(1, sizeof(*button));
+
+	button->type = type;
+	button->code = code;
+	button->value = value;
+
+
+	controller->buttons = (struct button_state **)realloc(controller->buttons, (controller->button_count + 1) * sizeof(*controller->buttons));
+	controller->buttons[controller->button_count] = button;
+	controller->button_count++;
+}
+
+void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value) {
+	static struct controller *controller;
+	if (!controller) {
+		controller = (struct controller *)calloc(1, sizeof(*controller));
+	}
+
+	for (int i = 0; i < hl_active_skin->button_count; i++) {
+		struct hl_skin_button *skin_button = hl_active_skin->buttons[i];
+		if (type == skin_button->type && code == skin_button->code) {
+			controller_set_button(controller, type, code, value);
+
+			break;
+		}
+	}
+
+	for (int i = 0; i < hl_active_skin->axis_count; i++) {
+		struct hl_skin_axis *skin_axis = hl_active_skin->axes[i];
+		if ((type == skin_axis->type_x && code == skin_axis->code_x) || (type == skin_axis->type_y && code == skin_axis->code_y)) {
+			controller_set_button(controller, type, code, value);
+
+			break;
+		}
+	}
+	hl_display_output_controller(controller);
 
 	controller_shortcuts(device, type, code, value);
 

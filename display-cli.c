@@ -20,30 +20,40 @@ void hl_cli_init(int argc, char **argv) {
 	printf("CLI Initialized.\n");
 }
 
-void hl_cli_output_controller(struct controller_display *controller) {
+void hl_cli_output_controller(struct controller *controller) {
 	char pressed[256] = {0};
 
 	if (!controller) {
 		return;
 	}
 
-	for (int j = 0; j < sizeof(controller->mapping) / sizeof(*controller->mapping); j++) {
-		struct controller_display_mapping *mapping = &controller->mapping[j];
+	for (int i = 0; i < controller->button_count; i++) {
+		struct button_state *button = controller->buttons[i];
 
-		if (mapping->value && !strstr(pressed, mapping->display)) {
-			strcat(pressed, mapping->display);
+		if (button->value) {
+			for (int j = 0; j < hl_active_skin->button_count; j++) {
+				if (!strstr(pressed, hl_active_skin->buttons[j]->cli_char)) {
+					strcat(pressed, hl_active_skin->buttons[j]->cli_char);
+				}
+			}
+
+			for (int j = 0; j < hl_active_skin->axis_count; j++) {
+				if (!strstr(pressed, hl_active_skin->axes[j]->cli_char)) {
+					strcat(pressed, hl_active_skin->axes[j]->cli_char);
+				}
+			}
 		}
 	}
 
 	printf("\n");
-	for (int j = 0; j < sizeof(controller->layout); j++) {
+	for (int i = 0; i < sizeof(hl_active_skin->cli_layout); i++) {
 		char layout_char[5];
 		char *ptr = layout_char;
-		*ptr = controller->layout[j];
+		*ptr = hl_active_skin->cli_layout[i];
 
 		/* Deal with UTF-8 characters. */
-		while ((controller->layout[j + 1] & 0xC0) == 0x80) {
-			*++ptr = controller->layout[++j];
+		while ((hl_active_skin->cli_layout[i + 1] & 0xC0) == 0x80) {
+			*++ptr = hl_active_skin->cli_layout[++i];
 		}
 
 		*++ptr = '\0';

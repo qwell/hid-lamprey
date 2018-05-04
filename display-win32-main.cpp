@@ -20,60 +20,47 @@ System::Void formMain::formMain_onPaint(System::Object^ sender, System::Windows:
 
 	hl_mutex_lock(&controller_mutex);
 
-	for (int j = 0; j < sizeof(controller->mapping) / sizeof(*controller->mapping); j++) {
-		struct controller_display_mapping *mapping = &controller->mapping[j];
-
-		for (int k = 0; k < sizeof(mapping->buttons) / sizeof(*mapping->buttons); k++) {
-			const struct button_trigger *trigger = &mapping->buttons[k];
-
-			for (int l = 0; l < hl_active_skin->button_count; l++) {
-				if (trigger->type == hl_active_skin->buttons[l]->type && trigger->code == hl_active_skin->buttons[l]->code) {
-					if (mapping->value) {
-						this->skinButtons[l]->Visible = true;
-					} else {
-						this->skinButtons[l]->Visible = false;
-					}
+	for (int i = 0; i < controller->button_count; i++) {
+		struct button_state *button = controller->buttons[i];
+		for (int j = 0; j < hl_active_skin->button_count; j++) {
+			struct hl_skin_button *skin_button = hl_active_skin->buttons[j];
+			if (button->type == skin_button->type && button->code == skin_button->code) {
+				if (button->value) {
+					this->skinButtons[j]->Visible = true;
+				} else {
+					this->skinButtons[j]->Visible = false;
 				}
 			}
-			for (int l = 0; l < hl_active_skin->axis_count; l++) {
-				if ((trigger->type == hl_active_skin->axes[l]->type_x && trigger->code == hl_active_skin->axes[l]->code_x) ||
-					(trigger->type == hl_active_skin->axes[l]->type_y && trigger->code == hl_active_skin->axes[l]->code_y)) {
-					int offset_x = this->skinAxes[l]->Location.X - hl_active_skin->axes[l]->x;
-					int offset_y = this->skinAxes[l]->Location.Y - hl_active_skin->axes[l]->y;
+		}
 
-					if (trigger->type == hl_active_skin->axes[l]->type_x && trigger->code == hl_active_skin->axes[l]->code_x) {
-						if (mapping->value && mapping->realvalue < 0 && trigger->trigger_low < 0) {
-							offset_x = mapping->realvalue / (256 / hl_active_skin->axes[l]->offset_x);
-						} else if (mapping->value && mapping->realvalue > 0 && trigger->trigger_high > 0) {
-							offset_x = mapping->realvalue / (256 / hl_active_skin->axes[l]->offset_x);
-						} else {
-							offset_x = 0;
-						}
+		for (int j = 0; j < hl_active_skin->axis_count; j++) {
+			struct hl_skin_axis *skin_axis = hl_active_skin->axes[j];
+			if ((button->type == skin_axis->type_x && button->code == skin_axis->code_x) ||
+				(button->type == skin_axis->type_y && button->code == skin_axis->code_y)) {
+				int offset_x = this->skinAxes[j]->Location.X - skin_axis->x;
+				int offset_y = this->skinAxes[j]->Location.Y - skin_axis->y;
 
-						this->skinAxes[l]->Location = Drawing::Point(hl_active_skin->axes[l]->x + offset_x, this->skinAxes[l]->Location.Y);
-						if (offset_x) {
-							this->skinAxes[l]->Visible = true;
-						}
+				if (button->type == skin_axis->type_x && button->code == skin_axis->code_x) {
+					if (button->value) {
+						offset_x = button->value / (256 / skin_axis->offset_x);
+					} else {
+						offset_x = 0;
 					}
+				}
 
-					if (trigger->type == hl_active_skin->axes[l]->type_y && trigger->code == hl_active_skin->axes[l]->code_y) {
-						if (mapping->value && mapping->realvalue < 0 && trigger->trigger_low < 0) {
-							offset_y = mapping->realvalue / (256 / hl_active_skin->axes[l]->offset_y);
-						} else if (mapping->value && mapping->realvalue > 0 && trigger->trigger_high > 0) {
-							offset_y = mapping->realvalue / (256 / hl_active_skin->axes[l]->offset_y);
-						} else {
-							offset_y = 0;
-						}
-
-						this->skinAxes[l]->Location = Drawing::Point(this->skinAxes[l]->Location.X, hl_active_skin->axes[l]->y + offset_y);
-						if (offset_y) {
-							this->skinAxes[l]->Visible = true;
-						}
+				if (button->type == skin_axis->type_y && button->code == skin_axis->code_y) {
+					if (button->value) {
+						offset_y = button->value / (256 / skin_axis->offset_y);
+					} else {
+						offset_y = 0;
 					}
+				}
 
-					if (offset_x == 0 && offset_y == 0) {
-						this->skinAxes[l]->Visible = false;
-					}
+				this->skinAxes[j]->Location = Drawing::Point(skin_axis->x + offset_x, skin_axis->y + offset_y);
+				if (offset_x || offset_y) {
+					this->skinAxes[j]->Visible = true;
+				} else {
+					this->skinAxes[j]->Visible = false;
 				}
 			}
 		}
@@ -82,7 +69,7 @@ System::Void formMain::formMain_onPaint(System::Object^ sender, System::Windows:
 	hl_mutex_unlock(&controller_mutex);
 }
 
-void formMain::output_controller(struct controller_display *c) {
+void formMain::output_controller(struct controller *c) {
 	if (!hl_active_skin) {
 		return;
 	}

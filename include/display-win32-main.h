@@ -26,7 +26,7 @@ namespace hidlamprey {
 			}
 		}
 		
-		void output_controller(struct controller_display *controller);
+		void output_controller(struct controller *controller);
 		void loadSkinImages();
 
 	protected:
@@ -48,7 +48,7 @@ namespace hidlamprey {
 
 		static formMain^ instance;
 		static Object^ instanceLock = gcnew Object();
-		struct controller_display *controller;
+		struct controller *controller;
 
 		array<System::Windows::Forms::PictureBox^>^ skinButtons;
 		array<System::Windows::Forms::PictureBox^>^ skinAxes;

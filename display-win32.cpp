@@ -43,7 +43,7 @@ void hl_display_win32_init(int argc, char **argv) {
 	return;
 }
 
-void hl_display_win32_output_controller(struct controller_display *controller) {
+void hl_display_win32_output_controller(struct controller *controller) {
 	if (!controller) {
 		return;
 	}
