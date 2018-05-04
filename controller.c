@@ -67,16 +67,14 @@ int hl_controller_scale_range(int curvalue, int curmin, int curmax) {
 	int rangesize = (curmax - curmin);
 	int deadsize = ((rangesize % 2 ? rangesize : rangesize + 1) / 2) * hl_settings->deadzone_axis;
 
-	if (curvalue >= relzero + deadsize || curvalue <= relzero - deadsize) {
-		/* Scale value
-		 * from min > relzero +/- deadsize > max
-		 * to newmin > 0 > newmax
-		 */
-		if (curvalue >= relzero + deadsize) {
-			value = (newmax - relzero) * (curvalue - (relzero + deadsize)) / (curmax - (relzero + deadsize));
-		} else if (curvalue <= relzero - deadsize) {
-			value = (relzero + newmin) * ((relzero - deadsize) - curvalue) / ((relzero - deadsize) - curmin);
-		}
+	/* Scale value
+	 * from min > relzero +/- deadsize > max
+	 * to newmin > 0 > newmax
+	 */
+	if (curvalue >= relzero + deadsize) {
+		value = (newmax - relzero) * (curvalue - (relzero + deadsize)) / (curmax - (relzero + deadsize));
+	} else if (curvalue <= relzero - deadsize) {
+		value = (relzero + newmin) * ((relzero - deadsize) - curvalue) / ((relzero - deadsize) - curmin);
 	}
 
 	return value;
