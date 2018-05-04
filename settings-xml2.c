@@ -68,20 +68,17 @@ void settings_xml_load_settings(xmlXPathContext *context) {
 						xmlFree(name);
 						xmlFree(background);
 					} else if (!xmlStrcmp(cur->name, (const xmlChar *) "option")) {
-						/*
 						xmlChar *name = xmlGetProp(cur, (const xmlChar *)"name");
 						xmlChar *content = xmlNodeGetContent(cur->children);
 
 						if (!xmlStrcmp(name, (xmlChar *)"deadzone_axis")) {
 							hl_settings->deadzone_axis = atof((char *)content);
-						}
-						else if (!xmlStrcmp(name, (xmlChar *)"deadzone_hat")) {
+						} else if (!xmlStrcmp(name, (xmlChar *)"deadzone_hat")) {
 							hl_settings->deadzone_hat = atof((char *)content);
 						}
 
 						xmlFree(name);
 						xmlFree(content);
-						*/
 					}
 				}
 			}
