@@ -44,18 +44,20 @@ struct hl_skin_axis {
 	int offset_y;
 };
 
-struct hl_active_skin {
+struct hl_skin {
 	char path[64];
 	char name[64];
-	struct hl_skin_background background;
 	char cli_layout[256];
+	struct hl_skin_background **backgrounds;
 	struct hl_skin_button **buttons;
 	struct hl_skin_axis **axes;
+	int background_count;
 	int button_count;
 	int axis_count;
 };
 
-extern struct hl_active_skin *hl_active_skin;
+extern struct hl_skin **hl_skins;
+extern int hl_skin_count;
 
 void hl_skin_load(char *name, char *background);
 

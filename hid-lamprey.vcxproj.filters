@@ -60,6 +60,9 @@
     <ClCompile Include="settings.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="display-win32-settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\controller.h">
@@ -122,6 +125,9 @@
     <ClInclude Include="include\skin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\display-win32-settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="settings\settings.xml">
@@ -135,13 +141,13 @@
     </Xml>
   </ItemGroup>
   <ItemGroup>
-    <None Include="settings\remaps.xsd">
+    <None Include="resources\remaps.xsd">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="settings\settings.xsd">
+    <None Include="resources\settings.xsd">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="settings\shortcuts.xsd">
+    <None Include="resources\shortcuts.xsd">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -158,6 +164,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="include\display-win32-main.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="include\display-win32-settings.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
   </ItemGroup>

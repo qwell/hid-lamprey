@@ -22,8 +22,8 @@ System::Void formMain::picController_onPaint(System::Object^ sender, System::Win
 
 	for (int i = 0; i < controller->button_count; i++) {
 		struct button_state *button = controller->buttons[i];
-		for (int j = 0; j < hl_active_skin->button_count; j++) {
-			struct hl_skin_button *skin_button = hl_active_skin->buttons[j];
+		for (int j = 0; j < skinActive->button_count; j++) {
+			struct hl_skin_button *skin_button = skinActive->buttons[j];
 			if (button->type == skin_button->type && button->code == skin_button->code) {
 				if (button->value) {
 					this->skinButtons[j]->Visible = true;
@@ -33,8 +33,8 @@ System::Void formMain::picController_onPaint(System::Object^ sender, System::Win
 			}
 		}
 
-		for (int j = 0; j < hl_active_skin->axis_count; j++) {
-			struct hl_skin_axis *skin_axis = hl_active_skin->axes[j];
+		for (int j = 0; j < skinActive->axis_count; j++) {
+			struct hl_skin_axis *skin_axis = skinActive->axes[j];
 			if ((button->type == skin_axis->type_x && button->code == skin_axis->code_x) ||
 				(button->type == skin_axis->type_y && button->code == skin_axis->code_y)) {
 				int offset_x = this->skinAxes[j]->Location.X - skin_axis->x;
@@ -74,7 +74,7 @@ void formMain::refreshImage() {
 }
 
 void formMain::output_controller(struct controller *c) {
-	if (!hl_active_skin) {
+	if (!skinActive) {
 		return;
 	}
 
@@ -99,28 +99,42 @@ void formMain::loadSkinImages() {
 		delete(this->skinAxes);
 	}
 
-	if (!hl_active_skin) {
+	for (int i = 0; i < hl_skin_count; i++) {
+		if (!strcmp(hl_settings->skin->name, hl_skins[i]->name)) {
+			skinActive = hl_skins[i];
+
+			for (int j = 0; j < skinActive->background_count; j++) {
+				if (!strcmp(hl_settings->skin->background, skinActive->backgrounds[j]->name)) {
+					skinActiveBackground = skinActive->backgrounds[j];
+					break;
+				}
+			}
+			break;
+		}
+	}
+
+	if (!skinActive) {
 		return;
 	}
 
-	Drawing::Bitmap ^backgroundImage = gcnew Bitmap(String::Concat(gcnew String(hl_active_skin->path), gcnew String(hl_active_skin->background.filename)));
+	Drawing::Bitmap ^backgroundImage = gcnew Bitmap(String::Concat(gcnew String(skinActive->path), gcnew String(skinActiveBackground->filename)));
 	//backgroundImage->MakeTransparent(Color::White);
 
 	picController->Image = backgroundImage;
 	picController->Size = backgroundImage->Size;
 	picController->Visible = true;
 
-	this->skinButtons = gcnew array<System::Windows::Forms::PictureBox^>(hl_active_skin->button_count);
-	for (int i = 0; i < hl_active_skin->button_count; i++) {
+	this->skinButtons = gcnew array<System::Windows::Forms::PictureBox^>(skinActive->button_count);
+	for (int i = 0; i < skinActive->button_count; i++) {
 		System::Windows::Forms::PictureBox^ picButton = (gcnew System::Windows::Forms::PictureBox());
 
-		Drawing::Bitmap ^buttonImage = gcnew Bitmap(String::Concat(gcnew String(hl_active_skin->path), gcnew String(hl_active_skin->buttons[i]->filename)));
+		Drawing::Bitmap ^buttonImage = gcnew Bitmap(String::Concat(gcnew String(skinActive->path), gcnew String(skinActive->buttons[i]->filename)));
 		buttonImage->MakeTransparent(Color::White);
 
 		picButton->BackColor = Color::Transparent;
 		picButton->Enabled = false;
 		picButton->Image = buttonImage;
-		picButton->Location = System::Drawing::Point(hl_active_skin->buttons[i]->x, hl_active_skin->buttons[i]->y);
+		picButton->Location = System::Drawing::Point(skinActive->buttons[i]->x, skinActive->buttons[i]->y);
 		picButton->Name = L"picButton";
 		picButton->Name += i;
 		picButton->Padding = System::Windows::Forms::Padding(0, 0, 0, 0);
@@ -135,17 +149,17 @@ void formMain::loadSkinImages() {
 		picButton->Parent = this->picController;
 	}
 
-	this->skinAxes = gcnew array<System::Windows::Forms::PictureBox^>(hl_active_skin->axis_count);
-	for (int i = 0; i < hl_active_skin->axis_count; i++) {
+	this->skinAxes = gcnew array<System::Windows::Forms::PictureBox^>(skinActive->axis_count);
+	for (int i = 0; i < skinActive->axis_count; i++) {
 		System::Windows::Forms::PictureBox^ picAxis = (gcnew System::Windows::Forms::PictureBox());
 
-		Drawing::Bitmap ^axisImage = gcnew Bitmap(String::Concat(gcnew String(hl_active_skin->path), gcnew String(hl_active_skin->axes[i]->filename)));
+		Drawing::Bitmap ^axisImage = gcnew Bitmap(String::Concat(gcnew String(skinActive->path), gcnew String(skinActive->axes[i]->filename)));
 		axisImage->MakeTransparent(Color::White);
 
 		picAxis->BackColor = Color::Transparent;
 		picAxis->Enabled = false;
 		picAxis->Image = axisImage;
-		picAxis->Location = System::Drawing::Point(hl_active_skin->axes[i]->x, hl_active_skin->axes[i]->y);
+		picAxis->Location = System::Drawing::Point(skinActive->axes[i]->x, skinActive->axes[i]->y);
 		picAxis->Name = L"picAxis";
 		picAxis->Name += i;
 		picAxis->Padding = System::Windows::Forms::Padding(0, 0, 0, 0);

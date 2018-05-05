@@ -265,12 +265,24 @@ void controller_set_button(struct controller *controller, uint8_t type, uint16_t
 
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value) {
 	static struct controller *controller;
+	struct hl_skin *skinActive = NULL;
 	if (!controller) {
 		controller = (struct controller *)calloc(1, sizeof(*controller));
 	}
 
-	for (int i = 0; i < hl_active_skin->button_count; i++) {
-		struct hl_skin_button *skin_button = hl_active_skin->buttons[i];
+	for (int i = 0; i < hl_skin_count; i++) {
+		if (!strcmp(hl_settings->skin->name, hl_skins[i]->name)) {
+			skinActive = hl_skins[i];
+			break;
+		}
+	}
+
+	if (!skinActive) {
+		return;
+	}
+
+	for (int i = 0; i < skinActive->button_count; i++) {
+		struct hl_skin_button *skin_button = skinActive->buttons[i];
 		if (type == skin_button->type && code == skin_button->code) {
 			controller_set_button(controller, type, code, value);
 
@@ -278,8 +290,8 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 		}
 	}
 
-	for (int i = 0; i < hl_active_skin->axis_count; i++) {
-		struct hl_skin_axis *skin_axis = hl_active_skin->axes[i];
+	for (int i = 0; i < skinActive->axis_count; i++) {
+		struct hl_skin_axis *skin_axis = skinActive->axes[i];
 		if ((type == skin_axis->type_x && code == skin_axis->code_x) || (type == skin_axis->type_y && code == skin_axis->code_y)) {
 			controller_set_button(controller, type, code, value);
 

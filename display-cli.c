@@ -22,8 +22,20 @@ void hl_cli_init(int argc, char **argv) {
 
 void hl_cli_output_controller(struct controller *controller) {
 	char pressed[256] = {0};
+	struct hl_skin *skinActive = NULL;
 
 	if (!controller) {
+		return;
+	}
+
+	for (int i = 0; i < hl_skin_count; i++) {
+		if (!strcmp(hl_settings->skin->name, hl_skins[i]->name)) {
+			skinActive = hl_skins[i];
+			break;
+		}
+	}
+
+	if (!skinActive) {
 		return;
 	}
 
@@ -31,29 +43,29 @@ void hl_cli_output_controller(struct controller *controller) {
 		struct button_state *button = controller->buttons[i];
 
 		if (button->value) {
-			for (int j = 0; j < hl_active_skin->button_count; j++) {
-				if (!strstr(pressed, hl_active_skin->buttons[j]->cli_char)) {
-					strcat(pressed, hl_active_skin->buttons[j]->cli_char);
+			for (int j = 0; j < skinActive->button_count; j++) {
+				if (!strstr(pressed, skinActive->buttons[j]->cli_char)) {
+					strcat(pressed, skinActive->buttons[j]->cli_char);
 				}
 			}
 
-			for (int j = 0; j < hl_active_skin->axis_count; j++) {
-				if (!strstr(pressed, hl_active_skin->axes[j]->cli_char)) {
-					strcat(pressed, hl_active_skin->axes[j]->cli_char);
+			for (int j = 0; j < skinActive->axis_count; j++) {
+				if (!strstr(pressed, skinActive->axes[j]->cli_char)) {
+					strcat(pressed, skinActive->axes[j]->cli_char);
 				}
 			}
 		}
 	}
 
 	printf("\n");
-	for (int i = 0; i < sizeof(hl_active_skin->cli_layout); i++) {
+	for (int i = 0; i < sizeof(skinActive->cli_layout); i++) {
 		char layout_char[5];
 		char *ptr = layout_char;
-		*ptr = hl_active_skin->cli_layout[i];
+		*ptr = skinActive->cli_layout[i];
 
 		/* Deal with UTF-8 characters. */
-		while ((hl_active_skin->cli_layout[i + 1] & 0xC0) == 0x80) {
-			*++ptr = hl_active_skin->cli_layout[++i];
+		while ((skinActive->cli_layout[i + 1] & 0xC0) == 0x80) {
+			*++ptr = skinActive->cli_layout[++i];
 		}
 
 		*++ptr = '\0';

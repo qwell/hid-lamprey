@@ -14,7 +14,8 @@
 #include "include/controller.h"
 #include "include/skin.h"
 
-struct hl_active_skin *hl_active_skin;
+struct hl_skin **hl_skins;
+int hl_skin_count;
 
 void xml_generic_skin_error_func(void *ctx, const char *msg, ...) {
 	return;
@@ -205,186 +206,193 @@ void hl_skin_load(char *skin_name, char *background_name) {
 			} else {
 				xmlNodeSet *nodeset = result->nodesetval;
 
+				hl_skin *skin = (struct hl_skin *)calloc(1, sizeof(struct hl_skin));
+
 				for (int i = 0; i < nodeset->nodeNr; i++) {
 					xmlNode *node = nodeset->nodeTab[i];
 
 					xmlChar *skinname = xmlGetProp(node, (const xmlChar *)"name");
 					xmlChar *skintype = xmlGetProp(node, (const xmlChar *)"type");
 
-					if (!xmlStrcmp(skinname, (const xmlChar *)skin_name)) {
-						hl_active_skin = (struct hl_active_skin *)calloc(1, sizeof(struct hl_active_skin));
-						snprintf(hl_active_skin->path, sizeof(hl_active_skin->path) - 1, "skins/%s/", skin_list[z]);
-						strncpy(hl_active_skin->name, (char *)skinname, sizeof(hl_active_skin->name) - 1);
+					snprintf(skin->path, sizeof(skin->path) - 1, "skins/%s/", skin_list[z]);
+					strncpy(skin->name, (char *)skinname, sizeof(skin->name) - 1);
 
-						for (xmlNode *cur = node->children; cur; cur = cur->next) {
-							if (cur->type == XML_ELEMENT_NODE) {
-								if (!xmlStrcmp(cur->name, (const xmlChar *)"background")) {
-									xmlChar *name = xmlGetProp(cur, (const xmlChar *)"name");
-									xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
+					for (xmlNode *cur = node->children; cur; cur = cur->next) {
+						if (cur->type == XML_ELEMENT_NODE) {
+							if (!xmlStrcmp(cur->name, (const xmlChar *)"background")) {
+								struct hl_skin_background *background = (struct hl_skin_background *)calloc(1, sizeof(struct hl_skin_background));
 
-									if (!xmlStrcmp(name, (xmlChar *)background_name)) {
-										strncpy(hl_active_skin->background.name, (char *)name, sizeof(hl_active_skin->background.name) - 1);
-										strncpy(hl_active_skin->background.filename, (char *)image, sizeof(hl_active_skin->background.filename) - 1);
-									}
+								xmlChar *name = xmlGetProp(cur, (const xmlChar *)"name");
+								xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
 
-									xmlFree(name);
-									xmlFree(image);
-								} else if (!xmlStrcmp(cur->name, (const xmlChar *)"button")) {
-									struct button_code *button_code;
+								strncpy(background->name, (char *)name, sizeof(background->name) - 1);
+								strncpy(background->filename, (char *)image, sizeof(background->filename) - 1);
 
-									xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
-									xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
-									xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
-									xmlChar *pos_x = xmlGetProp(cur, (const xmlChar *)"x");
-									xmlChar *pos_y = xmlGetProp(cur, (const xmlChar *)"y");
+								skin->backgrounds = (struct hl_skin_background **)realloc(skin->backgrounds, (skin->background_count + 1) * sizeof(*skin->backgrounds));
+								skin->backgrounds[skin->background_count] = background;
+								skin->background_count++;
 
-									if (type && code) {
-										button_code = hl_controller_get_code_by_name((char *)type, (char *)code);
-									} else if (skintype) {
-										// For compatibility with NintendoSpy skins, lookup type and code for button "name" on controller "type".
-										xmlChar *compat_name = xmlGetProp(cur, (const xmlChar *)"name");
-										button_code = skin_lookup_button((char *)skintype, (char *)compat_name);
-										xmlFree(compat_name);
-									}
-
-									if (button_code) {
-										struct hl_skin_button *button = (struct hl_skin_button *)calloc(1, sizeof(struct hl_skin_button));
-
-										strncpy(button->filename, (char *)image, sizeof(button->filename) - 1);
-										button->code = button_code->code;
-										button->type = button_code->type;
-										button->x = atoi((char *)pos_x);
-										button->y = atoi((char *)pos_y);
-
-										hl_active_skin->buttons = (struct hl_skin_button **)realloc(hl_active_skin->buttons, (hl_active_skin->button_count + 1) * sizeof(*hl_active_skin->buttons));
-										hl_active_skin->buttons[hl_active_skin->button_count] = button;
-										hl_active_skin->button_count++;
-
-										free(button_code);
-									}
-
-									xmlFree(image);
-									xmlFree(type);
-									xmlFree(code);
-									xmlFree(pos_x);
-									xmlFree(pos_y);
-								} else if (!xmlStrcmp(cur->name, (const xmlChar *)"axis")) {
-									struct button_code *button_code_x;
-									struct button_code *button_code_y;
-
-									xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
-
-									xmlChar *type_x = xmlGetProp(cur, (const xmlChar *)"type_x");
-									xmlChar *code_x = xmlGetProp(cur, (const xmlChar *)"code_x");
-									xmlChar *pos_x = xmlGetProp(cur, (const xmlChar *)"x");
-									xmlChar *offset_x = xmlGetProp(cur, (const xmlChar *)"xoffset");
-
-									xmlChar *type_y = xmlGetProp(cur, (const xmlChar *)"type_y");
-									xmlChar *code_y = xmlGetProp(cur, (const xmlChar *)"code_y");
-									xmlChar *pos_y = xmlGetProp(cur, (const xmlChar *)"y");
-									xmlChar *offset_y = xmlGetProp(cur, (const xmlChar *)"yoffset");
-
-									button_code_x = hl_controller_get_code_by_name((char *)type_x, (char *)code_x);
-									button_code_y = hl_controller_get_code_by_name((char *)type_y, (char *)code_y);
-
-									if (button_code_x || button_code_y) {
-										struct hl_skin_axis *axis = (struct hl_skin_axis *)calloc(1, sizeof(struct hl_skin_axis));
-
-										strncpy(axis->filename, (char *)image, sizeof(axis->filename) - 1);
-										axis->x = atoi((char *)pos_x);
-										axis->y = atoi((char *)pos_y);
-										axis->offset_x = atoi((char *)offset_x);
-										axis->offset_y = atoi((char *)offset_y);
-
-										if (button_code_x) {
-											axis->code_x = button_code_x->code;
-											axis->type_x = button_code_x->type;
-											free(button_code_x);
-										}
-										if (button_code_y) {
-											axis->code_y = button_code_y->code;
-											axis->type_y = button_code_y->type;
-											free(button_code_y);
-										}
-
-										hl_active_skin->axes = (struct hl_skin_axis **)realloc(hl_active_skin->axes, (hl_active_skin->axis_count + 1) * sizeof(*hl_active_skin->axes));
-										hl_active_skin->axes[hl_active_skin->axis_count] = axis;
-										hl_active_skin->axis_count++;
-									}
-
-									xmlFree(image);
-									xmlFree(type_x);
-									xmlFree(code_x);
-									xmlFree(pos_x);
-									xmlFree(offset_x);
-									xmlFree(type_y);
-									xmlFree(code_y);
-									xmlFree(pos_y);
-									xmlFree(offset_y);
-								} else if (!xmlStrcmp(cur->name, (const xmlChar *)"stick")) {
-									/* For compatibility. */
-									struct button_code *button_code_x;
-									struct button_code *button_code_y;
-
-									xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
-
-									xmlChar *xname = xmlGetProp(cur, (const xmlChar *)"xname");
-									xmlChar *pos_x = xmlGetProp(cur, (const xmlChar *)"x");
-									xmlChar *range_x = xmlGetProp(cur, (const xmlChar *)"xrange");
-
-									xmlChar *yname = xmlGetProp(cur, (const xmlChar *)"yname");
-									xmlChar *pos_y = xmlGetProp(cur, (const xmlChar *)"y");
-									xmlChar *range_y = xmlGetProp(cur, (const xmlChar *)"yrange");
-
-									if (skintype) {
-										button_code_x = skin_lookup_button((char *)skintype, (char *)xname);
-										button_code_y = skin_lookup_button((char *)skintype, (char *)yname);
-									}
-
-									if (button_code_x || button_code_y) {
-										struct hl_skin_axis *axis = (struct hl_skin_axis *)calloc(1, sizeof(struct hl_skin_axis));
-
-										strncpy(axis->filename, (char *)image, sizeof(axis->filename) - 1);
-										axis->x = atoi((char *)pos_x);
-										axis->y = atoi((char *)pos_y);
-										axis->offset_x = atoi((char *)range_x);
-										axis->offset_y = atoi((char *)range_y);
-
-										if (button_code_x) {
-											axis->code_x = button_code_x->code;
-											axis->type_x = button_code_x->type;
-											free(button_code_x);
-										}
-										if (button_code_y) {
-											axis->code_y = button_code_y->code;
-											axis->type_y = button_code_y->type;
-											free(button_code_y);
-										}
-
-										hl_active_skin->axes = (struct hl_skin_axis **)realloc(hl_active_skin->axes, (hl_active_skin->axis_count + 1) * sizeof(*hl_active_skin->axes));
-										hl_active_skin->axes[hl_active_skin->axis_count] = axis;
-										hl_active_skin->axis_count++;
-									}
-
-									xmlFree(image);
-									xmlFree(xname);
-									xmlFree(yname);
-									xmlFree(pos_x);
-									xmlFree(pos_y);
-									xmlFree(range_x);
-									xmlFree(range_y);
-								}
+								xmlFree(name);
+								xmlFree(image);
 							}
-						}
+							else if (!xmlStrcmp(cur->name, (const xmlChar *)"button")) {
+								struct button_code *button_code;
 
-						if (!strlen(hl_active_skin->background.filename)) {
-							free(hl_active_skin);
-							hl_active_skin = NULL;
+								xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
+								xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
+								xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
+								xmlChar *pos_x = xmlGetProp(cur, (const xmlChar *)"x");
+								xmlChar *pos_y = xmlGetProp(cur, (const xmlChar *)"y");
+
+								if (type && code) {
+									button_code = hl_controller_get_code_by_name((char *)type, (char *)code);
+								}
+								else if (skintype) {
+									// For compatibility with NintendoSpy skins, lookup type and code for button "name" on controller "type".
+									xmlChar *compat_name = xmlGetProp(cur, (const xmlChar *)"name");
+									button_code = skin_lookup_button((char *)skintype, (char *)compat_name);
+									xmlFree(compat_name);
+								}
+
+								if (button_code) {
+									struct hl_skin_button *button = (struct hl_skin_button *)calloc(1, sizeof(struct hl_skin_button));
+
+									strncpy(button->filename, (char *)image, sizeof(button->filename) - 1);
+									button->code = button_code->code;
+									button->type = button_code->type;
+									button->x = atoi((char *)pos_x);
+									button->y = atoi((char *)pos_y);
+
+									skin->buttons = (struct hl_skin_button **)realloc(skin->buttons, (skin->button_count + 1) * sizeof(*skin->buttons));
+									skin->buttons[skin->button_count] = button;
+									skin->button_count++;
+
+									free(button_code);
+								}
+
+								xmlFree(image);
+								xmlFree(type);
+								xmlFree(code);
+								xmlFree(pos_x);
+								xmlFree(pos_y);
+							}
+							else if (!xmlStrcmp(cur->name, (const xmlChar *)"axis")) {
+								struct button_code *button_code_x;
+								struct button_code *button_code_y;
+
+								xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
+
+								xmlChar *type_x = xmlGetProp(cur, (const xmlChar *)"type_x");
+								xmlChar *code_x = xmlGetProp(cur, (const xmlChar *)"code_x");
+								xmlChar *pos_x = xmlGetProp(cur, (const xmlChar *)"x");
+								xmlChar *offset_x = xmlGetProp(cur, (const xmlChar *)"xoffset");
+
+								xmlChar *type_y = xmlGetProp(cur, (const xmlChar *)"type_y");
+								xmlChar *code_y = xmlGetProp(cur, (const xmlChar *)"code_y");
+								xmlChar *pos_y = xmlGetProp(cur, (const xmlChar *)"y");
+								xmlChar *offset_y = xmlGetProp(cur, (const xmlChar *)"yoffset");
+
+								button_code_x = hl_controller_get_code_by_name((char *)type_x, (char *)code_x);
+								button_code_y = hl_controller_get_code_by_name((char *)type_y, (char *)code_y);
+
+								if (button_code_x || button_code_y) {
+									struct hl_skin_axis *axis = (struct hl_skin_axis *)calloc(1, sizeof(struct hl_skin_axis));
+
+									strncpy(axis->filename, (char *)image, sizeof(axis->filename) - 1);
+									axis->x = atoi((char *)pos_x);
+									axis->y = atoi((char *)pos_y);
+									axis->offset_x = atoi((char *)offset_x);
+									axis->offset_y = atoi((char *)offset_y);
+
+									if (button_code_x) {
+										axis->code_x = button_code_x->code;
+										axis->type_x = button_code_x->type;
+										free(button_code_x);
+									}
+									if (button_code_y) {
+										axis->code_y = button_code_y->code;
+										axis->type_y = button_code_y->type;
+										free(button_code_y);
+									}
+
+									skin->axes = (struct hl_skin_axis **)realloc(skin->axes, (skin->axis_count + 1) * sizeof(*skin->axes));
+									skin->axes[skin->axis_count] = axis;
+									skin->axis_count++;
+								}
+
+								xmlFree(image);
+								xmlFree(type_x);
+								xmlFree(code_x);
+								xmlFree(pos_x);
+								xmlFree(offset_x);
+								xmlFree(type_y);
+								xmlFree(code_y);
+								xmlFree(pos_y);
+								xmlFree(offset_y);
+							}
+							else if (!xmlStrcmp(cur->name, (const xmlChar *)"stick")) {
+								/* For compatibility. */
+								struct button_code *button_code_x;
+								struct button_code *button_code_y;
+
+								xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
+
+								xmlChar *xname = xmlGetProp(cur, (const xmlChar *)"xname");
+								xmlChar *pos_x = xmlGetProp(cur, (const xmlChar *)"x");
+								xmlChar *range_x = xmlGetProp(cur, (const xmlChar *)"xrange");
+
+								xmlChar *yname = xmlGetProp(cur, (const xmlChar *)"yname");
+								xmlChar *pos_y = xmlGetProp(cur, (const xmlChar *)"y");
+								xmlChar *range_y = xmlGetProp(cur, (const xmlChar *)"yrange");
+
+								if (skintype) {
+									button_code_x = skin_lookup_button((char *)skintype, (char *)xname);
+									button_code_y = skin_lookup_button((char *)skintype, (char *)yname);
+								}
+
+								if (button_code_x || button_code_y) {
+									struct hl_skin_axis *axis = (struct hl_skin_axis *)calloc(1, sizeof(struct hl_skin_axis));
+
+									strncpy(axis->filename, (char *)image, sizeof(axis->filename) - 1);
+									axis->x = atoi((char *)pos_x);
+									axis->y = atoi((char *)pos_y);
+									axis->offset_x = atoi((char *)range_x);
+									axis->offset_y = atoi((char *)range_y);
+
+									if (button_code_x) {
+										axis->code_x = button_code_x->code;
+										axis->type_x = button_code_x->type;
+										free(button_code_x);
+									}
+									if (button_code_y) {
+										axis->code_y = button_code_y->code;
+										axis->type_y = button_code_y->type;
+										free(button_code_y);
+									}
+
+									skin->axes = (struct hl_skin_axis **)realloc(skin->axes, (skin->axis_count + 1) * sizeof(*skin->axes));
+									skin->axes[skin->axis_count] = axis;
+									skin->axis_count++;
+								}
+
+								xmlFree(image);
+								xmlFree(xname);
+								xmlFree(yname);
+								xmlFree(pos_x);
+								xmlFree(pos_y);
+								xmlFree(range_x);
+								xmlFree(range_y);
+							}
 						}
 					}
 					xmlFree(skinname);
 					xmlFree(skintype);
 				}
+
+				hl_skins = (struct hl_skin **)realloc(hl_skins, (hl_skin_count + 1) * sizeof(*hl_skins));
+				hl_skins[hl_skin_count] = skin;
+				hl_skin_count++;
+
 				xmlXPathFreeObject(result);
 			}
 

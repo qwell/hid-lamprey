@@ -1,5 +1,7 @@
 #pragma once
 
+#include "display-win32-settings.h"
+
 namespace hidlamprey {
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -51,6 +53,8 @@ namespace hidlamprey {
 		static formMain^ instance;
 		static Object^ instanceLock = gcnew Object();
 		struct controller *controller;
+		struct hl_skin *skinActive;
+		struct hl_skin_background *skinActiveBackground;
 
 		array<System::Windows::Forms::PictureBox^>^ skinButtons;
 		array<System::Windows::Forms::PictureBox^>^ skinAxes;
@@ -112,6 +116,7 @@ namespace hidlamprey {
 			this->tsmiSettings->Name = L"tsmiSettings";
 			this->tsmiSettings->Size = System::Drawing::Size(174, 24);
 			this->tsmiSettings->Text = L"Settings";
+			this->tsmiSettings->Click += gcnew System::EventHandler(this, &formMain::tmsiSettings_Click);
 			// 
 			// tsmiAlwaysOnTop
 			// 
@@ -176,5 +181,9 @@ namespace hidlamprey {
 	private: System::Void tsmiExit_Click(System::Object^ sender, System::EventArgs^ e) {
 		this->Close();
 	}
-	};
+	private: System::Void tmsiSettings_Click(System::Object^  sender, System::EventArgs^  e) {
+		Form ^settings = gcnew formSettings();
+		settings->Show();
+	}
+};
 }

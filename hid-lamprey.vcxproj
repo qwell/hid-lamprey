@@ -131,6 +131,7 @@
     </ClCompile>
     <ClCompile Include="display-win32.cpp" />
     <ClCompile Include="display-win32-main.cpp" />
+    <ClCompile Include="display-win32-settings.cpp" />
     <ClCompile Include="input-dinput.c" />
     <ClCompile Include="input-evdev.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -159,6 +160,9 @@
     <ClInclude Include="include\display-win32-main.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="include\display-win32-settings.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="include\display-win32.h" />
     <ClInclude Include="include\display.h" />
     <ClInclude Include="include\input-codetable.h" />
@@ -184,9 +188,9 @@
     <Xml Include="settings\shortcuts.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="settings\remaps.xsd" />
-    <None Include="settings\settings.xsd" />
-    <None Include="settings\shortcuts.xsd" />
+    <None Include="resources\remaps.xsd" />
+    <None Include="resources\settings.xsd" />
+    <None Include="resources\shortcuts.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\lamprey.ico" />
@@ -203,6 +207,9 @@
   <ItemGroup>
     <EmbeddedResource Include="include\display-win32-main.resx">
       <DependentUpon>include\display-win32-main.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="include\display-win32-settings.resx">
+      <DependentUpon>include\display-win32-settings.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
