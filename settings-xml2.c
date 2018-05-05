@@ -312,13 +312,13 @@ bool settings_xml_verify(xmlDoc *doc, char *xml_file, char *xsd_file) {
 
 void hl_settings_xml_load() {
 	char *settings_xml_file = "settings/settings.xml";
-	char *settings_xsd_file = "settings/settings.xsd";
+	char *settings_xsd_file = "resources/settings.xsd";
 
 	char *shortcuts_xml_file = "settings/shortcuts.xml";
-	char *shortcuts_xsd_file = "settings/shortcuts.xsd";
+	char *shortcuts_xsd_file = "resources/shortcuts.xsd";
 
 	char *remaps_xml_file = "settings/remaps.xml";
-	char *remaps_xsd_file = "settings/remaps.xsd";
+	char *remaps_xsd_file = "resources/remaps.xsd";
 
 	xmlDoc *doc;
 
