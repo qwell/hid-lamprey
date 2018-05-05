@@ -13,7 +13,7 @@ using namespace hidlamprey;
 
 hl_mutex_t controller_mutex;
 
-System::Void formMain::formMain_onPaint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+System::Void formMain::picController_onPaint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 	if (!controller) {
 		return;
 	}
@@ -69,6 +69,10 @@ System::Void formMain::formMain_onPaint(System::Object^ sender, System::Windows:
 	hl_mutex_unlock(&controller_mutex);
 }
 
+void formMain::refreshImage() {
+	this->picController->Refresh();
+}
+
 void formMain::output_controller(struct controller *c) {
 	if (!hl_active_skin) {
 		return;
@@ -78,7 +82,11 @@ void formMain::output_controller(struct controller *c) {
 	this->controller = c;
 	hl_mutex_unlock(&controller_mutex);
 
-	this->Invalidate();
+	if (this->picController->InvokeRequired) {
+		this->picController->Invoke(gcnew Action(this, &formMain::refreshImage));
+	} else {
+		this->refreshImage();
+	}
 }
 
 void formMain::loadSkinImages() {

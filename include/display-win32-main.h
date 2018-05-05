@@ -44,7 +44,9 @@ namespace hidlamprey {
 			InitializeComponent();
 		}
 
-		System::Void formMain::formMain_onPaint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e);
+		void formMain::refreshImage();
+
+		System::Void formMain::picController_onPaint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e);
 
 		static formMain^ instance;
 		static Object^ instanceLock = gcnew Object();
@@ -81,6 +83,7 @@ namespace hidlamprey {
 			this->picController->Size = System::Drawing::Size(0, 0);
 			this->picController->TabIndex = 1;
 			this->picController->TabStop = false;
+			this->picController->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &formMain::picController_onPaint);
 			// 
 			// formMain
 			// 
@@ -97,7 +100,6 @@ namespace hidlamprey {
 			this->Closed += gcnew System::EventHandler(this, &formMain::formMain_Closed);
 			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
 			this->Shown += gcnew System::EventHandler(this, &formMain::formMain_Shown);
-			this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &formMain::formMain_onPaint);
 			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &formMain::formMain_MouseDown);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picController))->EndInit();
 			this->ResumeLayout(false);
