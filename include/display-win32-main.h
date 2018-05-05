@@ -1,7 +1,5 @@
 #pragma once
 
-#include "display-win32-settings.h"
-
 namespace hidlamprey {
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -28,8 +26,8 @@ namespace hidlamprey {
 			}
 		}
 
-		void output_controller(struct controller *controller);
-		void loadSkinImages();
+		void formMain::output_controller(struct controller *controller);
+		void formMain::loadSkinImages(char *skin_name, char *skin_background);
 
 	protected:
 		/// <summary>
@@ -49,6 +47,9 @@ namespace hidlamprey {
 		void formMain::refreshImage();
 
 		System::Void formMain::picController_onPaint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e);
+		System::Void formMain::tsmiAlwaysOnTop_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void formMain::tsmiExit_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void formMain::tmsiSettings_Click(System::Object^  sender, System::EventArgs^  e);
 
 		static formMain^ instance;
 		static Object^ instanceLock = gcnew Object();
@@ -166,7 +167,7 @@ namespace hidlamprey {
 	}
 
 	private: System::Void formMain_Shown(System::Object^ sender, System::EventArgs^ e) {
-		this->loadSkinImages();
+		this->loadSkinImages(hl_settings->skin->name, hl_settings->skin->background);
 	}
 	private: System::Void formMain_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		if (e->Button == System::Windows::Forms::MouseButtons::Left) {
@@ -174,16 +175,6 @@ namespace hidlamprey {
 			ReleaseCapture();
 			SendMessage(static_cast<HWND>(this->Handle.ToPointer()), WM_NCLBUTTONDOWN, HT_CAPTION, 0);
 		}
-	}
-	private: System::Void tsmiAlwaysOnTop_Click(System::Object^ sender, System::EventArgs^ e) {
-		this->TopMost = tsmiAlwaysOnTop->Checked;
-	}
-	private: System::Void tsmiExit_Click(System::Object^ sender, System::EventArgs^ e) {
-		this->Close();
-	}
-	private: System::Void tmsiSettings_Click(System::Object^  sender, System::EventArgs^  e) {
-		Form ^settings = gcnew formSettings();
-		settings->Show();
 	}
 };
 }

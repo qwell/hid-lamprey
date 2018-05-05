@@ -14,8 +14,9 @@ namespace hidlamprey {
 	public ref class formSettings : public System::Windows::Forms::Form
 	{
 	public:
-		formSettings(void)
+		formSettings(formMain ^formMain)
 		{
+			this->formMain = formMain;
 			InitializeComponent();
 			//
 			//TODO: Add the constructor code here
@@ -34,7 +35,9 @@ namespace hidlamprey {
 			}
 		}
 	private:
+		formMain ^ formMain;
 		System::Void formSettings_Load(System::Object^  sender, System::EventArgs^  e);
+		System::Void treeView1_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e);
 
 	private: System::Windows::Forms::TreeView^  treeView1;
 
@@ -59,12 +62,13 @@ namespace hidlamprey {
 			this->treeView1->Name = L"treeView1";
 			this->treeView1->Size = System::Drawing::Size(258, 229);
 			this->treeView1->TabIndex = 1;
+			this->treeView1->AfterSelect += gcnew System::Windows::Forms::TreeViewEventHandler(this, &formSettings::treeView1_AfterSelect);
 			// 
 			// formSettings
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(282, 253);
+			this->ClientSize = System::Drawing::Size(777, 253);
 			this->Controls->Add(this->treeView1);
 			this->Name = L"formSettings";
 			this->Text = L"formSettings";

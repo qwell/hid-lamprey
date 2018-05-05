@@ -1,10 +1,13 @@
 #include "include/lamprey.h"
 
+#include "include/controller.h"
 #include "include/skin.h"
 
+#include "include/display-win32-main.h"
 #include "include/display-win32-settings.h"
 
 using namespace System;
+using namespace System::Runtime::InteropServices;
 using namespace System::Windows::Forms;
 
 using namespace hidlamprey;
@@ -19,4 +22,11 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 		treeView1->Nodes->Add(node);
 	}
 	treeView1->EndUpdate();
+}
+System::Void formSettings::treeView1_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e) {
+	if (e->Node->Level == 1) {
+		char *name = (char *)(void *)Marshal::StringToHGlobalAnsi(e->Node->Parent->Text);
+		char *background = (char *)(void *)Marshal::StringToHGlobalAnsi(e->Node->Text);
+		this->formMain->loadSkinImages(name, background);
+	}
 }

@@ -4,6 +4,7 @@
 #include "include/skin.h"
 
 #include "include/display-win32-main.h"
+#include "include/display-win32-settings.h"
 
 using namespace System;
 using namespace System::Threading::Tasks;
@@ -27,7 +28,8 @@ System::Void formMain::picController_onPaint(System::Object^ sender, System::Win
 			if (button->type == skin_button->type && button->code == skin_button->code) {
 				if (button->value) {
 					this->skinButtons[j]->Visible = true;
-				} else {
+				}
+				else {
 					this->skinButtons[j]->Visible = false;
 				}
 			}
@@ -43,7 +45,8 @@ System::Void formMain::picController_onPaint(System::Object^ sender, System::Win
 				if (button->type == skin_axis->type_x && button->code == skin_axis->code_x) {
 					if (button->value) {
 						offset_x = button->value / (256 / skin_axis->offset_x);
-					} else {
+					}
+					else {
 						offset_x = 0;
 					}
 				}
@@ -51,7 +54,8 @@ System::Void formMain::picController_onPaint(System::Object^ sender, System::Win
 				if (button->type == skin_axis->type_y && button->code == skin_axis->code_y) {
 					if (button->value) {
 						offset_y = button->value / (256 / skin_axis->offset_y);
-					} else {
+					}
+					else {
 						offset_y = 0;
 					}
 				}
@@ -59,7 +63,8 @@ System::Void formMain::picController_onPaint(System::Object^ sender, System::Win
 				this->skinAxes[j]->Location = Drawing::Point(skin_axis->x + offset_x, skin_axis->y + offset_y);
 				if (offset_x || offset_y) {
 					this->skinAxes[j]->Visible = true;
-				} else {
+				}
+				else {
 					this->skinAxes[j]->Visible = false;
 				}
 			}
@@ -67,6 +72,16 @@ System::Void formMain::picController_onPaint(System::Object^ sender, System::Win
 	}
 
 	hl_mutex_unlock(&controller_mutex);
+}
+System::Void formMain::tsmiAlwaysOnTop_Click(System::Object^ sender, System::EventArgs^ e) {
+	this->TopMost = tsmiAlwaysOnTop->Checked;
+}
+System::Void formMain::tsmiExit_Click(System::Object^ sender, System::EventArgs^ e) {
+	this->Close();
+}
+System::Void formMain::tmsiSettings_Click(System::Object^  sender, System::EventArgs^  e) {
+	Form ^settings = gcnew formSettings(this);
+	settings->ShowDialog();
 }
 
 void formMain::refreshImage() {
@@ -84,12 +99,13 @@ void formMain::output_controller(struct controller *c) {
 
 	if (this->picController->InvokeRequired) {
 		this->picController->Invoke(gcnew Action(this, &formMain::refreshImage));
-	} else {
+	}
+	else {
 		this->refreshImage();
 	}
 }
 
-void formMain::loadSkinImages() {
+void formMain::loadSkinImages(char *skin_name, char *skin_background) {
 	hl_mutex_create(&controller_mutex);
 
 	if (this->skinButtons) {
@@ -100,11 +116,11 @@ void formMain::loadSkinImages() {
 	}
 
 	for (int i = 0; i < hl_skin_count; i++) {
-		if (!strcmp(hl_settings->skin->name, hl_skins[i]->name)) {
+		if (!strcmp(skin_name, hl_skins[i]->name)) {
 			skinActive = hl_skins[i];
 
 			for (int j = 0; j < skinActive->background_count; j++) {
-				if (!strcmp(hl_settings->skin->background, skinActive->backgrounds[j]->name)) {
+				if (!strcmp(skin_background, skinActive->backgrounds[j]->name)) {
 					skinActiveBackground = skinActive->backgrounds[j];
 					break;
 				}
