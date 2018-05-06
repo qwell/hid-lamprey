@@ -170,6 +170,8 @@ int dinput_get_padstate(DWORD state) {
 	case 31500:
 		return padLeft | padUp;
 	}
+
+	return 0;
 }
 
 void *hl_input_dinput_poll() {
@@ -338,21 +340,20 @@ void *hl_input_dinput_poll() {
 					}
 
 					if (hl_controller_scale_range(newstate.lX, -256, 256) != hl_controller_scale_range(oldstate.lX, -256, 256)) {
-						if (hl_controller_scale_range(newstate.lX, -256, 256) > 64) {
-							hl_controller_change(input->name, 0, EV_ABS, ABS_X, hl_controller_scale_range(newstate.lX, -256, 256));
-						} else if (hl_controller_scale_range(newstate.lX, -256, 256) < -64) {
-							hl_controller_change(input->name, 0, EV_ABS, ABS_X, hl_controller_scale_range(newstate.lX, -256, 256));
-						}
+						hl_controller_change(input->name, 0, EV_ABS, ABS_X, hl_controller_scale_range(newstate.lX, -256, 256));
 					}
 					if (hl_controller_scale_range(newstate.lY, -256, 256) != hl_controller_scale_range(oldstate.lY, -256, 256)) {
-						if (hl_controller_scale_range(newstate.lY, -256, 256) > 64) {
-							hl_controller_change(input->name, 0, EV_ABS, ABS_Y, hl_controller_scale_range(newstate.lY, -256, 256));
-						} else if (hl_controller_scale_range(newstate.lY, -256, 256) < -64) {
-							hl_controller_change(input->name, 0, EV_ABS, ABS_Y, hl_controller_scale_range(newstate.lY, -256, 256));
-						}
+						hl_controller_change(input->name, 0, EV_ABS, ABS_Y, hl_controller_scale_range(newstate.lY, -256, 256));
 					}
 
-					//TODO Send off hat messages?
+					/* TODO Is this what all controllers look like for right stick?
+					if (hl_controller_scale_range(newstate.rglSlider[0], -256, 256) != hl_controller_scale_range(oldstate.rglSlider[0], -256, 256)) {
+						hl_controller_change(input->name, 0, EV_ABS, ABS_RX, hl_controller_scale_range(newstate.rglSlider[0], -256, 256));
+					}
+					if (hl_controller_scale_range(newstate.lRz, -256, 256) != hl_controller_scale_range(oldstate.lRz, -256, 256)) {
+						hl_controller_change(input->name, 0, EV_ABS, ABS_RY, hl_controller_scale_range(newstate.lRz, -256, 256));
+					}
+					*/
 				}
 				break;
 			}
