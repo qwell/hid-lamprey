@@ -16,6 +16,11 @@ hl_thread_t t_input_dinput;
 hl_mutex_t mutex_input_dinput;
 struct hl_input_dinput *hl_input_dinput = NULL;
 
+#define padUp    1 << 0
+#define padRight 1 << 1
+#define padDown  1 << 2
+#define padLeft  1 << 3
+
 BOOL CALLBACK input_dinput_enum_axis(const DIDEVICEOBJECTINSTANCE *instance, void *ptr) {
 	LPDIRECTINPUTDEVICE8 device = (LPDIRECTINPUTDEVICE8)ptr;
 
@@ -145,6 +150,28 @@ void hl_input_dinput_init() {
 	return;
 }
 
+int dinput_get_padstate(DWORD state) {
+	/* What the fuck?  This is weeeeeird... */
+	switch (state) {
+	case 0:
+		return padUp;
+	case 4500:
+		return padUp | padRight;
+	case 9000:
+		return padRight;
+	case 13500:
+		return padRight | padDown;
+	case 18000:
+		return padDown;
+	case 22500:
+		return padDown | padLeft;
+	case 27000:
+		return padLeft;
+	case 31500:
+		return padLeft | padUp;
+	}
+}
+
 void *hl_input_dinput_poll() {
 	struct dinput_button_maps {
 		WORD dinput;
@@ -247,14 +274,8 @@ void *hl_input_dinput_poll() {
 				DIJOYSTATE2 newstate;
 
 				if ((hr = input->device->GetDeviceState(sizeof(DIJOYSTATE2), &newstate)) == DI_OK) {
-					bool dpadHChanged = false;
-					bool dpadVChanged = false;
 					bool axisHChanged = false;
 					bool axisVChanged = false;
-					bool pRight = false;
-					bool pLeft = false;
-					bool pUp = false;
-					bool pDown = false;
 
 					int map = -1;
 
@@ -283,75 +304,36 @@ void *hl_input_dinput_poll() {
 					}
 					for (int i = 0; i < input->capabilities.dwPOVs; i++) {
 						if (newstate.rgdwPOV[i] != oldstate.rgdwPOV[i]) {
-							/* What the fuck?  This is weeeeeird... */
-							switch (newstate.rgdwPOV[i]) {
-							case 0:
-								dpadVChanged = true;
-								pUp = true;
-								break;
-							case 4500:
-								dpadVChanged = true;
-								dpadHChanged = true;
-								pUp = true;
-								pRight = true;
-								break;
-							case 9000:
-								dpadHChanged = true;
-								pRight = true;
-								break;
-							case 13500:
-								dpadVChanged = true;
-								dpadHChanged = true;
-								pDown = true;
-								pRight = true;
-								break;
-							case 18000:
-								dpadVChanged = true;
-								pDown = true;
-								break;
-							case 22500:
-								dpadVChanged = true;
-								dpadHChanged = true;
-								pDown = true;
-								pLeft = true;
-								break;
-							case 27000:
-								dpadHChanged = true;
-								pLeft = true;
-								break;
-							case 31500:
-								dpadVChanged = true;
-								dpadHChanged = true;
-								pUp = true;
-								pLeft = true;
-								break;
+							int oldPad = dinput_get_padstate(oldstate.rgdwPOV[i]);
+							int newPad = dinput_get_padstate(newstate.rgdwPOV[i]);
+							int sharePad = oldPad ^ newPad;
+
+							oldPad &= sharePad;
+							newPad &= sharePad;
+
+							if (oldPad & padUp) {
+								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 0);
+							} else if (newPad & padUp) {
+								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 1);
 							}
-						}
-					}
 
-					if (dpadHChanged) {
-						if (pRight) {
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 1);
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 0);
-						} else if (pLeft) {
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 1);
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 0);
-						} else {
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 0);
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 0);
-						}
-					}
+							if (oldPad & padRight) {
+								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 0);
+							} else if (newPad & padRight) {
+								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 1);
+							}
 
-					if (dpadVChanged) {
-						if (pDown) {
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 1);
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 0);
-						} else if (pUp) {
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 1);
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 0);
-						} else {
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 0);
-							hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 0);
+							if (oldPad & padDown) {
+								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 0);
+							} else if (newPad & padDown) {
+								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 1);
+							}
+
+							if (oldPad & padLeft) {
+								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 0);
+							} else if (newPad & padLeft) {
+								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 1);
+							}
 						}
 					}
 
