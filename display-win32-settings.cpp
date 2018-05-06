@@ -27,6 +27,17 @@ System::Void formSettings::treeView1_AfterSelect(System::Object^  sender, System
 	if (e->Node->Level == 1) {
 		char *name = (char *)(void *)Marshal::StringToHGlobalAnsi(e->Node->Parent->Text);
 		char *background = (char *)(void *)Marshal::StringToHGlobalAnsi(e->Node->Text);
+
+		if (hl_settings->skin->name) {
+			free(hl_settings->skin->name);
+		}
+		hl_settings->skin->name = name;
+
+		if (hl_settings->skin->background) {
+			free(hl_settings->skin->background);
+		}
+		hl_settings->skin->background = background;
+
 		this->formMain->loadSkinImages(name, background);
 	}
 }
