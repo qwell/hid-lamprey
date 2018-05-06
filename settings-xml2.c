@@ -291,20 +291,20 @@ bool settings_xml_verify(xmlDoc *doc, char *xml_file, char *xsd_file) {
 		}
 		if (!(valid_context = xmlSchemaNewValidCtxt(schema))) {
 			printf("Settings file schema '%s' could not be loaded.\n", xsd_file);
-			xmlSchemaFreeParserCtxt(parser_context);
 			xmlSchemaFree(schema);
+			xmlSchemaFreeParserCtxt(parser_context);
 			return false;
 		}
 		if (xmlSchemaValidateDoc(valid_context, doc)) {
 			printf("Settings file '%s' did not validate against %s.\n", xml_file, xsd_file);
-			xmlSchemaFreeParserCtxt(parser_context);
-			xmlSchemaFree(schema);
 			xmlSchemaFreeValidCtxt(valid_context);
+			xmlSchemaFree(schema);
+			xmlSchemaFreeParserCtxt(parser_context);
 			return false;
 		}
-		xmlSchemaFreeParserCtxt(parser_context);
-		xmlSchemaFree(schema);
 		xmlSchemaFreeValidCtxt(valid_context);
+		xmlSchemaFree(schema);
+		xmlSchemaFreeParserCtxt(parser_context);
 	}
 
 	return true;
