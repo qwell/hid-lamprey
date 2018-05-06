@@ -16,3 +16,4 @@ include/config.h
 x86/
 x64/
 Debug/
+Release/
