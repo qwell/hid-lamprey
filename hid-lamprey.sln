@@ -18,7 +18,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libxml2-static", "third-par
 		{B56D17BC-072B-42F3-844A-870A07AFBAAA} = {B56D17BC-072B-42F3-844A-870A07AFBAAA}
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "lamprey-installer", "..\lamprey-installer\lamprey-installer.vdproj", "{7F848C1E-F1D8-424D-8C75-E4A38366C12C}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "lamprey-installer", "lamprey-installer.vdproj", "{7F848C1E-F1D8-424D-8C75-E4A38366C12C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
