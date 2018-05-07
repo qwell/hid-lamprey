@@ -202,6 +202,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
     }
@@ -354,8 +362,8 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7A0F0AC37BD44BD1B1BADF9E8CAD7D6E"
             {
-            "SourcePath" = "8:settings\\remaps.xml"
-            "TargetName" = "8:remaps.xml"
+            "SourcePath" = "8:settings\\emulations.xml"
+            "TargetName" = "8:emulations.xml"
             "Tag" = "8:"
             "Folder" = "8:_7C583BCA6B91404FB1BA1101FC142A3B"
             "Condition" = "8:"
@@ -494,8 +502,8 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9DA7057EE5BF493F857566C9D4A41696"
             {
-            "SourcePath" = "8:resources\\remaps.xsd"
-            "TargetName" = "8:remaps.xsd"
+            "SourcePath" = "8:resources\\emulations.xsd"
+            "TargetName" = "8:emulations.xsd"
             "Tag" = "8:"
             "Folder" = "8:_12995530E8EC467B810158ACFD101B3B"
             "Condition" = "8:"
@@ -752,15 +760,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:lamprey"
-        "ProductCode" = "8:{CFB30EFB-4555-4893-B5FD-777A44ADC792}"
-        "PackageCode" = "8:{7BB39297-1BA2-4CDA-AA6C-1CEC8ACBBDA3}"
+        "ProductCode" = "8:{53ECF331-C67B-46AC-9032-8B26793AF643}"
+        "PackageCode" = "8:{8B74519D-A1F7-48DC-B5CF-6213944CC6CC}"
         "UpgradeCode" = "8:{A07C38F7-399C-4E3E-B519-65C84AD8362A}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.1"
+        "ProductVersion" = "8:0.0.2"
         "Manufacturer" = "8:ntbox.com"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
