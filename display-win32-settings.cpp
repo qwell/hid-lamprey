@@ -31,12 +31,12 @@ System::Void formSettings::treeView1_AfterSelect(System::Object^  sender, System
 		if (hl_settings->skin->name) {
 			free(hl_settings->skin->name);
 		}
-		hl_settings->skin->name = name;
+		hl_settings->skin->name = strdup(name);
 
 		if (hl_settings->skin->background) {
 			free(hl_settings->skin->background);
 		}
-		hl_settings->skin->background = background;
+		hl_settings->skin->background = strdup(background);
 
 		this->formMain->loadSkinImages(name, background);
 	}
