@@ -133,7 +133,7 @@
     <Xml Include="settings\settings.xml">
       <Filter>Resource Files</Filter>
     </Xml>
-    <Xml Include="settings\remaps.xml">
+    <Xml Include="settings\emulations.xml">
       <Filter>Resource Files</Filter>
     </Xml>
     <Xml Include="settings\shortcuts.xml">
@@ -141,7 +141,7 @@
     </Xml>
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\remaps.xsd">
+    <None Include="resources\emulations.xsd">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="resources\settings.xsd">

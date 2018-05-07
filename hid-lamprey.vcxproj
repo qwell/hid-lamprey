@@ -184,12 +184,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="settings\remaps.xml" />
+    <Xml Include="settings\emulations.xml" />
     <Xml Include="settings\settings.xml" />
     <Xml Include="settings\shortcuts.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\remaps.xsd" />
+    <None Include="resources\emulations.xsd" />
     <None Include="resources\settings.xsd" />
     <None Include="resources\shortcuts.xsd" />
   </ItemGroup>
