@@ -347,6 +347,7 @@ void *hl_input_dinput_poll() {
 					}
 
 					/* TODO Is this what all controllers look like for right stick?
+					 * Confirmed: No.
 					if (hl_controller_scale_range(newstate.rglSlider[0], -256, 256) != hl_controller_scale_range(oldstate.rglSlider[0], -256, 256)) {
 						hl_controller_change(input->name, 0, EV_ABS, ABS_RX, hl_controller_scale_range(newstate.rglSlider[0], -256, 256));
 					}
