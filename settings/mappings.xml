@@ -1,0 +1,22 @@
+<mappings>
+	<mapping device="Dinput gamepad0" rawname="button:0" maptype="EV_KEY" mapcode="BTN_NORTH"/>
+	<mapping device="Dinput gamepad0" rawname="button:1" maptype="EV_KEY" mapcode="BTN_EAST"/>
+	<mapping device="Dinput gamepad0" rawname="button:2" maptype="EV_KEY" mapcode="BTN_SOUTH"/>
+	<mapping device="Dinput gamepad0" rawname="button:3" maptype="EV_KEY" mapcode="BTN_WEST"/>
+	<mapping device="Dinput gamepad0" rawname="button:4" maptype="EV_KEY" mapcode="BTN_L"/>
+	<mapping device="Dinput gamepad0" rawname="button:5" maptype="EV_KEY" mapcode="BTN_R"/>
+	<mapping device="Dinput gamepad0" rawname="button:6" maptype="EV_KEY" mapcode="BTN_SELECT"/>
+	<mapping device="Dinput gamepad0" rawname="button:7" maptype="EV_KEY" mapcode="BTN_START"/>
+
+	<mapping device="Dinput gamepad0" rawname="dpad_up:0" maptype="EV_KEY" mapcode="BTN_DPAD_UP"/>
+	<mapping device="Dinput gamepad0" rawname="dpad_right:0" maptype="EV_KEY" mapcode="BTN_DPAD_RIGHT"/>
+	<mapping device="Dinput gamepad0" rawname="dpad_down:0" maptype="EV_KEY" mapcode="BTN_DPAD_DOWN"/>
+	<mapping device="Dinput gamepad0" rawname="dpad_left:0" maptype="EV_KEY" mapcode="BTN_DPAD_LEFT"/>
+
+	<mapping device="Dinput gamepad0" rawname="axis:lX" maptype="EV_ABS" mapcode="ABS_X"/>
+	<mapping device="Dinput gamepad0" rawname="axis:lY" maptype="EV_ABS" mapcode="ABS_Y"/>
+
+	<!-- Keyboard escape key.
+	<mapping device="Dinput keyboard0" rawname="key:1" maptype="EV_KEY" mapcode="BTN_SELECT"/>
+	-->
+</mappings>

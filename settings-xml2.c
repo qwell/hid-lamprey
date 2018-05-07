@@ -32,7 +32,7 @@ void settings_xml_load_settings(xmlXPathContext *context) {
 	xmlXPathObject *result;
 
 	if (!(result = xmlXPathEvalExpression(xpath, context))) {
-		printf("Settings file has no category 'device'.\n");
+		printf("Settings file has no category 'settings'.\n");
 	} else {
 		xmlNodeSet *nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {
@@ -82,6 +82,45 @@ void settings_xml_load_settings(xmlXPathContext *context) {
 					}
 				}
 			}
+		}
+		xmlXPathFreeObject(result);
+	}
+}
+
+void settings_xml_load_mappings(xmlXPathContext *context) {
+	xmlChar *xpath = (xmlChar *)"/mappings/mapping";
+	xmlXPathObject *result;
+
+	if (!(result = xmlXPathEvalExpression(xpath, context))) {
+		printf("Settings file has no category 'mapping'.\n");
+	} else {
+		xmlNodeSet *nodeset = result->nodesetval;
+		for (int i = 0; i < nodeset->nodeNr; i++) {
+			xmlNode *node = nodeset->nodeTab[i];
+
+			xmlChar *device = xmlGetProp(node, (const xmlChar *)"device");
+			xmlChar *rawname = xmlGetProp(node, (const xmlChar *)"rawname");
+			xmlChar *maptype = xmlGetProp(node, (const xmlChar *)"maptype");
+			xmlChar *mapcode = xmlGetProp(node, (const xmlChar *)"mapcode");
+
+			if (struct button_code *button_code = hl_controller_get_code_by_name((char *)maptype, (char *)mapcode)) {
+				struct input_mapping *dinput_mapping;
+
+				dinput_mapping = (struct input_mapping *)malloc(sizeof(struct input_mapping));
+				dinput_mapping->mapvalue = 0;
+				dinput_mapping->device = strdup((char *)device);
+				dinput_mapping->rawname = strdup((char *)rawname);
+				dinput_mapping->maptype = button_code->type;
+				dinput_mapping->mapcode = button_code->code;
+
+				input_mappings = (struct input_mapping **)realloc(input_mappings, (input_mapping_count + 1) * sizeof(*input_mappings));
+				input_mappings[input_mapping_count++] = dinput_mapping;
+			}
+
+			xmlFree(device);
+			xmlFree(rawname);
+			xmlFree(maptype);
+			xmlFree(mapcode);
 		}
 		xmlXPathFreeObject(result);
 	}
@@ -314,6 +353,9 @@ void hl_settings_xml_load() {
 	char *settings_xml_file = "settings/settings.xml";
 	char *settings_xsd_file = "resources/settings.xsd";
 
+	char *mappings_xml_file = "settings/mappings.xml";
+	char *mappings_xsd_file = "resources/mappings.xsd";
+
 	char *shortcuts_xml_file = "settings/shortcuts.xml";
 	char *shortcuts_xsd_file = "resources/shortcuts.xsd";
 
@@ -331,7 +373,8 @@ void hl_settings_xml_load() {
 	if (!(doc = xmlParseFile(settings_xml_file))) {
 		printf("Settings file '%s' is missing or invalid.\n", settings_xml_file);
 		return;
-	} else {
+	}
+	else {
 		if (settings_xml_verify(doc, settings_xml_file, settings_xsd_file)) {
 			xmlXPathContext *context;
 
@@ -348,6 +391,32 @@ void hl_settings_xml_load() {
 		xmlFreeDoc(doc);
 
 		printf("Settings file '%s loaded.\n", settings_xml_file);
+	}
+
+	if (!(doc = xmlParseFile(mappings_xml_file))) {
+		printf("Settings file '%s' is missing or invalid.\n", mappings_xml_file);
+		return;
+	} else {
+		/*
+		if (settings_xml_verify(doc, mappings_xml_file, mappings_xsd_file)) {
+		*/
+			xmlXPathContext *context;
+
+			if (!(context = xmlXPathNewContext(doc))) {
+				printf("Settings file '%s' could not be loaded.\n", mappings_xml_file);
+				xmlFreeDoc(doc);
+				return;
+			}
+
+			settings_xml_load_mappings(context);
+
+			xmlFree(context);
+		/*
+		}
+		*/
+		xmlFreeDoc(doc);
+
+		printf("Settings file '%s loaded.\n", mappings_xml_file);
 	}
 
 	if (!(doc = xmlParseFile(shortcuts_xml_file))) {

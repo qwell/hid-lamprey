@@ -14,6 +14,7 @@
 #include "shortcut_cb.h"
 #include "skin.h"
 
+void hl_controller_raw(const char *device, const char *rawname, int value);
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value);
 struct button_code *hl_controller_get_code_by_name(char *type, char *name);
 int hl_controller_scale_range(int curvalue, int curmin, int curmax);
@@ -45,6 +46,14 @@ struct button_trigger_out {
 	uint8_t type;
 	uint16_t code;
 	int16_t trigger;
+};
+
+struct input_mapping {
+	char *device;
+	char *rawname;
+	int maptype;
+	int mapcode;
+	int mapvalue;
 };
 
 struct emulation {
@@ -92,10 +101,16 @@ struct codelookup {
 };
 extern struct codelookup codelookups[];
 extern int codelookup_count;
+
+extern struct input_mapping **input_mappings;
+extern int input_mapping_count;
+
 extern struct emulation **emulations;
 extern int emulation_count;
+
 extern struct shortcut **shortcuts;
 extern int shortcut_count;
+
 extern struct device **devices;
 extern int device_count;
 

@@ -21,6 +21,16 @@ struct hl_input_dinput *hl_input_dinput = NULL;
 #define padDown  1 << 2
 #define padLeft  1 << 3
 
+struct dinput_default_keymap {
+	int key;
+	int maptype;
+	int mapcode;
+};
+struct dinput_default_keymap dinput_default_keymaps[] = {
+	DINPUT_DEFAULT_KEYMAP
+};
+int dinput_default_keymap_count = sizeof(dinput_default_keymaps) / sizeof(struct dinput_default_keymap);
+
 BOOL CALLBACK input_dinput_enum_axis(const DIDEVICEOBJECTINSTANCE *instance, void *ptr) {
 	LPDIRECTINPUTDEVICE8 device = (LPDIRECTINPUTDEVICE8)ptr;
 
@@ -141,6 +151,36 @@ void hl_input_dinput_init() {
 		return;
 	}
 
+	for (int i = 0; i < dinput_default_keymap_count; i++) {
+		struct dinput_default_keymap *dinput_default_keymap = &dinput_default_keymaps[i];
+
+		bool found = false;
+
+		char *device = "Dinput keyboard0";
+		char rawname[32];
+
+		snprintf(rawname, sizeof(rawname), "key:%d", dinput_default_keymap->key);
+
+		for (int j = 0; j < input_mapping_count; j++) {
+			if (!strcmp(device, input_mappings[j]->device) && !strcmp(rawname, input_mappings[j]->rawname)) {
+				found = true;
+			}
+		}
+
+		if (!found) {
+			struct input_mapping *dinput_mapping;
+			dinput_mapping = (struct input_mapping *)malloc(sizeof(struct input_mapping));
+			dinput_mapping->device = device;
+			dinput_mapping->rawname = strdup(rawname);
+			dinput_mapping->maptype = dinput_default_keymap->maptype;
+			dinput_mapping->mapcode = dinput_default_keymap->mapcode;
+			dinput_mapping->mapvalue = 0;
+
+			input_mappings = (struct input_mapping **)realloc(input_mappings, (input_mapping_count + 1) * sizeof(*input_mappings));
+			input_mappings[input_mapping_count++] = dinput_mapping;
+		}
+	}
+
 	if (hl_input_dinput->device_count > 0) {
 		hl_thread_create(&t_input_dinput, hl_input_dinput_poll, NULL);
 	}
@@ -174,62 +214,18 @@ int dinput_get_padstate(DWORD state) {
 	return 0;
 }
 
-void *hl_input_dinput_poll() {
-	struct dinput_button_maps {
-		WORD dinput;
-		int maptype;
-		int mapcode;
-		int mapvalue;
-	};
-	struct dinput_button_maps dinput_gamepad_button_maps[2][16] = { {
-			/* 8 buttons */
-			{ 0, EV_KEY, BTN_SOUTH },
-			{ 1, EV_KEY, BTN_EAST },
-			{ 2, EV_KEY, BTN_WEST },
-			{ 3, EV_KEY, BTN_NORTH },
-			{ 4, EV_KEY, BTN_TL },
-			{ 5, EV_KEY, BTN_TR },
-			{ 6, EV_KEY, BTN_SELECT },
-			{ 7, EV_KEY, BTN_START },
-		},{
-			/* 12 buttons */
-			{ 0, EV_KEY, BTN_WEST },
-			{ 1, EV_KEY, BTN_SOUTH },
-			{ 2, EV_KEY, BTN_EAST },
-			{ 3, EV_KEY, BTN_NORTH },
-			{ 4, EV_KEY, BTN_TR },
-			{ 5, EV_KEY, BTN_TL },
-			{ 6, EV_KEY, BTN_TR2 },
-			{ 7, EV_KEY, BTN_TL2 },
-			{ 8, EV_KEY, BTN_START },
-			{ 9, EV_KEY, BTN_SELECT },
-			{ 10, EV_KEY, BTN_THUMBR },
-			{ 11, EV_KEY, BTN_THUMBL },
+struct input_mapping *dinput_get_map(const char *device, const char *rawname) {
+	for (int i = 0; i < input_mapping_count; i++) {
+		struct input_mapping *curmap = input_mappings[i];
+		if (!strcmp(device, curmap->device) && !strcmp(rawname, curmap->rawname)) {
+			return curmap;
 		}
-	};
-	struct dinput_button_maps dinput_keyboard_button_maps[256] = {
-		{ DIK_LEFT, EV_KEY, BTN_DPAD_LEFT },
-		{ DIK_RIGHT, EV_KEY, BTN_DPAD_RIGHT },
-		{ DIK_UP, EV_KEY, BTN_DPAD_UP },
-		{ DIK_DOWN, EV_KEY, BTN_DPAD_DOWN },
-		{ DIK_NUMPAD8, EV_KEY, BTN_DPAD_UP },
-		{ DIK_NUMPAD4, EV_KEY, BTN_DPAD_LEFT },
-		{ DIK_NUMPAD5, EV_KEY, BTN_DPAD_DOWN },
-		{ DIK_NUMPAD6, EV_KEY, BTN_DPAD_RIGHT },
-		{ DIK_LSHIFT, EV_KEY, BTN_TL },
-		{ DIK_RSHIFT, EV_KEY, BTN_TR },
-		{ DIK_MINUS, EV_KEY, BTN_SELECT },
-		{ DIK_EQUALS, EV_KEY, BTN_START },
-		{ DIK_1, EV_KEY, BTN_NORTH },
-		{ DIK_2, EV_KEY, BTN_EAST },
-		{ DIK_3, EV_KEY, BTN_SOUTH },
-		{ DIK_4, EV_KEY, BTN_WEST },
-		{ DIK_I, EV_ABS, ABS_Y, -128 },
-		{ DIK_J, EV_ABS, ABS_X, -128 },
-		{ DIK_K, EV_ABS, ABS_Y, 128 },
-		{ DIK_L, EV_ABS, ABS_X, 128 },
-	};
+	}
 
+	return NULL;
+}
+
+void *hl_input_dinput_poll() {
 	HRESULT hr = DI_OK;
 
 	HANDLE events[32] = {};
@@ -261,8 +257,10 @@ void *hl_input_dinput_poll() {
 		if (msg >= WAIT_OBJECT_0 && msg <= WAIT_OBJECT_0 + hl_input_dinput->device_count) {
 			int devnum = msg - WAIT_OBJECT_0;
 			struct dinput_device *input;
+			struct input_mapping *inputmap = NULL;
 
 			BYTE state[256];
+			char rawname[32];
 
 			hl_mutex_lock(&mutex_input_dinput);
 
@@ -276,34 +274,28 @@ void *hl_input_dinput_poll() {
 				DIJOYSTATE2 newstate;
 
 				if ((hr = input->device->GetDeviceState(sizeof(DIJOYSTATE2), &newstate)) == DI_OK) {
-					bool axisHChanged = false;
-					bool axisVChanged = false;
-
-					int map = -1;
-
 					memcpy(&oldstate, &hl_input_dinput->devices[devnum]->state, sizeof(oldstate));
 					memcpy(&state, &newstate, sizeof(newstate));
 
-					switch (input->capabilities.dwButtons) {
-					case 8:
-						map = 0;
-						break;
-					case 12:
-						map = 1;
-						break;
-					}
-					if (map >= 0) {
-						for (int i = 0; i < input->capabilities.dwButtons; i++) {
-							struct dinput_button_maps curmap = dinput_gamepad_button_maps[map][i];
-							if (newstate.rgbButtons[i] != oldstate.rgbButtons[i]) {
-								if (newstate.rgbButtons[i] & 0x80) {
-									hl_controller_change(input->name, 0, curmap.maptype, curmap.mapcode, curmap.mapvalue ? curmap.mapvalue : 1);
-								} else {
-									hl_controller_change(input->name, 0, curmap.maptype, curmap.mapcode, 0);
+					for (int i = 0; i < input->capabilities.dwButtons; i++) {
+						if (newstate.rgbButtons[i] != oldstate.rgbButtons[i]) {
+							snprintf(rawname, sizeof(rawname), "button:%d", i);
+							inputmap = dinput_get_map(input->name, rawname);
+
+							if (newstate.rgbButtons[i] & 0x80) {
+								hl_controller_raw(input->name, rawname, 1);
+								if (inputmap) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, inputmap->mapvalue ? inputmap->mapvalue : 1);
+								}
+							} else {
+								hl_controller_raw(input->name, rawname, 0);
+								if (inputmap) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, 0);
 								}
 							}
 						}
 					}
+
 					for (int i = 0; i < input->capabilities.dwPOVs; i++) {
 						if (newstate.rgdwPOV[i] != oldstate.rgdwPOV[i]) {
 							int oldPad = dinput_get_padstate(oldstate.rgdwPOV[i]);
@@ -314,36 +306,76 @@ void *hl_input_dinput_poll() {
 							newPad &= sharePad;
 
 							if (oldPad & padUp) {
-								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 0);
+								snprintf(rawname, sizeof(rawname), "dpad_up:%d", i);
+								hl_controller_raw(input->name, rawname, 0);
+								if ((inputmap = dinput_get_map(input->name, rawname))) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, 0);
+								}
 							} else if (newPad & padUp) {
-								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_UP, 1);
+								snprintf(rawname, sizeof(rawname), "dpad_up:%d", i);
+								hl_controller_raw(input->name, rawname, 1);
+								if ((inputmap = dinput_get_map(input->name, rawname))) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, inputmap->mapvalue ? inputmap->mapvalue : 1);
+								}
 							}
 
 							if (oldPad & padRight) {
-								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 0);
+								snprintf(rawname, sizeof(rawname), "dpad_right:%d", i);
+								hl_controller_raw(input->name, rawname, 0);
+								if ((inputmap = dinput_get_map(input->name, rawname))) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, 0);
+								}
 							} else if (newPad & padRight) {
-								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_RIGHT, 1);
+								snprintf(rawname, sizeof(rawname), "dpad_right:%d", i);
+								hl_controller_raw(input->name, rawname, 1);
+								if ((inputmap = dinput_get_map(input->name, rawname))) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, inputmap->mapvalue ? inputmap->mapvalue : 1);
+								}
 							}
 
 							if (oldPad & padDown) {
-								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 0);
+								snprintf(rawname, sizeof(rawname), "dpad_down:%d", i);
+								hl_controller_raw(input->name, rawname, 0);
+								if ((inputmap = dinput_get_map(input->name, rawname))) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, 0);
+								}
 							} else if (newPad & padDown) {
-								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_DOWN, 1);
+								snprintf(rawname, sizeof(rawname), "dpad_down:%d", i);
+								hl_controller_raw(input->name, rawname, 1);
+								if ((inputmap = dinput_get_map(input->name, rawname))) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, inputmap->mapvalue ? inputmap->mapvalue : 1);
+								}
 							}
 
 							if (oldPad & padLeft) {
-								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 0);
+								snprintf(rawname, sizeof(rawname), "dpad_left:%d", i);
+								hl_controller_raw(input->name, rawname, 0);
+								if ((inputmap = dinput_get_map(input->name, rawname))) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, 0);
+								}
 							} else if (newPad & padLeft) {
-								hl_controller_change(input->name, 0, EV_KEY, BTN_DPAD_LEFT, 1);
+								snprintf(rawname, sizeof(rawname), "dpad_left:%d", i);
+								hl_controller_raw(input->name, rawname, 1);
+								if ((inputmap = dinput_get_map(input->name, rawname))) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, inputmap->mapvalue ? inputmap->mapvalue : 1);
+								}
 							}
 						}
 					}
 
 					if (hl_controller_scale_range(newstate.lX, -256, 256) != hl_controller_scale_range(oldstate.lX, -256, 256)) {
-						hl_controller_change(input->name, 0, EV_ABS, ABS_X, hl_controller_scale_range(newstate.lX, -256, 256));
+						snprintf(rawname, sizeof(rawname), "axis:lX");
+						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lY, -256, 256));
+						if ((inputmap = dinput_get_map(input->name, rawname))) {
+							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lX, -256, 256));
+						}
 					}
 					if (hl_controller_scale_range(newstate.lY, -256, 256) != hl_controller_scale_range(oldstate.lY, -256, 256)) {
-						hl_controller_change(input->name, 0, EV_ABS, ABS_Y, hl_controller_scale_range(newstate.lY, -256, 256));
+						snprintf(rawname, sizeof(rawname), "axis:lY");
+						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lY, -256, 256));
+						if ((inputmap = dinput_get_map(input->name, rawname))) {
+							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lY, -256, 256));
+						}
 					}
 
 					/* TODO Is this what all controllers look like for right stick?
@@ -367,9 +399,8 @@ void *hl_input_dinput_poll() {
 					memcpy(&oldstate, &hl_input_dinput->devices[devnum]->state, sizeof(oldstate));
 					memcpy(&state, &newstate, sizeof(newstate));
 				}
-			}
-
 				break;
+			}
 			case DI8DEVTYPE_KEYBOARD:
 			{
 				BYTE oldstate[256];
@@ -378,15 +409,19 @@ void *hl_input_dinput_poll() {
 					memcpy(&oldstate, &hl_input_dinput->devices[devnum]->state, sizeof(oldstate));
 					memcpy(&state, &newstate, sizeof(newstate));
 
-					for (int i = 0; i < sizeof(dinput_keyboard_button_maps) / sizeof(*dinput_keyboard_button_maps); i++) {
-						struct dinput_button_maps curmap = dinput_keyboard_button_maps[i];
-						BYTE aold = oldstate[curmap.dinput];
-						BYTE anew = newstate[curmap.dinput];
-						if (newstate[curmap.dinput] != oldstate[curmap.dinput]) {
-							if (newstate[curmap.dinput] & 0x80) {
-								hl_controller_change(input->name, 0, curmap.maptype, curmap.mapcode, curmap.mapvalue ? curmap.mapvalue : 1);
+					for (int i = 0; i < 256; i++) {
+						if (newstate[i] != oldstate[i]) {
+							snprintf(rawname, sizeof(rawname), "key:%d", i);
+							if (newstate[i] & 0x80) {
+								hl_controller_raw(input->name, rawname, 1);
+								if ((inputmap = dinput_get_map(input->name, rawname))) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, inputmap->mapvalue ? inputmap->mapvalue : 1);
+								}
 							} else {
-								hl_controller_change(input->name, 0, curmap.maptype, curmap.mapcode, 0);
+								hl_controller_raw(input->name, rawname, 0);
+								if ((inputmap = dinput_get_map(input->name, rawname))) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, 0);
+								}
 							}
 						}
 					}

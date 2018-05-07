@@ -23,6 +23,9 @@ struct codelookup codelookups[] = {
 };
 int codelookup_count = sizeof(codelookups);
 
+struct input_mapping **input_mappings;
+int input_mapping_count = 0;
+
 struct emulation **emulations;
 int emulation_count = 0;
 
@@ -261,6 +264,9 @@ void controller_set_button(struct controller *controller, uint8_t type, uint16_t
 	controller->buttons = (struct button_state **)realloc(controller->buttons, (controller->button_count + 1) * sizeof(*controller->buttons));
 	controller->buttons[controller->button_count] = button;
 	controller->button_count++;
+}
+
+void hl_controller_raw(const char *device, const char *rawname, int value) {
 }
 
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value) {
