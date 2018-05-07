@@ -47,7 +47,7 @@ struct button_trigger_out {
 	int16_t trigger;
 };
 
-struct remap {
+struct emulation {
 	struct button_trigger *in;
 	struct button_trigger_out *out;
 };
@@ -92,8 +92,8 @@ struct codelookup {
 };
 extern struct codelookup codelookups[];
 extern int codelookup_count;
-extern struct remap **remaps;
-extern int remap_count;
+extern struct emulation **emulations;
+extern int emulation_count;
 extern struct shortcut **shortcuts;
 extern int shortcut_count;
 extern struct device **devices;

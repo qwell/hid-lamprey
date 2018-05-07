@@ -23,8 +23,8 @@ struct codelookup codelookups[] = {
 };
 int codelookup_count = sizeof(codelookups);
 
-struct remap **remaps;
-int remap_count = 0;
+struct emulation **emulations;
+int emulation_count = 0;
 
 struct shortcut **shortcuts;
 int shortcut_count = 0;
@@ -209,9 +209,9 @@ void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16
 
 }
 
-void controller_remaps(int id, uint8_t type, uint16_t code, int16_t value) {
-	for (int i = 0; i < remap_count; i++) {
-		struct remap *emu = remaps[i];
+void controller_emulations(int id, uint8_t type, uint16_t code, int16_t value) {
+	for (int i = 0; i < emulation_count; i++) {
+		struct emulation *emu = emulations[i];
 		if (type == emu->in->type && code == emu->in->code) {
 			int emuvalue = 0;
 			if (emu->in->trigger_low < 0 || emu->in->trigger_high > 0) {
@@ -302,6 +302,6 @@ void hl_controller_change(const char *device, int id, uint8_t type, uint16_t cod
 
 	controller_shortcuts(device, type, code, value);
 
-	controller_remaps(id, type, code, value);
+	controller_emulations(id, type, code, value);
 	return;
 }

@@ -188,16 +188,16 @@ struct shortcut {
 	}
 }
 
-void settings_xml_load_remaps(xmlXPathContext *context) {
-	xmlChar *xpath = (xmlChar *)"/remaps/remap";
+void settings_xml_load_emulations(xmlXPathContext *context) {
+	xmlChar *xpath = (xmlChar *)"/emulations/emulation";
 	xmlXPathObject *result;
 
 	if (!(result = xmlXPathEvalExpression(xpath, context))) {
-		printf("Settings file has no category 'remap'.\n");
+		printf("Settings file has no category 'emulation'.\n");
 	} else {
 		xmlNodeSet *nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {
-			struct remap *remap = (struct remap *)calloc(1, sizeof(struct remap));
+			struct emulation *emulation = (struct emulation *)calloc(1, sizeof(struct emulation));
 
 			xmlNode *node = nodeset->nodeTab[i];
 
@@ -226,7 +226,7 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 									button_trigger->trigger_low = 0;
 									button_trigger->trigger_high = 0;
 								}
-								remap->in = button_trigger;
+								emulation->in = button_trigger;
 								xmlFree(trigger_low);
 								xmlFree(trigger_high);
 							} else if (!xmlStrcmp(cur->name, (const xmlChar *)"out")) {
@@ -241,7 +241,7 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 								} else {
 									button_trigger_out->trigger = 0;
 								}
-								remap->out = button_trigger_out;
+								emulation->out = button_trigger_out;
 								xmlFree(trigger);
 							}
 						}
@@ -251,21 +251,21 @@ void settings_xml_load_remaps(xmlXPathContext *context) {
 					}
 				}
 			}
-			if (remap->in && remap->out) {
-				remaps = (struct remap **)realloc(remaps, (remap_count + 1) * sizeof(*remaps));
-				remaps[remap_count] = remap;
-				remap_count++;
+			if (emulation->in && emulation->out) {
+				emulations = (struct emulation **)realloc(emulations, (emulation_count + 1) * sizeof(*emulations));
+				emulations[emulation_count] = emulation;
+				emulation_count++;
 
-				debug_print("Added remap: in %d / %d (%d), out %d / %d (%d)\n",
-					remap->in->type, remap->in->code, remap->in->triggervalue,
-					remap->out->type, remap->out->code, remap->out->triggervalue);
+				debug_print("Added emulation: in %d / %d (%d), out %d / %d (%d)\n",
+					emulation->in->type, emulation->in->code, emulation->in->triggervalue,
+					emulation->out->type, emulation->out->code, emulation->out->triggervalue);
 			} else {
-				if (remap->in) {
-					free(remap->in);
-				} else if (remap->out) {
-					free(remap->out);
+				if (emulation->in) {
+					free(emulation->in);
+				} else if (emulation->out) {
+					free(emulation->out);
 				}
-				free(remap);
+				free(emulation);
 			}
 		}
 		xmlXPathFreeObject(result);
@@ -317,8 +317,8 @@ void hl_settings_xml_load() {
 	char *shortcuts_xml_file = "settings/shortcuts.xml";
 	char *shortcuts_xsd_file = "resources/shortcuts.xsd";
 
-	char *remaps_xml_file = "settings/remaps.xml";
-	char *remaps_xsd_file = "resources/remaps.xsd";
+	char *emulations_xml_file = "settings/emulations.xml";
+	char *emulations_xsd_file = "resources/emulations.xsd";
 
 	xmlDoc *doc;
 
@@ -372,26 +372,26 @@ void hl_settings_xml_load() {
 		printf("Settings file '%s loaded.\n", shortcuts_xml_file);
 	}
 
-	if (!(doc = xmlParseFile(remaps_xml_file))) {
-		printf("Settings file '%s' is missing or invalid.\n", remaps_xml_file);
+	if (!(doc = xmlParseFile(emulations_xml_file))) {
+		printf("Settings file '%s' is missing or invalid.\n", emulations_xml_file);
 		return;
 	} else {
-		if (settings_xml_verify(doc, remaps_xml_file, remaps_xsd_file)) {
+		if (settings_xml_verify(doc, emulations_xml_file, emulations_xsd_file)) {
 			xmlXPathContext *context;
 
 			if (!(context = xmlXPathNewContext(doc))) {
-				printf("Settings file '%s' could not be loaded.\n", remaps_xml_file);
+				printf("Settings file '%s' could not be loaded.\n", emulations_xml_file);
 				xmlFreeDoc(doc);
 				return;
 			}
 
-			settings_xml_load_remaps(context);
+			settings_xml_load_emulations(context);
 
 			xmlFree(context);
 		}
 		xmlFreeDoc(doc);
 
-		printf("Settings file '%s loaded.\n", remaps_xml_file);
+		printf("Settings file '%s loaded.\n", emulations_xml_file);
 	}
 }
 

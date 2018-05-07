@@ -1,26 +1,26 @@
-<remaps>
-	<remap>
+<emulations>
+	<emulation>
 		<in type="EV_KEY" code="BTN_THUMBL"/>
 		<out type="EV_KEY" code="KEY_1"/>
-	</remap>
-	<remap>
+	</emulation>
+	<emulation>
 		<in type="EV_KEY" code="BTN_THUMBR"/>
 		<out type="EV_KEY" code="KEY_3"/>
-	</remap>
-	<remap>
+	</emulation>
+	<emulation>
 		<in type="EV_KEY" code="BTN_SELECT"/>
 		<out type="EV_ABS" code="ABS_X" trigger="-128"/>
-	</remap>
-	<remap>
+	</emulation>
+	<emulation>
 		<in type="EV_KEY" code="BTN_START"/>
 		<out type="EV_ABS" code="ABS_X" trigger="128"/>
-	</remap>
-	<remap>
+	</emulation>
+	<emulation>
 		<in type="EV_KEY" code="BTN_MODE"/>
 		<out type="EV_KEY" code="KEY_Y"/>
-	</remap>
-	<remap>
+	</emulation>
+	<emulation>
 		<in type="EV_KEY" code="KEY_A"/>
 		<out type="EV_KEY" code="KEY_A"/>
-	</remap>
-</remaps>
+	</emulation>
+</emulations>
