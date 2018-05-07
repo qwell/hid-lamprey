@@ -60,7 +60,7 @@ namespace hidlamprey {
 			// 
 			this->treeView1->Location = System::Drawing::Point(12, 12);
 			this->treeView1->Name = L"treeView1";
-			this->treeView1->Size = System::Drawing::Size(258, 229);
+			this->treeView1->Size = System::Drawing::Size(258, 289);
 			this->treeView1->TabIndex = 1;
 			this->treeView1->AfterSelect += gcnew System::Windows::Forms::TreeViewEventHandler(this, &formSettings::treeView1_AfterSelect);
 			// 
@@ -68,10 +68,14 @@ namespace hidlamprey {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(777, 253);
+			this->ClientSize = System::Drawing::Size(777, 313);
 			this->Controls->Add(this->treeView1);
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
 			this->Name = L"formSettings";
-			this->Text = L"formSettings";
+			this->ShowIcon = false;
+			this->ShowInTaskbar = false;
+			this->Text = L"Settings";
 			this->Load += gcnew System::EventHandler(this, &formSettings::formSettings_Load);
 			this->ResumeLayout(false);
 
