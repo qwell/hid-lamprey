@@ -51,6 +51,7 @@ struct button_trigger_out {
 struct input_mapping {
 	char *device;
 	char *rawname;
+	bool builtin;
 	int maptype;
 	int mapcode;
 	int mapvalue;
@@ -92,11 +93,13 @@ struct device {
 struct codelookup_code {
 	char *codestr;
 	uint16_t code;
+	char *description;
 };
 
 struct codelookup {
 	char *typestr;
 	uint8_t type;
+	char *description;
 	struct codelookup_code codes[1024];
 };
 extern struct codelookup codelookups[];

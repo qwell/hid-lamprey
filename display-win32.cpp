@@ -51,3 +51,7 @@ void hl_display_win32_output_controller(struct controller *controller) {
 
 	formMain::Instance()->output_controller(controller);
 }
+
+void hl_display_win32_output_raw(const char *device, const char *rawname, int value) {
+	formMain::Instance()->output_raw(device, rawname, value);
+}

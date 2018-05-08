@@ -108,6 +108,7 @@ void settings_xml_load_mappings(xmlXPathContext *context) {
 
 				dinput_mapping = (struct input_mapping *)malloc(sizeof(struct input_mapping));
 				dinput_mapping->mapvalue = 0;
+				dinput_mapping->builtin = false;
 				dinput_mapping->device = strdup((char *)device);
 				dinput_mapping->rawname = strdup((char *)rawname);
 				dinput_mapping->maptype = button_code->type;

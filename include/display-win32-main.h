@@ -27,6 +27,7 @@ namespace hidlamprey {
 		}
 
 		void formMain::output_controller(struct controller *controller);
+		void formMain::output_raw(const char *device, const char *rawname, int value);
 		void formMain::loadSkinImages(char *skin_name, char *skin_background);
 
 	protected:
@@ -56,6 +57,7 @@ namespace hidlamprey {
 		struct controller *controller;
 		struct hl_skin *skinActive;
 		struct hl_skin_background *skinActiveBackground;
+		Form ^settings;
 
 		array<System::Windows::Forms::PictureBox^>^ skinButtons;
 		array<System::Windows::Forms::PictureBox^>^ skinAxes;
@@ -159,22 +161,10 @@ namespace hidlamprey {
 
 		}
 #pragma endregion
-	private: System::Void formMain_Load(System::Object^  sender, System::EventArgs^  e) {
-		this->DoubleBuffered = true;
-	}
-
-	private: System::Void formMain_Closed(System::Object^ sender, System::EventArgs^ e) {
-	}
-
-	private: System::Void formMain_Shown(System::Object^ sender, System::EventArgs^ e) {
-		this->loadSkinImages(hl_settings->skin->name, hl_settings->skin->background);
-	}
-	private: System::Void formMain_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
-		if (e->Button == System::Windows::Forms::MouseButtons::Left) {
-			const int HT_CAPTION = 2;
-			ReleaseCapture();
-			SendMessage(static_cast<HWND>(this->Handle.ToPointer()), WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-		}
-	}
+		private:
+			System::Void formMain_Load(System::Object^  sender, System::EventArgs^  e);
+			System::Void formMain_Closed(System::Object^ sender, System::EventArgs^ e);
+			System::Void formMain_Shown(System::Object^ sender, System::EventArgs^ e);
+			System::Void formMain_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 };
 }

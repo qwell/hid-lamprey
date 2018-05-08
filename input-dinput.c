@@ -172,6 +172,7 @@ void hl_input_dinput_init() {
 			dinput_mapping = (struct input_mapping *)malloc(sizeof(struct input_mapping));
 			dinput_mapping->device = device;
 			dinput_mapping->rawname = strdup(rawname);
+			dinput_mapping->builtin = true;
 			dinput_mapping->maptype = dinput_default_keymap->maptype;
 			dinput_mapping->mapcode = dinput_default_keymap->mapcode;
 			dinput_mapping->mapvalue = 0;

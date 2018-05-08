@@ -80,8 +80,26 @@ System::Void formMain::tsmiExit_Click(System::Object^ sender, System::EventArgs^
 	this->Close();
 }
 System::Void formMain::tmsiSettings_Click(System::Object^  sender, System::EventArgs^  e) {
-	Form ^settings = gcnew formSettings(this);
 	settings->ShowDialog();
+}
+System::Void formMain::formMain_Load(System::Object^  sender, System::EventArgs^  e) {
+	this->DoubleBuffered = true;
+
+	settings = gcnew formSettings(this);
+}
+
+System::Void formMain::formMain_Closed(System::Object^ sender, System::EventArgs^ e) {
+}
+
+System::Void formMain::formMain_Shown(System::Object^ sender, System::EventArgs^ e) {
+	this->loadSkinImages(hl_settings->skin->name, hl_settings->skin->background);
+}
+System::Void formMain::formMain_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+	if (e->Button == System::Windows::Forms::MouseButtons::Left) {
+		const int HT_CAPTION = 2;
+		ReleaseCapture();
+		SendMessage(static_cast<HWND>(this->Handle.ToPointer()), WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+	}
 }
 
 void formMain::refreshImage() {
@@ -103,6 +121,10 @@ void formMain::output_controller(struct controller *c) {
 	else {
 		this->refreshImage();
 	}
+}
+
+void formMain::output_raw(const char *device, const char *rawname, int value) {
+	((formSettings ^)settings)->output_raw(device, rawname, value);
 }
 
 void formMain::loadSkinImages(char *skin_name, char *skin_background) {
