@@ -128,7 +128,9 @@ void formMain::output_raw(const char *device, const char *rawname, int value) {
 		return;
 	}
 
-	((formSettings ^)settings)->output_raw(gcnew String(device), gcnew String(rawname), Int16(value));
+	if (settings->Visible) {
+		((formSettings ^)settings)->output_raw(gcnew String(device), gcnew String(rawname), Int16(value));
+	}
 }
 
 void formMain::loadSkinImages(char *skin_name, char *skin_background) {

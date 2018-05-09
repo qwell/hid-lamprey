@@ -49,8 +49,11 @@ void formSettings::update_mapping(String ^strDevice, String ^strButtonName, IntP
 	dinput_mapping->builtin = false;
 	dinput_mapping->device = strdup((char *)device);
 	dinput_mapping->rawname = strdup((char *)rawname);
-	dinput_mapping->maptype = button_code->type;
-	dinput_mapping->mapcode = button_code->code;
+	if (button_code) {
+		/* We shouldn't have gotten here, but compensate anyways. */
+		dinput_mapping->maptype = button_code->type;
+		dinput_mapping->mapcode = button_code->code;
+	}
 
 	input_mappings = (struct input_mapping **)realloc(input_mappings, (input_mapping_count + 1) * sizeof(*input_mappings));
 	input_mappings[input_mapping_count++] = dinput_mapping;
@@ -86,6 +89,7 @@ void formSettings::output_raw(String ^device, String ^rawname, Int16 value) {
 		nodeButton->ForeColor = Color::Red;
 
 		nodeDevice->Nodes->Add(nodeButton);
+		nodeDevice->Expand();
 
 		if (!nodeDevice->TreeView) {
 			tvMappings->Nodes->Add(nodeDevice);
@@ -134,7 +138,7 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 							struct button_code *button = (struct button_code *)calloc(1, sizeof(*button));
 
 							char text[256];
-							snprintf(text, sizeof(text), "%s  =  %s", input_mappings[i]->rawname, code.description ? code.description : code.codestr);
+							snprintf(text, sizeof(text), "%s  |  %s", input_mappings[i]->rawname, code.description ? code.description : code.codestr);
 
 							TreeNode ^nodeButton = gcnew TreeNode(gcnew String(text));
 
@@ -266,7 +270,7 @@ System::Void formSettings::tvMappings_DragDrop(System::Object^  sender, System::
 		if (nodeDest && nodeDest->Level == 1) {
 			TreeNode ^nodeLink = (TreeNode ^)e->Data->GetData("System.Windows.Forms.TreeNode");
 			nodeDest->Tag = nodeLink->Tag;
-			nodeDest->Text = nodeDest->Name + "  =  " + nodeLink->Text;
+			nodeDest->Text = nodeDest->Name + "  |  " + nodeLink->Text;
 			nodeDest->ForeColor = Color::Green;
 
 			this->update_mapping(nodeDest->Parent->Name, nodeDest->Name, (IntPtr)nodeDest->Tag);
@@ -279,6 +283,6 @@ System::Void formSettings::tvMappings_NodeMouseDoubleClick(System::Object^  send
 
 		e->Node->Tag = nullptr;
 		e->Node->Text = e->Node->Name;
-		e->Node->ForeColor = Color::Red;
+		e->Node->Remove();
 	}
 }
