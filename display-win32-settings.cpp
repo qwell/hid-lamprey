@@ -71,6 +71,13 @@ void formSettings::output_raw(String ^device, String ^rawname, Int16 value) {
 
 				for (int j = 0; j < nodeDevice->Nodes->Count; j++) {
 					if (nodeDevice->Nodes[j]->Name == rawname) {
+						if (value != 0) {
+							nodeDevice->Nodes[j]->ForeColor = Color::Gold;
+						} else if (nodeDevice->Nodes[j]->Name == nodeDevice->Nodes[j]->Text) {
+							nodeDevice->Nodes[j]->ForeColor = Color::Red;
+						} else {
+							nodeDevice->Nodes[j]->ForeColor = Color::Green;
+						}
 						return;
 					}
 				}

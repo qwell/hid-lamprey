@@ -124,10 +124,6 @@ void formMain::output_controller(struct controller *c) {
 }
 
 void formMain::output_raw(const char *device, const char *rawname, int value) {
-	if (!value) {
-		return;
-	}
-
 	if (settings->Visible) {
 		((formSettings ^)settings)->output_raw(gcnew String(device), gcnew String(rawname), Int16(value));
 	}

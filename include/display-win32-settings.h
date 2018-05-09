@@ -55,6 +55,7 @@ namespace hidlamprey {
 
 	private:
 		formMain ^ formMain;
+
 	private: System::ComponentModel::IContainer^  components;
 
 
@@ -141,12 +142,12 @@ namespace hidlamprey {
 			this->tabMappings->Padding = System::Windows::Forms::Padding(3);
 			this->tabMappings->Size = System::Drawing::Size(739, 476);
 			this->tabMappings->TabIndex = 1;
-			this->tabMappings->Text = L"Input Mappings (Not Fully Implemented)";
+			this->tabMappings->Text = L"Input Mappings";
 			this->tabMappings->UseVisualStyleBackColor = true;
 			// 
 			// toolTip1
 			// 
-			this->toolTip1->AutoPopDelay = 5000;
+			this->toolTip1->AutoPopDelay = 3000;
 			this->toolTip1->InitialDelay = 500;
 			this->toolTip1->ReshowDelay = 100;
 			// 
