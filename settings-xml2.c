@@ -374,8 +374,7 @@ void hl_settings_xml_load() {
 	if (!(doc = xmlParseFile(settings_xml_file))) {
 		printf("Settings file '%s' is missing or invalid.\n", settings_xml_file);
 		return;
-	}
-	else {
+	} else {
 		if (settings_xml_verify(doc, settings_xml_file, settings_xsd_file)) {
 			xmlXPathContext *context;
 
@@ -387,7 +386,7 @@ void hl_settings_xml_load() {
 
 			settings_xml_load_settings(context);
 
-			xmlFree(context);
+			xmlXPathFreeContext(context);
 		}
 		xmlFreeDoc(doc);
 
@@ -411,7 +410,7 @@ void hl_settings_xml_load() {
 
 			settings_xml_load_mappings(context);
 
-			xmlFree(context);
+			xmlXPathFreeContext(context);
 		/*
 		}
 		*/
@@ -435,7 +434,7 @@ void hl_settings_xml_load() {
 
 			settings_xml_load_shortcuts(context);
 
-			xmlFree(context);
+			xmlXPathFreeContext(context);
 		}
 		xmlFreeDoc(doc);
 
@@ -457,7 +456,7 @@ void hl_settings_xml_load() {
 
 			settings_xml_load_emulations(context);
 
-			xmlFree(context);
+			xmlXPathFreeContext(context);
 		}
 		xmlFreeDoc(doc);
 

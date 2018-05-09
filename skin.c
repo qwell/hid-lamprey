@@ -396,7 +396,7 @@ void hl_skin_load(char *skin_name, char *background_name) {
 				xmlXPathFreeObject(result);
 			}
 
-			xmlFree(context);
+			xmlXPathFreeContext(context);
 			xmlFreeDoc(doc);
 
 			printf("Skin file '%s' checked.\n", skin_list[z]);
