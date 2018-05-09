@@ -124,7 +124,11 @@ void formMain::output_controller(struct controller *c) {
 }
 
 void formMain::output_raw(const char *device, const char *rawname, int value) {
-	((formSettings ^)settings)->output_raw(device, rawname, value);
+	if (!value) {
+		return;
+	}
+
+	((formSettings ^)settings)->output_raw(gcnew String(device), gcnew String(rawname), Int16(value));
 }
 
 void formMain::loadSkinImages(char *skin_name, char *skin_background) {

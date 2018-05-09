@@ -93,6 +93,7 @@ struct device {
 struct codelookup_code {
 	char *codestr;
 	uint16_t code;
+	enum code_category category;
 	char *description;
 };
 

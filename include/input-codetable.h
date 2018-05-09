@@ -7,240 +7,251 @@
  * (at your option) any later version.
  */
 
+enum code_category {
+	UnknownCategory = 0,
+	GamepadButton,
+	MouseButton,
+	KeyboardKey,
+	KeyboardNumpadKey,
+	KeyboardMiscKey,
+	AbsoluteAxis,
+	RelativeAxis,
+};
+
 #define CODETABLE \
 	{ "EV_KEY", EV_KEY, "Button", {\
-		{ "BTN_SOUTH", BTN_SOUTH, "Button South (A)" },\
-		{ "BTN_EAST", BTN_EAST, "Button East (B)" },\
-		{ "BTN_C", BTN_C, "Button C" },\
-		{ "BTN_NORTH", BTN_NORTH, "Button North (X)" },\
-		{ "BTN_WEST", BTN_WEST, "Button West (Y)" },\
-		{ "BTN_Z", BTN_Z, "Button Z" },\
-		{ "BTN_TL", BTN_TL, "Button L1" },\
-		{ "BTN_TR", BTN_TR, "Button R1" },\
-		{ "BTN_TL2", BTN_TL2, "Button L2 (digital)" },\
-		{ "BTN_TR2", BTN_TR2, "Button R2 (digital)" },\
-		{ "BTN_SELECT", BTN_SELECT, "Button Select" },\
-		{ "BTN_START", BTN_START, "Button Start" },\
-		{ "BTN_MODE", BTN_MODE, "Button Menu" },\
-		{ "BTN_THUMBL", BTN_THUMBL, "Button Thumb Left" },\
-		{ "BTN_THUMBR", BTN_THUMBR, "Button Thumb Right" },\
-		{ "BTN_DPAD_UP", BTN_DPAD_UP, "D-pad Up" },\
-		{ "BTN_DPAD_DOWN", BTN_DPAD_DOWN, "D-pad Down" },\
-		{ "BTN_DPAD_LEFT", BTN_DPAD_LEFT, "D-pad Left" },\
-		{ "BTN_DPAD_RIGHT", BTN_DPAD_RIGHT, "D-pad Right" },\
-		{ "BTN_LEFT", BTN_LEFT, "Mouse Left" },\
-		{ "BTN_RIGHT", BTN_RIGHT, "Mouse Right" },\
-		{ "BTN_MIDDLE", BTN_MIDDLE, "Mouse Middle" },\
-		{ "BTN_SIDE", BTN_SIDE, "Mouse 4" },\
-		{ "BTN_EXTRA", BTN_EXTRA, "Mouse 5" },\
-		{ "BTN_FORWARD", BTN_FORWARD, "Mouse Forward" },\
-		{ "BTN_BACK", BTN_BACK, "Mouse Back" },\
-		{ "BTN_TASK", BTN_TASK, "Mouse Task" },\
-		{ "KEY_F1", KEY_F1, "F1" },\
-		{ "KEY_F2", KEY_F2, "F2" },\
-		{ "KEY_F3", KEY_F3, "F3" },\
-		{ "KEY_F4", KEY_F4, "F4" },\
-		{ "KEY_F5", KEY_F5, "F5" },\
-		{ "KEY_F6", KEY_F6, "F6" },\
-		{ "KEY_F7", KEY_F7, "F7" },\
-		{ "KEY_F8", KEY_F8, "F8" },\
-		{ "KEY_F9", KEY_F9, "F9" },\
-		{ "KEY_F10", KEY_F10, "F10" },\
-		{ "KEY_F11", KEY_F11, "F11" },\
-		{ "KEY_F12", KEY_F12, "F12" },\
-		{ "KEY_0", KEY_0, "0" },\
-		{ "KEY_1", KEY_1, "1" },\
-		{ "KEY_2", KEY_2, "2" },\
-		{ "KEY_3", KEY_3, "3" },\
-		{ "KEY_4", KEY_4, "4" },\
-		{ "KEY_5", KEY_5, "5" },\
-		{ "KEY_6", KEY_6, "6" },\
-		{ "KEY_7", KEY_7, "7" },\
-		{ "KEY_8", KEY_8, "8" },\
-		{ "KEY_9", KEY_9, "9" },\
-		{ "KEY_KP0", KEY_KP0, "Keypad 0" },\
-		{ "KEY_KP1", KEY_KP1, "Keypad 1" },\
-		{ "KEY_KP2", KEY_KP2, "Keypad 2" },\
-		{ "KEY_KP3", KEY_KP3, "Keypad 3" },\
-		{ "KEY_KP4", KEY_KP4, "Keypad 4" },\
-		{ "KEY_KP5", KEY_KP5, "Keypad 5" },\
-		{ "KEY_KP6", KEY_KP6, "Keypad 6" },\
-		{ "KEY_KP7", KEY_KP7, "Keypad 7" },\
-		{ "KEY_KP8", KEY_KP8, "Keypad 8" },\
-		{ "KEY_KP9", KEY_KP9, "Keypad 9" },\
-		{ "KEY_KPMINUS", KEY_KPMINUS, "Keypad -" },\
-		{ "KEY_KPPLUS", KEY_KPPLUS, "Keypad  +" },\
-		{ "KEY_KPSLASH", KEY_KPSLASH, "Keypad /" }, \
-		{ "KEY_KPASTERISK", KEY_KPASTERISK, "Keypad *" },\
-		{ "KEY_KPDOT", KEY_KPDOT, "Keypad ." },\
-		{ "KEY_KPEQUAL", KEY_KPEQUAL, "Keypad =" },\
-		{ "KEY_KPCOMMA", KEY_KPCOMMA, "Keypad ," }, \
-		{ "KEY_KPLEFTPAREN", KEY_KPLEFTPAREN, "Keypad (" },\
-		{ "KEY_KPRIGHTPAREN", KEY_KPRIGHTPAREN, "Keypad )" },\
-		{ "KEY_KPENTER", KEY_KPENTER, "Keypad Enter" }, \
-		{ "KEY_A", KEY_A, "A" },\
-		{ "KEY_B", KEY_B, "B" },\
-		{ "KEY_C", KEY_C, "C" },\
-		{ "KEY_D", KEY_D, "D" },\
-		{ "KEY_E", KEY_E, "E" },\
-		{ "KEY_F", KEY_F, "F" },\
-		{ "KEY_G", KEY_G, "G" },\
-		{ "KEY_H", KEY_H, "H" },\
-		{ "KEY_I", KEY_I, "I" },\
-		{ "KEY_J", KEY_J, "J" },\
-		{ "KEY_K", KEY_K, "K" },\
-		{ "KEY_L", KEY_L, "L" },\
-		{ "KEY_M", KEY_M, "M" },\
-		{ "KEY_N", KEY_N, "N" },\
-		{ "KEY_O", KEY_O, "O" },\
-		{ "KEY_P", KEY_P, "P" },\
-		{ "KEY_Q", KEY_Q, "Q" },\
-		{ "KEY_R", KEY_R, "R" },\
-		{ "KEY_S", KEY_S, "S" },\
-		{ "KEY_T", KEY_T, "T" },\
-		{ "KEY_U", KEY_U, "U" },\
-		{ "KEY_V", KEY_V, "V" },\
-		{ "KEY_W", KEY_W, "W" },\
-		{ "KEY_X", KEY_X, "X" }, \
-		{ "KEY_Y", KEY_Y, "Y" },\
-		{ "KEY_Z", KEY_Z, "Z" },\
-		{ "KEY_ESC", KEY_ESC, "Escape" },\
-		{ "KEY_GRAVE", KEY_GRAVE, "`" },\
-		{ "KEY_MINUS", KEY_MINUS, "-" },\
-		{ "KEY_EQUAL", KEY_EQUAL, "=" },\
-		{ "KEY_BACKSPACE", KEY_BACKSPACE, "Backspace" },\
-		{ "KEY_TAB", KEY_TAB, "Tab" },\
-		{ "KEY_LEFTBRACE", KEY_LEFTBRACE, "[" },\
-		{ "KEY_RIGHTBRACE", KEY_RIGHTBRACE, "]" },\
-		{ "KEY_BACKSLASH", KEY_BACKSLASH, "\\" },\
-		{ "KEY_CAPSLOCK", KEY_CAPSLOCK, "Capslock" },\
-		{ "KEY_SEMICOLON", KEY_SEMICOLON, ";" },\
-		{ "KEY_APOSTROPHE", KEY_APOSTROPHE, "'" },\
-		{ "KEY_ENTER", KEY_ENTER, "Enter" },\
-		{ "KEY_LEFTSHIFT", KEY_LEFTSHIFT, "Left Shift" },\
-		{ "KEY_COMMA", KEY_COMMA, "," },\
-		{ "KEY_DOT", KEY_DOT, "." },\
-		{ "KEY_SLASH", KEY_SLASH, "/" },\
-		{ "KEY_RIGHTSHIFT", KEY_RIGHTSHIFT, "Right Shift" },\
-		{ "KEY_LEFTCTRL", KEY_LEFTCTRL, "Left Ctrl" },\
-		{ "KEY_LEFTMETA", KEY_LEFTMETA, "Left Meta" },\
-		{ "KEY_LEFTALT", KEY_LEFTALT, "Left Alt" },\
-		{ "KEY_SPACE", KEY_SPACE, "Space" },\
-		{ "KEY_RIGHTALT", KEY_RIGHTALT, "Right Alt" }, \
-		{ "KEY_RIGHTMETA", KEY_RIGHTMETA, "Right Meta" },\
-		{ "KEY_RIGHTCTRL", KEY_RIGHTCTRL, "Right Ctrl" }, \
-		{ "KEY_INSERT", KEY_INSERT, "Insert" }, \
-		{ "KEY_DELETE", KEY_DELETE, "Delete" }, \
-		{ "KEY_HOME", KEY_HOME, "Home" }, \
-		{ "KEY_END", KEY_END, "End" }, \
-		{ "KEY_PAGEUP", KEY_PAGEUP, "PgUp" }, \
-		{ "KEY_PAGEDOWN", KEY_PAGEDOWN, "PgDn" }, \
-		{ "KEY_UP", KEY_UP, "Up Arrow" }, \
-		{ "KEY_LEFT", KEY_LEFT, "Left Arrow" }, \
-		{ "KEY_RIGHT", KEY_RIGHT, "Right Arrow" }, \
-		{ "KEY_DOWN", KEY_DOWN, "Down Arrow" }, \
-		{ "KEY_NUMLOCK", KEY_NUMLOCK, "Numlock" },\
-		{ "KEY_SCROLLLOCK", KEY_SCROLLLOCK, "Scroll Lock" }, \
-		{ "KEY_SYSRQ", KEY_SYSRQ, "SysRq" }, \
-		{ "KEY_MUTE", KEY_MUTE, "Mute" },\
-		{ "KEY_VOLUMEDOWN", KEY_VOLUMEDOWN, "Vol Down" },\
-		{ "KEY_VOLUMEUP", KEY_VOLUMEUP, "Vol Up" },\
-		{ "KEY_POWER", KEY_POWER, "Power" },\
-		{ "KEY_PAUSE", KEY_PAUSE, "Pause" },\
-		{ "KEY_COMPOSE", KEY_COMPOSE, "Compose" },\
-		{ "KEY_STOP", KEY_STOP, "Stop" },\
-		{ "KEY_AGAIN", KEY_AGAIN },\
-		{ "KEY_PROPS", KEY_PROPS },\
-		{ "KEY_UNDO", KEY_UNDO, "Undo" },\
-		{ "KEY_FRONT", KEY_FRONT },\
-		{ "KEY_COPY", KEY_COPY, "Copy" },\
-		{ "KEY_OPEN", KEY_OPEN, "Open" },\
-		{ "KEY_PASTE", KEY_PASTE, "Paste" },\
-		{ "KEY_FIND", KEY_FIND, "Find" },\
-		{ "KEY_CUT", KEY_CUT, "Cut" },\
-		{ "KEY_HELP", KEY_HELP, "Help" },\
-		{ "KEY_CALC", KEY_CALC, "Calc" },\
-		{ "KEY_SLEEP", KEY_SLEEP, "Sleep" },\
-		{ "KEY_WWW", KEY_WWW, "WWW" },\
-		{ "KEY_COFFEE", KEY_COFFEE },\
-		{ "KEY_BACK", KEY_BACK, "Back" },\
-		{ "KEY_FORWARD", KEY_FORWARD, "Forward" },\
-		{ "KEY_EJECTCD", KEY_EJECTCD, "Eject" },\
-		{ "KEY_NEXTSONG", KEY_NEXTSONG, "Next" },\
-		{ "KEY_PLAYPAUSE", KEY_PLAYPAUSE, "Play/Pause" },\
-		{ "KEY_PREVIOUSSONG", KEY_PREVIOUSSONG, "Prev" },\
-		{ "KEY_STOPCD", KEY_STOPCD },\
-		{ "KEY_REFRESH", KEY_REFRESH, "Refresh" },\
-		{ "KEY_EDIT", KEY_EDIT, "Edit" },\
-		{ "KEY_SCROLLUP", KEY_SCROLLUP },\
-		{ "KEY_SCROLLDOWN", KEY_SCROLLDOWN },\
-		{ "KEY_F13", KEY_F13, "F13" },\
-		{ "KEY_F14", KEY_F14, "F14" },\
-		{ "KEY_F15", KEY_F15, "F15" },\
-		{ "KEY_F16", KEY_F16, "F16" },\
-		{ "KEY_F17", KEY_F17, "F17" },\
-		{ "KEY_F18", KEY_F18, "F18" },\
-		{ "KEY_F19", KEY_F19, "F19" },\
-		{ "KEY_F20", KEY_F20, "F20" },\
-		{ "KEY_F21", KEY_F21, "F21" },\
-		{ "KEY_F22", KEY_F22, "F22" },\
-		{ "KEY_F23", KEY_F23, "F23" },\
-		{ "KEY_F24", KEY_F24, "F24" },\
-		{ "KEY_WAKEUP", KEY_WAKEUP, "Wakeup" },\
-		{ "KEY_FILE", KEY_FILE, "File" },\
-		{ "KEY_MAIL", KEY_MAIL, "Mail" },\
-		{ "KEY_BOOKMARKS", KEY_BOOKMARKS, "Bookmarks" },\
-		{ "KEY_CONFIG", KEY_CONFIG, "Config" },\
-		{ "KEY_HOMEPAGE", KEY_HOMEPAGE, "Homepage" },\
-		{ "KEY_SEARCH", KEY_SEARCH, "Search" },\
-		{ "KEY_WORDPROCESSOR", KEY_WORDPROCESSOR },\
-		{ "KEY_SPREADSHEET", KEY_SPREADSHEET },\
-		{ "KEY_PRESENTATION", KEY_PRESENTATION },\
-		{ "KEY_KPJPCOMMA", KEY_KPJPCOMMA }, \
-		{ "KEY_ZENKAKUHANKAKU", KEY_ZENKAKUHANKAKU }, \
-		{ "KEY_102ND", KEY_102ND }, \
-		{ "KEY_RO", KEY_RO }, \
-		{ "KEY_KATAKANA", KEY_KATAKANA }, \
-		{ "KEY_HIRAGANA", KEY_HIRAGANA }, \
-		{ "KEY_HENKAN", KEY_HENKAN }, \
-		{ "KEY_KATAKANAHIRAGANA", KEY_KATAKANAHIRAGANA }, \
-		{ "KEY_MUHENKAN", KEY_MUHENKAN }, \
-		{ "KEY_HANGEUL", KEY_HANGEUL }, \
-		{ "KEY_HANJA", KEY_HANJA }, \
-		{ "KEY_YEN", KEY_YEN }, \
+		{ "BTN_SOUTH", BTN_SOUTH, GamepadButton, "Button South (A)" },\
+		{ "BTN_EAST", BTN_EAST, GamepadButton, "Button East (B)" },\
+		{ "BTN_C", BTN_C, GamepadButton, "Button C" },\
+		{ "BTN_NORTH", BTN_NORTH, GamepadButton, "Button North (X)" },\
+		{ "BTN_WEST", BTN_WEST, GamepadButton, "Button West (Y)" },\
+		{ "BTN_Z", BTN_Z, GamepadButton, "Button Z" },\
+		{ "BTN_TL", BTN_TL, GamepadButton, "Button L1" },\
+		{ "BTN_TR", BTN_TR, GamepadButton, "Button R1" },\
+		{ "BTN_TL2", BTN_TL2, GamepadButton, "Button L2 (digital)" },\
+		{ "BTN_TR2", BTN_TR2, GamepadButton, "Button R2 (digital)" },\
+		{ "BTN_SELECT", BTN_SELECT, GamepadButton, "Button Select" },\
+		{ "BTN_START", BTN_START, GamepadButton, "Button Start" },\
+		{ "BTN_MODE", BTN_MODE, GamepadButton, "Button Menu" },\
+		{ "BTN_THUMBL", BTN_THUMBL, GamepadButton, "Button Thumb Left" },\
+		{ "BTN_THUMBR", BTN_THUMBR, GamepadButton, "Button Thumb Right" },\
+		{ "BTN_DPAD_UP", BTN_DPAD_UP, GamepadButton, "D-pad Up" },\
+		{ "BTN_DPAD_DOWN", BTN_DPAD_DOWN, GamepadButton, "D-pad Down" },\
+		{ "BTN_DPAD_LEFT", BTN_DPAD_LEFT, GamepadButton, "D-pad Left" },\
+		{ "BTN_DPAD_RIGHT", BTN_DPAD_RIGHT, GamepadButton, "D-pad Right" },\
+		{ "BTN_LEFT", BTN_LEFT, MouseButton, "Mouse Left" },\
+		{ "BTN_RIGHT", BTN_RIGHT, MouseButton, "Mouse Right" },\
+		{ "BTN_MIDDLE", BTN_MIDDLE, MouseButton, "Mouse Middle" },\
+		{ "BTN_SIDE", BTN_SIDE, MouseButton, "Mouse 4" },\
+		{ "BTN_EXTRA", BTN_EXTRA, MouseButton, "Mouse 5" },\
+		{ "BTN_FORWARD", BTN_FORWARD, MouseButton, "Mouse Forward" },\
+		{ "BTN_BACK", BTN_BACK, MouseButton, "Mouse Back" },\
+		{ "BTN_TASK", BTN_TASK, MouseButton, "Mouse Task" },\
+		{ "KEY_0", KEY_0, KeyboardKey, "0" },\
+		{ "KEY_1", KEY_1, KeyboardKey, "1" },\
+		{ "KEY_2", KEY_2, KeyboardKey, "2" },\
+		{ "KEY_3", KEY_3, KeyboardKey, "3" },\
+		{ "KEY_4", KEY_4, KeyboardKey, "4" },\
+		{ "KEY_5", KEY_5, KeyboardKey, "5" },\
+		{ "KEY_6", KEY_6, KeyboardKey, "6" },\
+		{ "KEY_7", KEY_7, KeyboardKey, "7" },\
+		{ "KEY_8", KEY_8, KeyboardKey, "8" },\
+		{ "KEY_9", KEY_9, KeyboardKey, "9" },\
+		{ "KEY_A", KEY_A, KeyboardKey, "A" },\
+		{ "KEY_B", KEY_B, KeyboardKey, "B" },\
+		{ "KEY_C", KEY_C, KeyboardKey, "C" },\
+		{ "KEY_D", KEY_D, KeyboardKey, "D" },\
+		{ "KEY_E", KEY_E, KeyboardKey, "E" },\
+		{ "KEY_F", KEY_F, KeyboardKey, "F" },\
+		{ "KEY_G", KEY_G, KeyboardKey, "G" },\
+		{ "KEY_H", KEY_H, KeyboardKey, "H" },\
+		{ "KEY_I", KEY_I, KeyboardKey, "I" },\
+		{ "KEY_J", KEY_J, KeyboardKey, "J" },\
+		{ "KEY_K", KEY_K, KeyboardKey, "K" },\
+		{ "KEY_L", KEY_L, KeyboardKey, "L" },\
+		{ "KEY_M", KEY_M, KeyboardKey, "M" },\
+		{ "KEY_N", KEY_N, KeyboardKey, "N" },\
+		{ "KEY_O", KEY_O, KeyboardKey, "O" },\
+		{ "KEY_P", KEY_P, KeyboardKey, "P" },\
+		{ "KEY_Q", KEY_Q, KeyboardKey, "Q" },\
+		{ "KEY_R", KEY_R, KeyboardKey, "R" },\
+		{ "KEY_S", KEY_S, KeyboardKey, "S" },\
+		{ "KEY_T", KEY_T, KeyboardKey, "T" },\
+		{ "KEY_U", KEY_U, KeyboardKey, "U" },\
+		{ "KEY_V", KEY_V, KeyboardKey, "V" },\
+		{ "KEY_W", KEY_W, KeyboardKey, "W" },\
+		{ "KEY_X", KEY_X, KeyboardKey, "X" }, \
+		{ "KEY_Y", KEY_Y, KeyboardKey, "Y" },\
+		{ "KEY_Z", KEY_Z, KeyboardKey, "Z" },\
+		{ "KEY_F1", KEY_F1, KeyboardKey, "F1" },\
+		{ "KEY_F2", KEY_F2, KeyboardKey, "F2" },\
+		{ "KEY_F3", KEY_F3, KeyboardKey, "F3" },\
+		{ "KEY_F4", KEY_F4, KeyboardKey, "F4" },\
+		{ "KEY_F5", KEY_F5, KeyboardKey, "F5" },\
+		{ "KEY_F6", KEY_F6, KeyboardKey, "F6" },\
+		{ "KEY_F7", KEY_F7, KeyboardKey, "F7" },\
+		{ "KEY_F8", KEY_F8, KeyboardKey, "F8" },\
+		{ "KEY_F9", KEY_F9, KeyboardKey, "F9" },\
+		{ "KEY_F10", KEY_F10, KeyboardKey, "F10" },\
+		{ "KEY_F11", KEY_F11, KeyboardKey, "F11" },\
+		{ "KEY_F12", KEY_F12, KeyboardKey, "F12" },\
+		{ "KEY_F13", KEY_F13, KeyboardKey, "F13" },\
+		{ "KEY_F14", KEY_F14, KeyboardKey, "F14" },\
+		{ "KEY_F15", KEY_F15, KeyboardKey, "F15" },\
+		{ "KEY_F16", KEY_F16, KeyboardKey, "F16" },\
+		{ "KEY_F17", KEY_F17, KeyboardKey, "F17" },\
+		{ "KEY_F18", KEY_F18, KeyboardKey, "F18" },\
+		{ "KEY_F19", KEY_F19, KeyboardKey, "F19" },\
+		{ "KEY_F20", KEY_F20, KeyboardKey, "F20" },\
+		{ "KEY_F21", KEY_F21, KeyboardKey, "F21" },\
+		{ "KEY_F22", KEY_F22, KeyboardKey, "F22" },\
+		{ "KEY_F23", KEY_F23, KeyboardKey, "F23" },\
+		{ "KEY_F24", KEY_F24, KeyboardKey, "F24" },\
+		{ "KEY_KP0", KEY_KP0, KeyboardNumpadKey, "Keypad 0" },\
+		{ "KEY_KP1", KEY_KP1, KeyboardNumpadKey, "Keypad 1" },\
+		{ "KEY_KP2", KEY_KP2, KeyboardNumpadKey, "Keypad 2" },\
+		{ "KEY_KP3", KEY_KP3, KeyboardNumpadKey, "Keypad 3" },\
+		{ "KEY_KP4", KEY_KP4, KeyboardNumpadKey, "Keypad 4" },\
+		{ "KEY_KP5", KEY_KP5, KeyboardNumpadKey, "Keypad 5" },\
+		{ "KEY_KP6", KEY_KP6, KeyboardNumpadKey, "Keypad 6" },\
+		{ "KEY_KP7", KEY_KP7, KeyboardNumpadKey, "Keypad 7" },\
+		{ "KEY_KP8", KEY_KP8, KeyboardNumpadKey, "Keypad 8" },\
+		{ "KEY_KP9", KEY_KP9, KeyboardNumpadKey, "Keypad 9" },\
+		{ "KEY_KPMINUS", KEY_KPMINUS, KeyboardNumpadKey, "Keypad -" },\
+		{ "KEY_KPPLUS", KEY_KPPLUS, KeyboardNumpadKey, "Keypad  +" },\
+		{ "KEY_KPSLASH", KEY_KPSLASH, KeyboardNumpadKey, "Keypad /" }, \
+		{ "KEY_KPASTERISK", KEY_KPASTERISK, KeyboardNumpadKey, "Keypad *" },\
+		{ "KEY_KPDOT", KEY_KPDOT, KeyboardNumpadKey, "Keypad ." },\
+		{ "KEY_KPEQUAL", KEY_KPEQUAL, KeyboardNumpadKey, "Keypad =" },\
+		{ "KEY_KPCOMMA", KEY_KPCOMMA, KeyboardNumpadKey, "Keypad ," }, \
+		{ "KEY_KPLEFTPAREN", KEY_KPLEFTPAREN, KeyboardNumpadKey, "Keypad (" },\
+		{ "KEY_KPRIGHTPAREN", KEY_KPRIGHTPAREN, KeyboardNumpadKey, "Keypad )" },\
+		{ "KEY_KPENTER", KEY_KPENTER, KeyboardNumpadKey, "Keypad Enter" }, \
+		{ "KEY_ESC", KEY_ESC, KeyboardKey, "Escape" },\
+		{ "KEY_GRAVE", KEY_GRAVE, KeyboardKey, "`" },\
+		{ "KEY_MINUS", KEY_MINUS, KeyboardKey, "-" },\
+		{ "KEY_EQUAL", KEY_EQUAL, KeyboardKey, "=" },\
+		{ "KEY_BACKSPACE", KEY_BACKSPACE, KeyboardKey, "Backspace" },\
+		{ "KEY_TAB", KEY_TAB, KeyboardKey, "Tab" },\
+		{ "KEY_LEFTBRACE", KEY_LEFTBRACE, KeyboardKey, "[" },\
+		{ "KEY_RIGHTBRACE", KEY_RIGHTBRACE, KeyboardKey, "]" },\
+		{ "KEY_BACKSLASH", KEY_BACKSLASH, KeyboardKey, "\\" },\
+		{ "KEY_CAPSLOCK", KEY_CAPSLOCK, KeyboardKey, "Capslock" },\
+		{ "KEY_SEMICOLON", KEY_SEMICOLON, KeyboardKey, ";" },\
+		{ "KEY_APOSTROPHE", KEY_APOSTROPHE, KeyboardKey, "'" },\
+		{ "KEY_ENTER", KEY_ENTER, KeyboardKey, "Enter" },\
+		{ "KEY_LEFTSHIFT", KEY_LEFTSHIFT, KeyboardKey, "Left Shift" },\
+		{ "KEY_COMMA", KEY_COMMA, KeyboardKey, "," },\
+		{ "KEY_DOT", KEY_DOT, KeyboardKey, "." },\
+		{ "KEY_SLASH", KEY_SLASH, KeyboardKey, "/" },\
+		{ "KEY_RIGHTSHIFT", KEY_RIGHTSHIFT, KeyboardKey, "Right Shift" },\
+		{ "KEY_LEFTCTRL", KEY_LEFTCTRL, KeyboardKey, "Left Ctrl" },\
+		{ "KEY_LEFTMETA", KEY_LEFTMETA, KeyboardKey, "Left Meta" },\
+		{ "KEY_LEFTALT", KEY_LEFTALT, KeyboardKey, "Left Alt" },\
+		{ "KEY_SPACE", KEY_SPACE, KeyboardKey, "Space" },\
+		{ "KEY_RIGHTALT", KEY_RIGHTALT, KeyboardKey, "Right Alt" }, \
+		{ "KEY_RIGHTMETA", KEY_RIGHTMETA, KeyboardKey, "Right Meta" },\
+		{ "KEY_RIGHTCTRL", KEY_RIGHTCTRL, KeyboardKey, "Right Ctrl" }, \
+		{ "KEY_INSERT", KEY_INSERT, KeyboardKey, "Insert" }, \
+		{ "KEY_DELETE", KEY_DELETE, KeyboardKey, "Delete" }, \
+		{ "KEY_HOME", KEY_HOME, KeyboardKey, "Home" }, \
+		{ "KEY_END", KEY_END, KeyboardKey, "End" }, \
+		{ "KEY_PAGEUP", KEY_PAGEUP, KeyboardKey, "PgUp" }, \
+		{ "KEY_PAGEDOWN", KEY_PAGEDOWN, KeyboardKey, "PgDn" }, \
+		{ "KEY_UP", KEY_UP, KeyboardKey, "Up Arrow" }, \
+		{ "KEY_LEFT", KEY_LEFT, KeyboardKey, "Left Arrow" }, \
+		{ "KEY_RIGHT", KEY_RIGHT, KeyboardKey, "Right Arrow" }, \
+		{ "KEY_DOWN", KEY_DOWN, KeyboardKey, "Down Arrow" }, \
+		{ "KEY_NUMLOCK", KEY_NUMLOCK, KeyboardKey, "Numlock" },\
+		{ "KEY_SCROLLLOCK", KEY_SCROLLLOCK, KeyboardKey, "Scroll Lock" }, \
+		{ "KEY_SYSRQ", KEY_SYSRQ, KeyboardKey, "SysRq" }, \
+		{ "KEY_MUTE", KEY_MUTE, KeyboardKey, "Mute" },\
+		{ "KEY_VOLUMEDOWN", KEY_VOLUMEDOWN, KeyboardKey, "Vol Down" },\
+		{ "KEY_VOLUMEUP", KEY_VOLUMEUP, KeyboardKey, "Vol Up" },\
+		{ "KEY_POWER", KEY_POWER, KeyboardKey, "Power" },\
+		{ "KEY_PAUSE", KEY_PAUSE, KeyboardKey, "Pause" },\
+		{ "KEY_COMPOSE", KEY_COMPOSE, KeyboardKey, "Compose" },\
+		{ "KEY_STOP", KEY_STOP, KeyboardKey, "Stop" },\
+		{ "KEY_AGAIN", KEY_AGAIN, KeyboardKey },\
+		{ "KEY_PROPS", KEY_PROPS, KeyboardKey },\
+		{ "KEY_UNDO", KEY_UNDO, KeyboardKey, "Undo" },\
+		{ "KEY_FRONT", KEY_FRONT, KeyboardKey },\
+		{ "KEY_COPY", KEY_COPY, KeyboardKey, "Copy" },\
+		{ "KEY_OPEN", KEY_OPEN, KeyboardKey, "Open" },\
+		{ "KEY_PASTE", KEY_PASTE, KeyboardKey, "Paste" },\
+		{ "KEY_FIND", KEY_FIND, KeyboardKey, "Find" },\
+		{ "KEY_CUT", KEY_CUT, KeyboardKey, "Cut" },\
+		{ "KEY_HELP", KEY_HELP, KeyboardKey, "Help" },\
+		{ "KEY_CALC", KEY_CALC, KeyboardKey, "Calc" },\
+		{ "KEY_SLEEP", KEY_SLEEP, KeyboardKey, "Sleep" },\
+		{ "KEY_WWW", KEY_WWW, KeyboardKey, "WWW" },\
+		{ "KEY_COFFEE", KEY_COFFEE, KeyboardKey },\
+		{ "KEY_BACK", KEY_BACK, KeyboardKey, "Back" },\
+		{ "KEY_FORWARD", KEY_FORWARD, KeyboardKey, "Forward" },\
+		{ "KEY_EJECTCD", KEY_EJECTCD, KeyboardKey, "Eject" },\
+		{ "KEY_NEXTSONG", KEY_NEXTSONG, KeyboardKey, "Next" },\
+		{ "KEY_PLAYPAUSE", KEY_PLAYPAUSE, KeyboardKey, "Play/Pause" },\
+		{ "KEY_PREVIOUSSONG", KEY_PREVIOUSSONG, KeyboardKey, "Prev" },\
+		{ "KEY_STOPCD", KEY_STOPCD, KeyboardKey },\
+		{ "KEY_REFRESH", KEY_REFRESH, KeyboardKey, "Refresh" },\
+		{ "KEY_EDIT", KEY_EDIT, KeyboardKey, "Edit" },\
+		{ "KEY_SCROLLUP", KEY_SCROLLUP, KeyboardKey },\
+		{ "KEY_SCROLLDOWN", KEY_SCROLLDOWN, KeyboardKey },\
+		{ "KEY_WAKEUP", KEY_WAKEUP, KeyboardKey, "Wakeup" },\
+		{ "KEY_FILE", KEY_FILE, KeyboardKey, "File" },\
+		{ "KEY_MAIL", KEY_MAIL, KeyboardKey, "Mail" },\
+		{ "KEY_BOOKMARKS", KEY_BOOKMARKS, KeyboardKey, "Bookmarks" },\
+		{ "KEY_CONFIG", KEY_CONFIG, KeyboardKey, "Config" },\
+		{ "KEY_HOMEPAGE", KEY_HOMEPAGE, KeyboardKey, "Homepage" },\
+		{ "KEY_SEARCH", KEY_SEARCH, KeyboardKey, "Search" },\
+		{ "KEY_WORDPROCESSOR", KEY_WORDPROCESSOR, KeyboardKey },\
+		{ "KEY_SPREADSHEET", KEY_SPREADSHEET, KeyboardKey },\
+		{ "KEY_PRESENTATION", KEY_PRESENTATION, KeyboardKey },\
+		{ "KEY_KPJPCOMMA", KEY_KPJPCOMMA, KeyboardMiscKey }, \
+		{ "KEY_ZENKAKUHANKAKU", KEY_ZENKAKUHANKAKU, KeyboardMiscKey }, \
+		{ "KEY_102ND", KEY_102ND, KeyboardMiscKey }, \
+		{ "KEY_RO", KEY_RO, KeyboardMiscKey }, \
+		{ "KEY_KATAKANA", KEY_KATAKANA, KeyboardMiscKey }, \
+		{ "KEY_HIRAGANA", KEY_HIRAGANA, KeyboardMiscKey }, \
+		{ "KEY_HENKAN", KEY_HENKAN, KeyboardMiscKey }, \
+		{ "KEY_KATAKANAHIRAGANA", KEY_KATAKANAHIRAGANA, KeyboardMiscKey }, \
+		{ "KEY_MUHENKAN", KEY_MUHENKAN, KeyboardMiscKey }, \
+		{ "KEY_HANGEUL", KEY_HANGEUL, KeyboardMiscKey }, \
+		{ "KEY_HANJA", KEY_HANJA, KeyboardMiscKey }, \
+		{ "KEY_YEN", KEY_YEN, KeyboardMiscKey }, \
 	}},\
 	{ "EV_ABS", EV_ABS, "Absolute Axis", {\
-		{ "ABS_X", ABS_X, "Left X Axis" },\
-		{ "ABS_Y", ABS_Y, "Left Y Axis" },\
-		{ "ABS_Z", ABS_Z, "Left Z Axis" },\
-		{ "ABS_RX", ABS_RX, "Right X Axis" },\
-		{ "ABS_RY", ABS_RY, "Right Y Axis" },\
-		{ "ABS_RZ", ABS_RZ, "Right Z Axis" },\
-		{ "ABS_HAT0X", ABS_HAT0X, "Hat 0 X" },\
-		{ "ABS_HAT0Y", ABS_HAT0Y, "Hat 0 Y" },\
-		{ "ABS_HAT1X", ABS_HAT1X, "Hat 1 X" },\
-		{ "ABS_HAT1Y", ABS_HAT1Y, "Hat 1 Y" },\
-		{ "ABS_HAT2X", ABS_HAT2X, "Hat 2 X" },\
-		{ "ABS_HAT2Y", ABS_HAT2Y, "Hat 2 Y" },\
-		{ "ABS_HAT3X", ABS_HAT3X, "Hat 3 X" },\
-		{ "ABS_HAT3Y", ABS_HAT3Y, "Hat 3 Y" },\
-		{ "ABS_THROTTLE", ABS_THROTTLE, "Throttle" },\
-		{ "ABS_RUDDER", ABS_RUDDER, "Rudder" },\
-		{ "ABS_WHEEL", ABS_WHEEL, "Wheel" },\
-		{ "ABS_GAS", ABS_GAS, "Gas" },\
-		{ "ABS_BRAKE", ABS_BRAKE, "Brake" },\
+		{ "ABS_X", ABS_X, AbsoluteAxis, "Left X Axis" },\
+		{ "ABS_Y", ABS_Y, AbsoluteAxis, "Left Y Axis" },\
+		{ "ABS_Z", ABS_Z, AbsoluteAxis, "Left Z Axis" },\
+		{ "ABS_RX", ABS_RX, AbsoluteAxis, "Right X Axis" },\
+		{ "ABS_RY", ABS_RY, AbsoluteAxis, "Right Y Axis" },\
+		{ "ABS_RZ", ABS_RZ, AbsoluteAxis, "Right Z Axis" },\
+		{ "ABS_HAT0X", ABS_HAT0X, AbsoluteAxis, "Hat 0 X" },\
+		{ "ABS_HAT0Y", ABS_HAT0Y, AbsoluteAxis, "Hat 0 Y" },\
+		{ "ABS_HAT1X", ABS_HAT1X, AbsoluteAxis, "Hat 1 X" },\
+		{ "ABS_HAT1Y", ABS_HAT1Y, AbsoluteAxis, "Hat 1 Y" },\
+		{ "ABS_HAT2X", ABS_HAT2X, AbsoluteAxis, "Hat 2 X" },\
+		{ "ABS_HAT2Y", ABS_HAT2Y, AbsoluteAxis, "Hat 2 Y" },\
+		{ "ABS_HAT3X", ABS_HAT3X, AbsoluteAxis, "Hat 3 X" },\
+		{ "ABS_HAT3Y", ABS_HAT3Y, AbsoluteAxis, "Hat 3 Y" },\
+		{ "ABS_THROTTLE", ABS_THROTTLE, AbsoluteAxis, "Throttle" },\
+		{ "ABS_RUDDER", ABS_RUDDER, AbsoluteAxis, "Rudder" },\
+		{ "ABS_WHEEL", ABS_WHEEL, AbsoluteAxis, "Wheel" },\
+		{ "ABS_GAS", ABS_GAS, AbsoluteAxis, "Gas" },\
+		{ "ABS_BRAKE", ABS_BRAKE, AbsoluteAxis, "Brake" },\
 	}},\
 	{ "EV_REL", EV_REL, "Relative Axis", {\
-		{ "REL_X", REL_X, "Left X Axis" },\
-		{ "REL_Y", REL_Y, "Left Y Axis"},\
-		{ "REL_Z", REL_Z, "Left Z Axis" },\
-		{ "REL_RX", REL_RX, "Right X Axis" },\
-		{ "REL_RY", REL_RY, "Right Y Axis" },\
-		{ "REL_RZ", REL_RZ, "Right Z Axis" },\
-		{ "REL_WHEEL", REL_WHEEL, "Vertical Wheel" },\
-		{ "REL_HWHEEL", REL_HWHEEL, "Horizontal Wheel" },\
-		{ "REL_DIAL", REL_DIAL, "Dial" },\
-		{ "REL_MISC", REL_MISC, "Misc" },\
+		{ "REL_X", REL_X, RelativeAxis, "Left X Axis" },\
+		{ "REL_Y", REL_Y, RelativeAxis, "Left Y Axis"},\
+		{ "REL_Z", REL_Z, RelativeAxis, "Left Z Axis" },\
+		{ "REL_RX", REL_RX, RelativeAxis, "Right X Axis" },\
+		{ "REL_RY", REL_RY, RelativeAxis, "Right Y Axis" },\
+		{ "REL_RZ", REL_RZ, RelativeAxis, "Right Z Axis" },\
+		{ "REL_WHEEL", REL_WHEEL, RelativeAxis, "Vertical Wheel" },\
+		{ "REL_HWHEEL", REL_HWHEEL, RelativeAxis, "Horizontal Wheel" },\
+		{ "REL_DIAL", REL_DIAL, RelativeAxis, "Dial" },\
+		{ "REL_MISC", REL_MISC, RelativeAxis, "Misc" },\
 	}},
 
 

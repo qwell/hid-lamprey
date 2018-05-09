@@ -12,10 +12,93 @@ using namespace System::Windows::Forms;
 
 using namespace hidlamprey;
 
-void formSettings::output_raw(const char *device, const char *rawname, int value) {
+void formSettings::update_mapping(String ^strDevice, String ^strButtonName, IntPtr tag) {
+	struct button_code *button_code = (struct button_code *)tag.ToPointer();
+
+	struct input_mapping *dinput_mapping;
+
+	const char *device = (char *)(void *)Marshal::StringToHGlobalAnsi(strDevice);
+	const char *rawname = (char *)(void *)Marshal::StringToHGlobalAnsi(strButtonName);
+
+	for (int i = 0; i < input_mapping_count; i++) {
+		dinput_mapping = input_mappings[i];
+
+		if (!strcmp(device, dinput_mapping->device) && !strcmp(rawname, dinput_mapping->rawname)) {
+			if (!button_code) {
+				struct input_mapping **test = input_mappings;
+				free(input_mappings[i]);
+
+				for (int j = i; j < input_mapping_count - 1; j++) {
+					input_mappings[j] = input_mappings[j + 1];
+				}
+
+				input_mapping_count--;
+			} else {
+				dinput_mapping->mapvalue = 0;
+				dinput_mapping->builtin = false;
+				dinput_mapping->maptype = button_code->type;
+				dinput_mapping->mapcode = button_code->code;
+			}
+
+			return;
+		}
+	}
+
+	dinput_mapping = (struct input_mapping *)malloc(sizeof(struct input_mapping));
+	dinput_mapping->mapvalue = 0;
+	dinput_mapping->builtin = false;
+	dinput_mapping->device = strdup((char *)device);
+	dinput_mapping->rawname = strdup((char *)rawname);
+	dinput_mapping->maptype = button_code->type;
+	dinput_mapping->mapcode = button_code->code;
+
+	input_mappings = (struct input_mapping **)realloc(input_mappings, (input_mapping_count + 1) * sizeof(*input_mappings));
+	input_mappings[input_mapping_count++] = dinput_mapping;
+}
+void formSettings::output_raw(String ^device, String ^rawname, Int16 value) {
+	if (this->tvMappings->InvokeRequired) {
+		this->tvMappings->Invoke(gcnew Action<String ^, String ^, Int16>(this, &formSettings::output_raw), device, rawname, value);
+	} else {
+		TreeNode ^nodeDevice;
+		TreeNode ^nodeButton;
+
+		for (int i = 0; i < this->tvMappings->Nodes->Count; i++) {
+			if (device == this->tvMappings->Nodes[i]->Text) {
+				nodeDevice = tvMappings->Nodes[i];
+
+				for (int j = 0; j < nodeDevice->Nodes->Count; j++) {
+					if (nodeDevice->Nodes[j]->Name == rawname) {
+						return;
+					}
+				}
+				break;
+			}
+		}
+		if (!nodeDevice) {
+			nodeDevice = gcnew TreeNode(device);
+			nodeDevice->Name = device;
+		}
+
+		tvMappings->BeginUpdate();
+
+		nodeButton = gcnew TreeNode(rawname);
+		nodeButton->Name = rawname;
+		nodeButton->ForeColor = Color::Red;
+
+		nodeDevice->Nodes->Add(nodeButton);
+
+		if (!nodeDevice->TreeView) {
+			tvMappings->Nodes->Add(nodeDevice);
+		}
+
+		tvMappings->EndUpdate();
+	}
 }
 
 System::Void formSettings::formSettings_Load(System::Object^  sender, System::EventArgs^  e) {
+	toolTip1->SetToolTip(this->tvMappings, "Double-click to remove current mapping.  Press any button to add a new mapping target.");
+	toolTip1->SetToolTip(this->tvMapButtons, "Drag a button to a mapping target (left) to assign a button mapping.");
+
 	tvSkins->BeginUpdate();
 	for (int i = 0; i < hl_skin_count; i++) {
 		TreeNode ^node = gcnew TreeNode(gcnew String(hl_skins[i]->name));
@@ -39,6 +122,7 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 			}
 			if (!nodeDevice) {
 				nodeDevice = gcnew TreeNode(strDevice);
+				nodeDevice->Name = gcnew String(strDevice);
 			}
 
 			for (int j = 0; j < codelookup_count / sizeof(*codelookups); j++) {
@@ -59,6 +143,7 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 
 							nodeButton->Name = gcnew String(input_mappings[i]->rawname);
 							nodeButton->Tag = IntPtr((void *)button);
+							nodeButton->ForeColor = Color::Green;
 
 							nodeDevice->Nodes->Add(nodeButton);
 						}
@@ -71,19 +156,62 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 			}
 		}
 	}
+	tvMappings->ExpandAll();
 	tvMappings->EndUpdate();
 
 	tvMapButtons->BeginUpdate();
 	for (int i = 0; i < codelookup_count / sizeof(*codelookups); i++) {
+		TreeNode ^nodeCategory;
+
 		struct codelookup type = codelookups[i];
 		if (type.codes[i].codestr) {
-			TreeNode ^nodeType = gcnew TreeNode(gcnew String(type.description ? type.description : type.typestr));
-			nodeType->Name = gcnew String(type.description ? type.description : type.typestr);
-
 			for (int j = 0; j < sizeof(type.codes) / sizeof(*type.codes); j++) {
 				struct codelookup_code code = type.codes[j];
 
 				if (code.codestr) {
+					String ^strCategory;
+
+					switch (code.category) {
+					case GamepadButton:
+						strCategory = gcnew String("Gamepad Buttons");
+						break;
+					case MouseButton:
+						strCategory = gcnew String("Mouse Buttons");
+						break;
+					case KeyboardKey:
+						strCategory = gcnew String("Keyboard Keys");
+						break;
+					case KeyboardNumpadKey:
+						strCategory = gcnew String("Keyboard Numpad Keys");
+						break;
+					case KeyboardMiscKey:
+						strCategory = gcnew String("Keyboard Misc Keys");
+						break;
+					case AbsoluteAxis:
+						strCategory = gcnew String("Absolute Axis");
+						break;
+					case RelativeAxis:
+						strCategory = gcnew String("Relative Axis");
+						break;
+					default:
+						strCategory = gcnew String("Other");
+						break;
+					}
+
+					if (!nodeCategory || nodeCategory->Text != strCategory) {
+						nodeCategory = nullptr;
+						for (int k = 0; k < this->tvMapButtons->Nodes->Count; k++) {
+							if (strCategory == this->tvMapButtons->Nodes[k]->Text) {
+								nodeCategory = tvMapButtons->Nodes[k];
+								break;
+							}
+						}
+					}
+					if (!nodeCategory) {
+						nodeCategory = gcnew TreeNode(strCategory);
+						nodeCategory->Name = gcnew String(strCategory);
+					}
+
 					TreeNode ^nodeCode = gcnew TreeNode(gcnew String(code.description ? code.description : code.codestr));
 					nodeCode->Name = gcnew String(code.description ? code.description : code.codestr);
 
@@ -93,20 +221,18 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 					button->code = code.code;
 
 					nodeCode->Tag = IntPtr((void *)button);
-					/*
-					IntPtr tag = (IntPtr)nodeCode->Tag;
-					struct button_code *foo = (struct button_code *)tag.ToPointer();
-					*/
 
-					nodeType->Nodes->Add(nodeCode);
+					nodeCategory->Nodes->Add(nodeCode);
+					if (!nodeCategory->TreeView) {
+						tvMapButtons->Nodes->Add(nodeCategory);
+					}
 				}
 			}
-			tvMapButtons->Nodes->Add(nodeType);
 		}
 	}
 	tvMapButtons->EndUpdate();
 }
-System::Void formSettings::treeView1_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e) {
+System::Void formSettings::tvSkins_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e) {
 	if (e->Node->Level == 1) {
 		char *name = (char *)(void *)Marshal::StringToHGlobalAnsi(e->Node->Parent->Text);
 		char *background = (char *)(void *)Marshal::StringToHGlobalAnsi(e->Node->Text);
@@ -125,7 +251,10 @@ System::Void formSettings::treeView1_AfterSelect(System::Object^  sender, System
 	}
 }
 System::Void formSettings::tvMapButtons_ItemDrag(System::Object^  sender, System::Windows::Forms::ItemDragEventArgs^  e) {
-	DoDragDrop(e->Item, DragDropEffects::Link);
+	TreeNode ^node = (TreeNode ^)e->Item;
+	if (node && node->Level == 1) {
+		DoDragDrop(e->Item, DragDropEffects::Link);
+	}
 }
 System::Void formSettings::tvMappings_DragEnter(System::Object^  sender, System::Windows::Forms::DragEventArgs^  e) {
 	e->Effect = DragDropEffects::Link;
@@ -138,6 +267,18 @@ System::Void formSettings::tvMappings_DragDrop(System::Object^  sender, System::
 			TreeNode ^nodeLink = (TreeNode ^)e->Data->GetData("System.Windows.Forms.TreeNode");
 			nodeDest->Tag = nodeLink->Tag;
 			nodeDest->Text = nodeDest->Name + "  =  " + nodeLink->Text;
+			nodeDest->ForeColor = Color::Green;
+
+			this->update_mapping(nodeDest->Parent->Name, nodeDest->Name, (IntPtr)nodeDest->Tag);
 		}
+	}
+}
+System::Void formSettings::tvMappings_NodeMouseDoubleClick(System::Object^  sender, System::Windows::Forms::TreeNodeMouseClickEventArgs^  e) {
+	if (e->Node->Level == 1) {
+		this->update_mapping(e->Node->Parent->Name, e->Node->Name, IntPtr(nullptr));
+
+		e->Node->Tag = nullptr;
+		e->Node->Text = e->Node->Name;
+		e->Node->ForeColor = Color::Red;
 	}
 }

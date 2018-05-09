@@ -267,6 +267,7 @@ void controller_set_button(struct controller *controller, uint8_t type, uint16_t
 }
 
 void hl_controller_raw(const char *device, const char *rawname, int value) {
+	hl_display_output_raw(device, rawname, value);
 }
 
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value) {

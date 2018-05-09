@@ -20,6 +20,9 @@
 	hl_cli_init(__VA_ARGS__);\
 	hl_gtk_init(__VA_ARGS__);\
 }
+#define hl_display_output_raw(device, rawname, value) { \
+}
+
 #define hl_display_output_controller(controller) {\
 	hl_cli_output_controller(controller);\
 	hl_gtk_output_controller(controller);\
@@ -32,6 +35,11 @@
 	hl_cli_init(__VA_ARGS__);\
 	hl_display_win32_init(__VA_ARGS__);\
 }
+
+#define hl_display_output_raw(device, rawname, value) { \
+	hl_display_win32_output_raw(device, rawname, value);\
+}
+
 #define hl_display_output_controller(controller) {\
 	hl_cli_output_controller(controller);\
 	hl_display_win32_output_controller(controller);\
@@ -50,6 +58,9 @@
 #include "display-win32.h"
 
 #define hl_display_init(...) hl_display_win32_init(__VA_ARGS__)
+#define hl_display_output_raw(device, rawname, value) { \
+	hl_display_win32_output_raw(device, rawname, value);\
+}
 #define hl_display_output_controller(controller) hl_display_win32_output_controller(controller)
 #else
 #define hl_display_init(...)
