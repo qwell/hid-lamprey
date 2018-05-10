@@ -369,6 +369,7 @@ void hl_settings_xml_load() {
 		hl_settings = (struct hl_settings *)calloc(1, sizeof(hl_settings));
 	}
 
+	xmlInitParser();
 	xmlSetGenericErrorFunc(NULL, xml_generic_error_func);
 
 	if (!(doc = xmlParseFile(settings_xml_file))) {
