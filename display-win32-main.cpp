@@ -162,7 +162,7 @@ void formMain::loadSkinImages(char *skin_name, char *skin_background) {
 
 	picController->Image = backgroundImage;
 	picController->Size = backgroundImage->Size;
-	picController->Visible = true;
+	picController->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 
 	this->skinButtons = gcnew array<System::Windows::Forms::PictureBox^>(skinActive->button_count);
 	for (int i = 0; i < skinActive->button_count; i++) {
@@ -171,6 +171,7 @@ void formMain::loadSkinImages(char *skin_name, char *skin_background) {
 		Drawing::Bitmap ^buttonImage = gcnew Bitmap(String::Concat(gcnew String(skinActive->path), gcnew String(skinActive->buttons[i]->filename)));
 		buttonImage->MakeTransparent(Color::White);
 
+		picButton->Anchor = AnchorStyles::Left | AnchorStyles::Top;
 		picButton->BackColor = Color::Transparent;
 		picButton->Enabled = false;
 		picButton->Image = buttonImage;
@@ -179,7 +180,7 @@ void formMain::loadSkinImages(char *skin_name, char *skin_background) {
 		picButton->Name += i;
 		picButton->Padding = System::Windows::Forms::Padding(0, 0, 0, 0);
 		picButton->Size = buttonImage->Size;
-		picButton->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
+		picButton->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 		picButton->Visible = false;
 
 		this->skinButtons[i] = picButton;
@@ -196,6 +197,7 @@ void formMain::loadSkinImages(char *skin_name, char *skin_background) {
 		Drawing::Bitmap ^axisImage = gcnew Bitmap(String::Concat(gcnew String(skinActive->path), gcnew String(skinActive->axes[i]->filename)));
 		axisImage->MakeTransparent(Color::White);
 
+		picAxis->Anchor = AnchorStyles::Left | AnchorStyles::Top;
 		picAxis->BackColor = Color::Transparent;
 		picAxis->Enabled = false;
 		picAxis->Image = axisImage;
@@ -204,7 +206,7 @@ void formMain::loadSkinImages(char *skin_name, char *skin_background) {
 		picAxis->Name += i;
 		picAxis->Padding = System::Windows::Forms::Padding(0, 0, 0, 0);
 		picAxis->Size = axisImage->Size;
-		picAxis->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
+		picAxis->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 		picAxis->Visible = false;
 
 		this->skinAxes[i] = picAxis;
@@ -213,4 +215,8 @@ void formMain::loadSkinImages(char *skin_name, char *skin_background) {
 
 		picAxis->Parent = this->picController;
 	}
+
+	float scale = 640 * ((float)1 / backgroundImage->Width);
+	picController->Scale(SizeF(scale, scale));
+	picController->Visible = true;
 }
