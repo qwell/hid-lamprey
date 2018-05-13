@@ -103,7 +103,8 @@ void settings_xml_load_mappings(xmlXPathContext *context) {
 			xmlChar *maptype = xmlGetProp(node, (const xmlChar *)"maptype");
 			xmlChar *mapcode = xmlGetProp(node, (const xmlChar *)"mapcode");
 
-			if (struct button_code *button_code = hl_controller_get_code_by_name((char *)maptype, (char *)mapcode)) {
+			struct button_code *button_code;
+			if (button_code = hl_controller_get_code_by_name((char *)maptype, (char *)mapcode)) {
 				struct input_mapping *dinput_mapping;
 
 				dinput_mapping = (struct input_mapping *)malloc(sizeof(struct input_mapping));

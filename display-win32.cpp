@@ -16,9 +16,6 @@
 #include "include/controller.h"
 #include "include/display.h"
 
-#include "include/display-win32-main.h"
-#include "include/display-win32-settings.h"
-
 using namespace hidlamprey;
 
 using namespace System;

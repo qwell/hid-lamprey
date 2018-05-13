@@ -206,7 +206,7 @@ void hl_skin_load(char *skin_name, char *background_name) {
 			} else {
 				xmlNodeSet *nodeset = result->nodesetval;
 
-				hl_skin *skin = (struct hl_skin *)calloc(1, sizeof(struct hl_skin));
+				struct hl_skin *skin = (struct hl_skin *)calloc(1, sizeof(struct hl_skin));
 
 				for (int i = 0; i < nodeset->nodeNr; i++) {
 					xmlNode *node = nodeset->nodeTab[i];

@@ -36,7 +36,7 @@ struct device **devices;
 int device_count = 0;
 
 struct button_code *hl_controller_get_code_by_name(char *type, char *name) {
-	for (int i = 0; i < codelookup_count / sizeof(*codelookups); i++) {
+	for (unsigned int i = 0; i < codelookup_count / sizeof(*codelookups); i++) {
 		struct codelookup code = codelookups[i];
 		if (code.typestr && !strcmp(code.typestr, type)) {
 			for (int j = 0; j < sizeof(code.codes) / sizeof(*code.codes); j++) {
@@ -65,10 +65,10 @@ int hl_controller_scale_range(int curvalue, int curmin, int curmax) {
 	/* Make it even. */
 	zeroish = zeroish % 2 ? zeroish : zeroish + 1;
 	/* Div 2 to get the midpoint. */
-	int relzero = zeroish ? round(zeroish / 2) : zeroish;
+	int relzero = zeroish ? (int)round(zeroish / 2) : zeroish;
 
 	int rangesize = (curmax - curmin);
-	int deadsize = ((rangesize % 2 ? rangesize : rangesize + 1) / 2) * hl_settings->deadzone_axis;
+	int deadsize = (int)(((rangesize % 2) ? rangesize : rangesize + 1) / 2) * hl_settings->deadzone_axis;
 
 	/* Scale value
 	 * from min > relzero +/- deadsize > max

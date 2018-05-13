@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\config-win.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\defaults.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\display.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\display-cli.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\display-gtk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\display-win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input-codetable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input-dinput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input-evdev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input-xinput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lamprey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\settings-xml2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shortcut_cb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\skin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\threads.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xdo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="controller.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="display-cli.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="display-gtk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="display-win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="input-dinput.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="input-evdev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="input-xinput.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lamprey.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="output-win32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="settings.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="settings-xml2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shortcut_cb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="skin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="threads.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xdo.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

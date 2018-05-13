@@ -44,7 +44,7 @@ BOOL CALLBACK input_dinput_enum_axis(const DIDEVICEOBJECTINSTANCE *instance, voi
 		propRange.lMax = 256;
 
 		// Set the range for the axis
-		if (device->SetProperty(DIPROP_RANGE, &propRange.diph) != DI_OK) {
+		if (device->lpVtbl->SetProperty(device, DIPROP_RANGE, &propRange.diph) != DI_OK) {
 			return DIENUM_STOP;
 		}
 	}
@@ -58,7 +58,7 @@ BOOL CALLBACK input_dinput_enum_devices(const DIDEVICEINSTANCE *instance, void *
 	int devtype = GET_DIDEVICE_TYPE(instance->dwDevType);
 	int devsubtype = GET_DIDEVICE_SUBTYPE(instance->dwDevType);
 
-	if (hl_input_dinput->di->CreateDevice(instance->guidInstance, &input->device, NULL) != DI_OK) {
+	if (hl_input_dinput->di->lpVtbl->CreateDevice(hl_input_dinput->di, &instance->guidInstance, &input->device, NULL) != DI_OK) {
 		free(input);
 		return DIENUM_CONTINUE;
 	}
@@ -66,28 +66,28 @@ BOOL CALLBACK input_dinput_enum_devices(const DIDEVICEINSTANCE *instance, void *
 	switch (devtype) {
 	case DI8DEVTYPE_GAMEPAD:
 	case DI8DEVTYPE_JOYSTICK:
-		if (input->device->SetDataFormat(&c_dfDIJoystick2) != DI_OK) {
+		if (input->device->lpVtbl->SetDataFormat(input->device, &c_dfDIJoystick2) != DI_OK) {
 			free(input);
 			return DIENUM_CONTINUE;
 		}
-		if (input->device->EnumObjects(input_dinput_enum_axis, input->device, DIDFT_AXIS) != DI_OK) {
+		if (input->device->lpVtbl->EnumObjects(input->device, input_dinput_enum_axis, input->device, DIDFT_AXIS) != DI_OK) {
 			free(input);
 			return DIENUM_CONTINUE;
 		}
 		break;
 	case DI8DEVTYPE_MOUSE:
 	case DI8DEVTYPE_SCREENPOINTER:
-		if (input->device->SetDataFormat(&c_dfDIMouse2) != DI_OK) {
+		if (input->device->lpVtbl->SetDataFormat(input->device, &c_dfDIMouse2) != DI_OK) {
 			free(input);
 			return DIENUM_CONTINUE;
 		}
-		if (input->device->EnumObjects(input_dinput_enum_axis, input->device, DIDFT_AXIS) != DI_OK) {
+		if (input->device->lpVtbl->EnumObjects(input->device, input_dinput_enum_axis, input->device, DIDFT_AXIS) != DI_OK) {
 			free(input);
 			return DIENUM_CONTINUE;
 		}
 		break;
 	case DI8DEVTYPE_KEYBOARD:
-		if (input->device->SetDataFormat(&c_dfDIKeyboard) != DI_OK) {
+		if (input->device->lpVtbl->SetDataFormat(input->device, &c_dfDIKeyboard) != DI_OK) {
 			free(input);
 			return DIENUM_CONTINUE;
 		}
@@ -97,13 +97,13 @@ BOOL CALLBACK input_dinput_enum_devices(const DIDEVICEINSTANCE *instance, void *
 		return DIENUM_CONTINUE;
 	}
 
-	if (input->device->SetCooperativeLevel(NULL, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND) != DI_OK) {
+	if (input->device->lpVtbl->SetCooperativeLevel(input->device, NULL, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND) != DI_OK) {
 		free(input);
 		return DIENUM_CONTINUE;
 	}
 
 	input->capabilities.dwSize = sizeof(DIDEVCAPS);
-	if (input->device->GetCapabilities(&input->capabilities) != DI_OK) {
+	if (input->device->lpVtbl->GetCapabilities(input->device, &input->capabilities) != DI_OK) {
 		free(input);
 		return DIENUM_CONTINUE;
 	}
@@ -141,12 +141,12 @@ void hl_input_dinput_init() {
 
 	hl_input_dinput = (struct hl_input_dinput *)calloc(1, sizeof(struct hl_input_dinput));
 
-	if (DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&hl_input_dinput->di, NULL) != DI_OK) {
+	if (DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &IID_IDirectInput8, (void **)&hl_input_dinput->di, NULL) != DI_OK) {
 		hl_mutex_unlock(&mutex_input_dinput);
 		return;
 	}
 
-	if (hl_input_dinput->di->EnumDevices(DI8DEVCLASS_ALL, input_dinput_enum_devices, NULL, DIEDFL_ATTACHEDONLY) != DI_OK) {
+	if (hl_input_dinput->di->lpVtbl->EnumDevices(hl_input_dinput->di, DI8DEVCLASS_ALL, input_dinput_enum_devices, NULL, DIEDFL_ATTACHEDONLY) != DI_OK) {
 		hl_mutex_unlock(&mutex_input_dinput);
 		return;
 	}
@@ -229,7 +229,7 @@ struct input_mapping *dinput_get_map(const char *device, const char *rawname) {
 void *hl_input_dinput_poll() {
 	HRESULT hr = DI_OK;
 
-	HANDLE events[32] = {};
+	HANDLE events[32] = {0, };
 
 	hl_mutex_lock(&mutex_input_dinput);
 	for (int i = 0; i < hl_input_dinput->device_count; i++) {
@@ -238,12 +238,12 @@ void *hl_input_dinput_poll() {
 			continue;
 		}
 
-		if (hl_input_dinput->devices[i]->device->SetEventNotification(event) != DI_OK) {
+		if (hl_input_dinput->devices[i]->device->lpVtbl->SetEventNotification(hl_input_dinput->devices[i]->device, event) != DI_OK) {
 			continue;
 		}
-		hr = hl_input_dinput->devices[i]->device->Acquire();
+		hr = hl_input_dinput->devices[i]->device->lpVtbl->Acquire(hl_input_dinput->devices[i]->device);
 		while (hr == DIERR_INPUTLOST) {
-			hr = hl_input_dinput->devices[i]->device->Acquire();
+			hr = hl_input_dinput->devices[i]->device->lpVtbl->Acquire(hl_input_dinput->devices[i]->device);
 		}
 
 		hl_input_dinput->devices[i]->event = event;
@@ -274,11 +274,11 @@ void *hl_input_dinput_poll() {
 				DIJOYSTATE2 oldstate;
 				DIJOYSTATE2 newstate;
 
-				if ((hr = input->device->GetDeviceState(sizeof(DIJOYSTATE2), &newstate)) == DI_OK) {
+				if ((hr = input->device->lpVtbl->GetDeviceState(input->device, sizeof(DIJOYSTATE2), &newstate)) == DI_OK) {
 					memcpy(&oldstate, &hl_input_dinput->devices[devnum]->state, sizeof(oldstate));
 					memcpy(&state, &newstate, sizeof(newstate));
 
-					for (int i = 0; i < input->capabilities.dwButtons; i++) {
+					for (DWORD i = 0; i < input->capabilities.dwButtons; i++) {
 						if (newstate.rgbButtons[i] != oldstate.rgbButtons[i]) {
 							snprintf(rawname, sizeof(rawname), "button:%d", i);
 							inputmap = dinput_get_map(input->name, rawname);
@@ -297,7 +297,7 @@ void *hl_input_dinput_poll() {
 						}
 					}
 
-					for (int i = 0; i < input->capabilities.dwPOVs; i++) {
+					for (DWORD i = 0; i < input->capabilities.dwPOVs; i++) {
 						if (newstate.rgdwPOV[i] != oldstate.rgdwPOV[i]) {
 							int oldPad = dinput_get_padstate(oldstate.rgdwPOV[i]);
 							int newPad = dinput_get_padstate(newstate.rgdwPOV[i]);
@@ -396,7 +396,7 @@ void *hl_input_dinput_poll() {
 			{
 				DIMOUSESTATE2 oldstate;
 				DIMOUSESTATE2 newstate;
-				if ((hr = input->device->GetDeviceState(sizeof(DIMOUSESTATE2), &newstate)) == DI_OK) {
+				if ((hr = input->device->lpVtbl->GetDeviceState(input->device, sizeof(DIMOUSESTATE2), &newstate)) == DI_OK) {
 					memcpy(&oldstate, &hl_input_dinput->devices[devnum]->state, sizeof(oldstate));
 					memcpy(&state, &newstate, sizeof(newstate));
 				}
@@ -406,7 +406,7 @@ void *hl_input_dinput_poll() {
 			{
 				BYTE oldstate[256];
 				BYTE newstate[256];
-				if ((hr = input->device->GetDeviceState(sizeof(newstate), &newstate)) == DI_OK) {
+				if ((hr = input->device->lpVtbl->GetDeviceState(input->device, sizeof(newstate), &newstate)) == DI_OK) {
 					memcpy(&oldstate, &hl_input_dinput->devices[devnum]->state, sizeof(oldstate));
 					memcpy(&state, &newstate, sizeof(newstate));
 
@@ -451,7 +451,7 @@ void hl_input_dinput_destroy() {
 	}
 
 	for (int i = 0; i < hl_input_dinput->device_count; i++) {
-		hl_input_dinput->devices[i]->device->Unacquire();
+		hl_input_dinput->devices[i]->device->lpVtbl->Unacquire(hl_input_dinput->devices[i]->device);
 		free(hl_input_dinput->devices[i]);
 	}
 
