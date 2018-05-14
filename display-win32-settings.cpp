@@ -61,6 +61,7 @@ void formSettings::update_mapping(String ^strDevice, String ^strButtonName, IntP
 
 	hl_settings_save_mappings();
 }
+
 void formSettings::output_raw(String ^device, String ^rawname, Int16 value) {
 	if (this->tvMappings->InvokeRequired) {
 		this->tvMappings->Invoke(gcnew Action<String ^, String ^, Int16>(this, &formSettings::output_raw), device, rawname, value);
@@ -246,6 +247,7 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 	}
 	tvMapButtons->EndUpdate();
 }
+
 System::Void formSettings::tvSkins_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e) {
 	if (e->Node->Level == 1) {
 		char *name = (char *)(void *)Marshal::StringToHGlobalAnsi(e->Node->Parent->Text);
@@ -264,15 +266,18 @@ System::Void formSettings::tvSkins_AfterSelect(System::Object^  sender, System::
 		this->formMain->loadSkinImages(name, background);
 	}
 }
+
 System::Void formSettings::tvMapButtons_ItemDrag(System::Object^  sender, System::Windows::Forms::ItemDragEventArgs^  e) {
 	TreeNode ^node = (TreeNode ^)e->Item;
 	if (node && node->Level == 1) {
 		DoDragDrop(e->Item, DragDropEffects::Link);
 	}
 }
+
 System::Void formSettings::tvMappings_DragEnter(System::Object^  sender, System::Windows::Forms::DragEventArgs^  e) {
 	e->Effect = DragDropEffects::Link;
 }
+
 System::Void formSettings::tvMappings_DragDrop(System::Object^  sender, System::Windows::Forms::DragEventArgs^  e) {
 	if (e->Data->GetDataPresent("System.Windows.Forms.TreeNode", false)) {
 		Point pt = ((TreeView ^)sender)->PointToClient(Point(e->X, e->Y));
@@ -287,6 +292,7 @@ System::Void formSettings::tvMappings_DragDrop(System::Object^  sender, System::
 		}
 	}
 }
+
 System::Void formSettings::tvMappings_NodeMouseDoubleClick(System::Object^  sender, System::Windows::Forms::TreeNodeMouseClickEventArgs^  e) {
 	if (e->Node->Level == 1) {
 		this->update_mapping(e->Node->Parent->Name, e->Node->Name, IntPtr(nullptr));
