@@ -1,26 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <emulations>
-	<emulation>
-		<in type="EV_KEY" code="BTN_THUMBL"/>
-		<out type="EV_KEY" code="KEY_1"/>
-	</emulation>
-	<emulation>
-		<in type="EV_KEY" code="BTN_THUMBR"/>
-		<out type="EV_KEY" code="KEY_3"/>
-	</emulation>
-	<emulation>
-		<in type="EV_KEY" code="BTN_SELECT"/>
-		<out type="EV_ABS" code="ABS_X" trigger="-128"/>
-	</emulation>
-	<emulation>
-		<in type="EV_KEY" code="BTN_START"/>
-		<out type="EV_ABS" code="ABS_X" trigger="128"/>
-	</emulation>
-	<emulation>
-		<in type="EV_KEY" code="BTN_MODE"/>
-		<out type="EV_KEY" code="KEY_Y"/>
-	</emulation>
-	<emulation>
-		<in type="EV_KEY" code="KEY_A"/>
-		<out type="EV_KEY" code="KEY_A"/>
-	</emulation>
+  <emulation>
+    <in type="EV_KEY" code="BTN_THUMBL"/>
+    <out type="EV_KEY" code="KEY_1"/>
+  </emulation>
+  <emulation>
+    <in type="EV_KEY" code="BTN_THUMBR"/>
+    <out type="EV_KEY" code="KEY_3"/>
+  </emulation>
+  <emulation>
+    <in type="EV_KEY" code="BTN_SELECT"/>
+    <out type="EV_ABS" code="ABS_X" trigger="-128"/>
+  </emulation>
+  <emulation>
+    <in type="EV_KEY" code="BTN_START"/>
+    <out type="EV_ABS" code="ABS_X" trigger="128"/>
+  </emulation>
+  <emulation>
+    <in type="EV_KEY" code="BTN_MODE"/>
+    <out type="EV_KEY" code="KEY_Y"/>
+  </emulation>
+  <emulation>
+    <in type="EV_KEY" code="KEY_A"/>
+    <out type="EV_KEY" code="KEY_A"/>
+  </emulation>
 </emulations>
