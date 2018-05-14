@@ -25,12 +25,20 @@ extern struct hl_settings *hl_settings;
 
 #if defined(HAVE_XML2)
 #include "settings-xml2.h"
-#define hl_settings_load(...) hl_settings_xml_load(__VA_ARGS__)
-#define hl_settings_save(...) hl_settings_xml_save(__VA_ARGS__)
-#define hl_settings_destroy(...) hl_settings_xml_destroy(__VA_ARGS__)
+#define hl_settings_load_settings(...) settings_xml_load_settings(__VA_ARGS__)
+#define hl_settings_load_mappings(...) settings_xml_load_mappings(__VA_ARGS__)
+#define hl_settings_load_shortcuts(...) settings_xml_load_shortcuts(__VA_ARGS__)
+#define hl_settings_load_emulations(...) settings_xml_load_emulations(__VA_ARGS__)
+#define hl_settings_save_mappings(...) settings_xml_save_mappings(__VA_ARGS__)
+#define hl_settings_init(...) settings_xml_init(__VA_ARGS__)
+#define hl_settings_destroy(...) settings_xml_destroy(__VA_ARGS__)
 #else
-#define hl_settings_load(...)
-#define hl_settings_save(...)
+#define hl_settings_load_settings(...)
+#define hl_settings_load_mappings(...)
+#define hl_settings_load_shortcuts(...)
+#define hl_settings_load_emulations(...)
+#define hl_settings_save_mappings(...)
+#define hl_settings_init(...)
 #define hl_settings_destroy(...)
 #endif
 

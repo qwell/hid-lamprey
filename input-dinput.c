@@ -164,6 +164,7 @@ void hl_input_dinput_init() {
 		for (int j = 0; j < input_mapping_count; j++) {
 			if (!strcmp(device, input_mappings[j]->device) && !strcmp(rawname, input_mappings[j]->rawname)) {
 				found = true;
+				break;
 			}
 		}
 

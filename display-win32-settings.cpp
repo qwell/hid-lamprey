@@ -40,6 +40,7 @@ void formSettings::update_mapping(String ^strDevice, String ^strButtonName, IntP
 				dinput_mapping->mapcode = button_code->code;
 			}
 
+			hl_settings_save_mappings();
 			return;
 		}
 	}
@@ -57,6 +58,8 @@ void formSettings::update_mapping(String ^strDevice, String ^strButtonName, IntP
 
 	input_mappings = (struct input_mapping **)realloc(input_mappings, (input_mapping_count + 1) * sizeof(*input_mappings));
 	input_mappings[input_mapping_count++] = dinput_mapping;
+
+	hl_settings_save_mappings();
 }
 void formSettings::output_raw(String ^device, String ^rawname, Int16 value) {
 	if (this->tvMappings->InvokeRequired) {

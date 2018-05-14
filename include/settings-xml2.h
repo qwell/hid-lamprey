@@ -12,6 +12,10 @@
 #include <libxml/xmlschemas.h>
 #include <libxml/xpath.h>
 
-void hl_settings_xml_load();
-void hl_settings_xml_save();
-void hl_settings_xml_destroy();
+void settings_xml_load_settings();
+void settings_xml_load_mappings();
+void settings_xml_load_shortcuts();
+void settings_xml_load_emulations();
+void settings_xml_save_mappings();
+void settings_xml_init();
+void settings_xml_destroy();

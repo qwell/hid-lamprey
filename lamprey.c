@@ -48,7 +48,11 @@ int main(int argc, char **argv) {
 
 	printf("Lamprey Version: " PACKAGE_VERSION "\n");
 
-	hl_settings_load();
+	hl_settings_init();
+	hl_settings_load_settings();
+	hl_settings_load_mappings();
+	hl_settings_load_shortcuts();
+	hl_settings_load_emulations();
 
 #if defined(HAVE_XML2)
 	if (hl_settings->skin) {
