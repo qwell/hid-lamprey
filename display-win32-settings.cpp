@@ -296,3 +296,8 @@ System::Void formSettings::tvMappings_NodeMouseDoubleClick(System::Object^  send
 		e->Node->Remove();
 	}
 }
+
+System::Void formSettings::eat_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) {
+	e->Handled = true;
+	return;
+}

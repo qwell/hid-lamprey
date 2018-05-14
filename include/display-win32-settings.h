@@ -92,6 +92,7 @@ namespace hidlamprey {
 			this->tvSkins->Size = System::Drawing::Size(265, 457);
 			this->tvSkins->TabIndex = 1;
 			this->tvSkins->AfterSelect += gcnew System::Windows::Forms::TreeViewEventHandler(this, &formSettings::tvSkins_AfterSelect);
+			this->tvSkins->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &formSettings::eat_KeyPress);
 			// 
 			// tvMappings
 			// 
@@ -103,6 +104,7 @@ namespace hidlamprey {
 			this->tvMappings->NodeMouseDoubleClick += gcnew System::Windows::Forms::TreeNodeMouseClickEventHandler(this, &formSettings::tvMappings_NodeMouseDoubleClick);
 			this->tvMappings->DragDrop += gcnew System::Windows::Forms::DragEventHandler(this, &formSettings::tvMappings_DragDrop);
 			this->tvMappings->DragEnter += gcnew System::Windows::Forms::DragEventHandler(this, &formSettings::tvMappings_DragEnter);
+			this->tvMappings->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &formSettings::eat_KeyPress);
 			// 
 			// tvMapButtons
 			// 
@@ -111,6 +113,7 @@ namespace hidlamprey {
 			this->tvMapButtons->Size = System::Drawing::Size(360, 464);
 			this->tvMapButtons->TabIndex = 5;
 			this->tvMapButtons->ItemDrag += gcnew System::Windows::Forms::ItemDragEventHandler(this, &formSettings::tvMapButtons_ItemDrag);
+			this->tvMapButtons->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &formSettings::eat_KeyPress);
 			// 
 			// tabControl1
 			// 
@@ -121,6 +124,7 @@ namespace hidlamprey {
 			this->tabControl1->SelectedIndex = 0;
 			this->tabControl1->Size = System::Drawing::Size(747, 505);
 			this->tabControl1->TabIndex = 6;
+			this->tabControl1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &formSettings::eat_KeyPress);
 			// 
 			// tabSkins
 			// 
@@ -157,6 +161,7 @@ namespace hidlamprey {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(763, 529);
 			this->Controls->Add(this->tabControl1);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"formSettings";
@@ -164,6 +169,7 @@ namespace hidlamprey {
 			this->ShowInTaskbar = false;
 			this->Text = L"Settings";
 			this->Load += gcnew System::EventHandler(this, &formSettings::formSettings_Load);
+			this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &formSettings::eat_KeyPress);
 			this->tabControl1->ResumeLayout(false);
 			this->tabSkins->ResumeLayout(false);
 			this->tabMappings->ResumeLayout(false);
@@ -171,11 +177,13 @@ namespace hidlamprey {
 
 		}
 #pragma endregion
+
 private: System::Void formSettings_Load(System::Object^  sender, System::EventArgs^  e);
 private: System::Void tvSkins_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e);
 private: System::Void tvMapButtons_ItemDrag(System::Object^  sender, System::Windows::Forms::ItemDragEventArgs^  e);
 private: System::Void tvMappings_DragEnter(System::Object^  sender, System::Windows::Forms::DragEventArgs^  e);
 private: System::Void tvMappings_DragDrop(System::Object^  sender, System::Windows::Forms::DragEventArgs^  e);
 private: System::Void tvMappings_NodeMouseDoubleClick(System::Object^  sender, System::Windows::Forms::TreeNodeMouseClickEventArgs^  e);
+private: System::Void eat_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 };
 }
