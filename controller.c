@@ -110,15 +110,8 @@ void controller_shortcut_simultaneous(struct shortcut *shortcut) {
 			continue;
 		}
 
-		for (int j = 0; j < button->trigger_count; j++) {
-			const struct button_trigger *trigger = button->triggers[j];
-			if (!trigger) {
-				continue;
-			}
-
-			if (!button->state) {
-				triggered = 0;
-			}
+		if (!button->state) {
+			triggered = 0;
 		}
 	}
 
@@ -147,15 +140,8 @@ void controller_shortcut_consecutive(struct shortcut *shortcut) {
 			continue;
 		}
 
-		for (int j = 0; j < sizeof(button->triggers) / sizeof(*button->triggers); j++) {
-			const struct button_trigger *trigger = button->triggers[j];
-			if (!trigger) {
-				continue;
-			}
-
-			if (!button->state) {
-				triggered = 0;
-			}
+		if (!button->state) {
+			triggered = 0;
 		}
 	}
 
@@ -172,30 +158,23 @@ void controller_shortcuts(const char *device, uint8_t type, uint16_t code, int16
 			continue;
 		}
 
-		for (int i = 0; i < shortcut->button_count; i++) {
-			struct shortcut_button *button = shortcut->buttons[i];
+		for (int j = 0; j < shortcut->button_count; j++) {
+			struct shortcut_button *button = shortcut->buttons[j];
 			if (!button) {
 				continue;
 			}
 
-			for (int j = 0; j < button->trigger_count; j++) {
-				const struct button_trigger *trigger = button->triggers[j];
-				if (!trigger) {
-					continue;
-				}
-
-				if (type == trigger->type && code == trigger->code) {
-					if (trigger->trigger_low < 0 || trigger->trigger_high > 0) {
-						if (trigger->trigger_low < 0 && value <= trigger->trigger_low) {
-							button->state = true;
-						} else if (trigger->trigger_high > 0 && value >= trigger->trigger_high) {
-							button->state = true;
-						} else {
-							button->state = false;
-						}
+			if (type == button->type && code == button->code) {
+				if (button->trigger_low < 0 || button->trigger_high > 0) {
+					if (button->trigger_low < 0 && value <= button->trigger_low) {
+						button->state = true;
+					} else if (button->trigger_high > 0 && value >= button->trigger_high) {
+						button->state = true;
 					} else {
-						button->state = value ? true : false;
+						button->state = false;
 					}
+				} else {
+					button->state = value ? true : false;
 				}
 			}
 		}
@@ -259,7 +238,6 @@ void controller_set_button(struct controller *controller, uint8_t type, uint16_t
 	button->type = type;
 	button->code = code;
 	button->value = value;
-
 
 	controller->buttons = (struct button_state **)realloc(controller->buttons, (controller->button_count + 1) * sizeof(*controller->buttons));
 	controller->buttons[controller->button_count] = button;

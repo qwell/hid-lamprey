@@ -13,80 +13,22 @@
       <arg name="foo">Some args</arg>
       <arg name="bar">99</arg>
     </function>
-    <button>
-      <trigger type="EV_KEY" code="KEY_A"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_S"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_D"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_UP"/>
-      <trigger type="EV_KEY" code="BTN_DPAD_UP"/>
-      <trigger type="EV_ABS" code="ABS_HAT0Y" trigger_low="-128"/>
-      <trigger type="EV_ABS" code="ABS_Y" trigger_low="-128"/>
-    </button>
+    <button type="EV_KEY" code="KEY_A"/>
+    <button type="EV_KEY" code="KEY_S"/>
+    <button type="EV_KEY" code="KEY_D"/>
   </shortcut>
   <shortcut name="konami" type="consecutive">
     <device name="xbox"/>
     <device name="rockcandy"/>
-    <button>
-      <trigger type="EV_KEY" code="KEY_UP"/>
-      <trigger type="EV_KEY" code="BTN_DPAD_UP"/>
-      <trigger type="EV_ABS" code="ABS_HAT0Y" trigger_low="-128"/>
-      <trigger type="EV_ABS" code="ABS_Y" trigger_low="-128"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_UP"/>
-      <trigger type="EV_KEY" code="BTN_DPAD_UP"/>
-      <trigger type="EV_ABS" code="ABS_HAT0Y" trigger_low="-128"/>
-      <trigger type="EV_ABS" code="ABS_Y" trigger_low="-128"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_DOWN"/>
-      <trigger type="EV_KEY" code="BTN_DPAD_DOWN"/>
-      <trigger type="EV_ABS" code="ABS_HAT0Y" trigger_high="128"/>
-      <trigger type="EV_ABS" code="ABS_Y" trigger_high="128"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_DOWN"/>
-      <trigger type="EV_KEY" code="BTN_DPAD_DOWN"/>
-      <trigger type="EV_ABS" code="ABS_HAT0Y" trigger_high="128"/>
-      <trigger type="EV_ABS" code="ABS_Y" trigger_high="128"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_LEFT"/>
-      <trigger type="EV_KEY" code="BTN_DPAD_LEFT"/>
-      <trigger type="EV_ABS" code="ABS_HAT0X" trigger_low="-128"/>
-      <trigger type="EV_ABS" code="ABS_X" trigger_low="-128"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_RIGHT"/>
-      <trigger type="EV_KEY" code="BTN_DPAD_RIGHT"/>
-      <trigger type="EV_ABS" code="ABS_HAT0X" trigger_high="128"/>
-      <trigger type="EV_ABS" code="ABS_X" trigger_high="128"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_LEFT"/>
-      <trigger type="EV_KEY" code="BTN_DPAD_LEFT"/>
-      <trigger type="EV_ABS" code="ABS_HAT0X" trigger_low="-128"/>
-      <trigger type="EV_ABS" code="ABS_X" trigger_low="-128"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_RIGHT"/>
-      <trigger type="EV_KEY" code="BTN_DPAD_RIGHT"/>
-      <trigger type="EV_ABS" code="ABS_HAT0X" trigger_high="128"/>
-      <trigger type="EV_ABS" code="ABS_X" trigger_high="128"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_B"/>
-      <trigger type="EV_KEY" code="BTN_WEST"/>
-    </button>
-    <button>
-      <trigger type="EV_KEY" code="KEY_A"/>
-      <trigger type="EV_KEY" code="BTN_EAST"/>
-    </button>
+    <button type="EV_KEY" code="BTN_DPAD_UP"/>
+    <button type="EV_KEY" code="BTN_DPAD_UP"/>
+    <button type="EV_KEY" code="BTN_DPAD_DOWN"/>
+    <button type="EV_KEY" code="BTN_DPAD_DOWN"/>
+    <button type="EV_KEY" code="BTN_DPAD_LEFT"/>
+    <button type="EV_KEY" code="BTN_DPAD_RIGHT"/>
+    <button type="EV_KEY" code="BTN_DPAD_LEFT"/>
+    <button type="EV_KEY" code="BTN_DPAD_RIGHT"/>
+    <button type="EV_KEY" code="BTN_WEST"/>
+    <button type="EV_KEY" code="BTN_EAST"/>
   </shortcut>
 </shortcuts>

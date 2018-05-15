@@ -64,8 +64,10 @@ struct emulation {
 
 
 struct shortcut_button {
-	struct button_trigger **triggers;
-	int trigger_count;
+	uint8_t type;
+	uint16_t code;
+	int16_t trigger_low;
+	int16_t trigger_high;
 	int state;
 };
 

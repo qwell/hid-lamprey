@@ -307,46 +307,33 @@ void settings_xml_load_shortcuts() {
 
 					xmlFree(name);
 				} else if (!xmlStrcmp(cur->name, (const xmlChar *)"button")) {
-					struct shortcut_button *button = (struct shortcut_button *)calloc(1, sizeof(struct shortcut_button));
+					struct button_code *button_code;
 
-					for (xmlNode *tchild = cur->children; tchild; tchild = tchild->next) {
-						if (tchild->type == XML_ELEMENT_NODE) {
-							/* <trigger/> */
-							struct button_code *button_code;
+					xmlChar *code = xmlGetProp(cur, (const xmlChar *)"code");
+					xmlChar *type = xmlGetProp(cur, (const xmlChar *)"type");
+					xmlChar *trigger_low = xmlGetProp(cur, (const xmlChar *)"trigger_low");
+					xmlChar *trigger_high = xmlGetProp(cur, (const xmlChar *)"trigger_high");
 
-							xmlChar *code = xmlGetProp(tchild, (const xmlChar *)"code");
-							xmlChar *type = xmlGetProp(tchild, (const xmlChar *)"type");
-							xmlChar *trigger_low = xmlGetProp(tchild, (const xmlChar *)"trigger_low");
-							xmlChar *trigger_high = xmlGetProp(tchild, (const xmlChar *)"trigger_high");
+					if ((button_code = hl_controller_get_code_by_name((char *)type, (char *)code))) {
+						struct shortcut_button *button = (struct shortcut_button *)calloc(1, sizeof(struct shortcut_button));
+						button->code = button_code->code;
+						button->type = button_code->type;
 
-							if ((button_code = hl_controller_get_code_by_name((char *)type, (char *)code))) {
-								struct button_trigger *button_trigger = (struct button_trigger *)calloc(1, sizeof(struct button_trigger));
-								button_trigger->code = button_code->code;
-								button_trigger->type = button_code->type;
-								button_trigger->trigger_low = 0;
-								button_trigger->trigger_high = 0;
-
-								if (xmlStrlen(trigger_low) > 0) {
-									button_trigger->trigger_low = atol((char *)trigger_low);
-								} else if (xmlStrlen(trigger_high) > 0) {
-									button_trigger->trigger_high = atol((char *)trigger_high);
-								}
-
-								button->triggers = (struct button_trigger **)realloc(button->triggers, (button->trigger_count + 1) * sizeof(*button->triggers));
-								button->triggers[button->trigger_count] = button_trigger;
-								button->trigger_count++;
-							}
-
-							xmlFree(code);
-							xmlFree(type);
-							xmlFree(trigger_low);
-							xmlFree(trigger_high);
+						if (xmlStrlen(trigger_low) > 0) {
+							button->trigger_low = atol((char *)trigger_low);
+						} else if (xmlStrlen(trigger_high) > 0) {
+							button->trigger_high = atol((char *)trigger_high);
 						}
+
+						shortcut->buttons = (struct shortcut_button **)realloc(shortcut->buttons, (shortcut->button_count + 1) * sizeof(*shortcut->buttons));
+						shortcut->buttons[shortcut->button_count] = button;
+						shortcut->button_count++;
 					}
 
-					shortcut->buttons = (struct shortcut_button **)realloc(shortcut->buttons, (shortcut->button_count + 1) * sizeof(*shortcut->buttons));
-					shortcut->buttons[shortcut->button_count] = button;
-					shortcut->button_count++;
+					xmlFree(code);
+					xmlFree(type);
+					xmlFree(trigger_low);
+					xmlFree(trigger_high);
 				} else if (!xmlStrcmp(cur->name, (const xmlChar *)"function")) {
 /*
 struct shortcut {
