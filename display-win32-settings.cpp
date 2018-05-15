@@ -179,7 +179,7 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 		TreeNode ^nodeCategory;
 
 		struct codelookup type = codelookups[i];
-		if (type.codes[i].codestr) {
+		if (type.typestr) {
 			for (int j = 0; j < sizeof(type.codes) / sizeof(*type.codes); j++) {
 				struct codelookup_code code = type.codes[j];
 
@@ -246,6 +246,40 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 		}
 	}
 	tvMapButtons->EndUpdate();
+
+	tvShortcuts->BeginUpdate();
+	for (int i = 0; i < shortcut_count; i++) {
+		struct shortcut *shortcut = shortcuts[i];
+
+		String ^strShortcut = gcnew String(shortcut->name);
+		TreeNode ^nodeShortcut;
+
+		nodeShortcut = gcnew TreeNode(strShortcut);
+
+		for (int j = 0; j < shortcut->button_count; j++) {
+			struct shortcut_button *button = shortcut->buttons[j];
+
+			for (int k = 0; k < codelookup_count / sizeof(*codelookups); k++) {
+				struct codelookup type = codelookups[k];
+				if (type.typestr && type.type == button->type) {
+					for (int l = 0; l < sizeof(type.codes) / sizeof(*type.codes); l++) {
+						struct codelookup_code code = type.codes[l];
+						if (code.codestr && code.code == button->code) {
+							String ^strButton = gcnew String(code.description ? code.description : code.codestr);
+							TreeNode ^nodeButton;
+
+							nodeButton = gcnew TreeNode(strButton);
+							nodeShortcut->Nodes->Add(nodeButton);
+						}
+					}
+				}
+			}
+		}
+
+		tvShortcuts->Nodes->Add(nodeShortcut);
+	}
+	tvShortcuts->ExpandAll();
+	tvShortcuts->EndUpdate();
 }
 
 System::Void formSettings::tvSkins_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e) {
@@ -266,7 +300,7 @@ System::Void formSettings::tvSkins_AfterSelect(System::Object^  sender, System::
 		this->formMain->loadSkinImages(name, background);
 	}
 }
-
+		 
 System::Void formSettings::tvMapButtons_ItemDrag(System::Object^  sender, System::Windows::Forms::ItemDragEventArgs^  e) {
 	TreeNode ^node = (TreeNode ^)e->Item;
 	if (node && node->Level == 1) {

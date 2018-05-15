@@ -55,6 +55,12 @@ namespace hidlamprey {
 
 	private:
 		formMain ^ formMain;
+	private: System::Windows::Forms::TabPage^  tabShortcuts;
+	private: System::Windows::Forms::TreeView^  tvShortcuts;
+
+
+
+
 
 	private: System::ComponentModel::IContainer^  components;
 
@@ -79,10 +85,13 @@ namespace hidlamprey {
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->tabSkins = (gcnew System::Windows::Forms::TabPage());
 			this->tabMappings = (gcnew System::Windows::Forms::TabPage());
+			this->tabShortcuts = (gcnew System::Windows::Forms::TabPage());
+			this->tvShortcuts = (gcnew System::Windows::Forms::TreeView());
 			this->toolTip1 = (gcnew System::Windows::Forms::ToolTip(this->components));
 			this->tabControl1->SuspendLayout();
 			this->tabSkins->SuspendLayout();
 			this->tabMappings->SuspendLayout();
+			this->tabShortcuts->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// tvSkins
@@ -119,6 +128,7 @@ namespace hidlamprey {
 			// 
 			this->tabControl1->Controls->Add(this->tabSkins);
 			this->tabControl1->Controls->Add(this->tabMappings);
+			this->tabControl1->Controls->Add(this->tabShortcuts);
 			this->tabControl1->Location = System::Drawing::Point(12, 12);
 			this->tabControl1->Name = L"tabControl1";
 			this->tabControl1->SelectedIndex = 0;
@@ -149,6 +159,24 @@ namespace hidlamprey {
 			this->tabMappings->Text = L"Input Mappings";
 			this->tabMappings->UseVisualStyleBackColor = true;
 			// 
+			// tabShortcuts
+			// 
+			this->tabShortcuts->Controls->Add(this->tvShortcuts);
+			this->tabShortcuts->Location = System::Drawing::Point(4, 25);
+			this->tabShortcuts->Name = L"tabShortcuts";
+			this->tabShortcuts->Padding = System::Windows::Forms::Padding(3);
+			this->tabShortcuts->Size = System::Drawing::Size(739, 476);
+			this->tabShortcuts->TabIndex = 2;
+			this->tabShortcuts->Text = L"Shortcuts (Read-Only)";
+			this->tabShortcuts->UseVisualStyleBackColor = true;
+			// 
+			// tvShortcuts
+			// 
+			this->tvShortcuts->Location = System::Drawing::Point(6, 6);
+			this->tvShortcuts->Name = L"tvShortcuts";
+			this->tvShortcuts->Size = System::Drawing::Size(360, 464);
+			this->tvShortcuts->TabIndex = 0;
+			// 
 			// toolTip1
 			// 
 			this->toolTip1->AutoPopDelay = 3000;
@@ -173,6 +201,7 @@ namespace hidlamprey {
 			this->tabControl1->ResumeLayout(false);
 			this->tabSkins->ResumeLayout(false);
 			this->tabMappings->ResumeLayout(false);
+			this->tabShortcuts->ResumeLayout(false);
 			this->ResumeLayout(false);
 
 		}
