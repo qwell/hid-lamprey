@@ -464,6 +464,3 @@ void hl_input_dinput_destroy() {
 
 	hl_thread_exit();
 }
-
-void hl_input_dinput_inject(int id, uint8_t type, uint16_t code, int16_t value) {
-}

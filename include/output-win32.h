@@ -7,18 +7,15 @@
 * (at your option) any later version.
 */
 
-#ifndef LAMPREY_INPUT_XINPUT_H
-#define LAMPREY_INPUT_XINPUT_H
+#ifndef LAMPREY_OUTPUT_WIN32_H
+#define LAMPREY_OUTPUT_WIN32_H
 
 #include "lamprey.h"
 
 #include "threads.h"
 
-extern hl_thread_t t_input_xinput;
-extern hl_mutex_t mutex_input_xinput;
-
-void hl_input_xinput_init();
-void hl_input_xinput_destroy();
-void *hl_input_xinput_poll();
+void hl_output_win32_init();
+void hl_output_win32_destroy();
+void hl_output_win32_inject(uint8_t type, uint16_t code, int16_t value);
 
 #endif

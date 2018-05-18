@@ -140,6 +140,11 @@
     </ClCompile>
     <ClCompile Include="input-xinput.c" />
     <ClCompile Include="lamprey.c" />
+    <ClCompile Include="output-evdev.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="output-win32.c" />
     <ClCompile Include="settings-xml2.c" />
     <ClCompile Include="settings.c" />
     <ClCompile Include="shortcut_cb.c" />
@@ -157,6 +162,7 @@
     <ClInclude Include="include\display-cli.h" />
     <ClInclude Include="include\display-gtk.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="include\display-win32-main.h">
       <FileType>CppForm</FileType>
@@ -170,10 +176,14 @@
     <ClInclude Include="include\input-dinput.h" />
     <ClInclude Include="include\input-evdev.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="include\input-xinput.h" />
     <ClInclude Include="include\input.h" />
     <ClInclude Include="include\lamprey.h" />
+    <ClInclude Include="include\output-evdev.h" />
+    <ClInclude Include="include\output-win32.h" />
+    <ClInclude Include="include\output.h" />
     <ClInclude Include="include\settings-xml2.h" />
     <ClInclude Include="include\settings.h" />
     <ClInclude Include="include\shortcut_cb.h" />
@@ -181,6 +191,7 @@
     <ClInclude Include="include\threads.h" />
     <ClInclude Include="include\xdo.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

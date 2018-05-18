@@ -24,7 +24,7 @@
 
 hl_thread_t t_evdev;
 hl_mutex_t mutex_evdev;
-struct hl_evdev *hl_evdev = NULL;
+struct hl_input_evdev *hl_input_evdev = NULL;
 
 int filter_event_files(const struct dirent *entry)
 {
@@ -44,28 +44,28 @@ void hl_input_evdev_init() {
 
 	hl_mutex_create(&mutex_evdev);
 	hl_mutex_lock(&mutex_evdev);
-	if (hl_evdev) {
+	if (hl_input_evdev) {
 		hl_mutex_unlock(&mutex_evdev);
 		return;
 	}
-	hl_evdev = malloc(sizeof(struct hl_evdev));
-	memset(hl_evdev->fds, 0, sizeof(hl_evdev->fds));
-	memset(hl_evdev->devices, 0, sizeof(hl_evdev->devices));
+	hl_input_evdev = malloc(sizeof(struct hl_input_evdev));
+	memset(hl_input_evdev->fds, 0, sizeof(hl_input_evdev->fds));
+	memset(hl_input_evdev->devices, 0, sizeof(hl_input_evdev->devices));
 
 	for (int i = 0; i < filecount; ++i) {
 		char fullpath[512];
 		char uniq[256];
 		int rc = 1;
 
-		struct libevdev *dev = hl_evdev->devices[i].dev;
+		struct libevdev *dev = hl_input_evdev->devices[i].dev;
 
 		debug_print("Opening event file %s\n", filelist[i]->d_name);
 
 		snprintf(fullpath, sizeof(fullpath), "%s%s", filepath, filelist[i]->d_name);
-		hl_evdev->fds[i].fd = open(fullpath, O_RDWR|O_NONBLOCK);
-		hl_evdev->fds[i].events = POLLIN;
+		hl_input_evdev->fds[i].fd = open(fullpath, O_RDWR|O_NONBLOCK);
+		hl_input_evdev->fds[i].events = POLLIN;
 
-		rc = libevdev_new_from_fd(hl_evdev->fds[i].fd, &dev);
+		rc = libevdev_new_from_fd(hl_input_evdev->fds[i].fd, &dev);
 		if (rc < 0) {
 			fprintf(stderr, "Failed to init libevdev for %s (%s)\n", filelist[i]->d_name, strerror(-rc));
 			continue;
@@ -82,7 +82,7 @@ void hl_input_evdev_init() {
 
 		free(filelist[i]);
 
-		hl_evdev->devices[i].ff_id = -1;
+		hl_input_evdev->devices[i].ff_id = -1;
 
 		if (libevdev_has_event_type(dev, EV_KEY)) {
 			// Get info about keys
@@ -92,7 +92,7 @@ void hl_input_evdev_init() {
 					};
 					debug_print("Device %d has key: %s\n",
 						i, libevdev_event_code_get_name(EV_KEY, code));
-					hl_evdev->maps.key_map[code - LOW_KEY] = key;
+					hl_input_evdev->maps.key_map[code - LOW_KEY] = key;
 				}
 			}
 		}
@@ -114,7 +114,7 @@ void hl_input_evdev_init() {
 					debug_print("Device %d has absolute axis: %s { %d > %d }\n",
 					       i, libevdev_event_code_get_name(EV_ABS, code),
 					       absinfo->minimum, absinfo->maximum);
-					hl_evdev->maps.abs_map[code - LOW_AXIS] = axis;
+					hl_input_evdev->maps.abs_map[code - LOW_AXIS] = axis;
 				}
 			}
 
@@ -134,7 +134,7 @@ void hl_input_evdev_init() {
 					debug_print("Device %d has hat: %s { %d > %d }\n",
 					       i, libevdev_event_code_get_name(EV_ABS, code),
 					       absinfo->minimum, absinfo->maximum);
-					hl_evdev->maps.hat_map[code - LOW_HAT] = hat;
+					hl_input_evdev->maps.hat_map[code - LOW_HAT] = hat;
 				}
 			}
 		}
@@ -151,47 +151,16 @@ void hl_input_evdev_init() {
 				};
 				debug_print("Device %d has FF: %s\n", i, libevdev_event_code_get_name(EV_FF, FF_PERIODIC));
 
-				ioctl(hl_evdev->fds[i].fd, EVIOCSFF, &effect);
-				hl_evdev->devices[i].ff_id = effect.id;
+				ioctl(hl_input_evdev->fds[i].fd, EVIOCSFF, &effect);
+				hl_input_evdev->devices[i].ff_id = effect.id;
 			}
 		}
 		debug_print("\n");
 
-		hl_evdev->devices[i].dev = dev;
+		hl_input_evdev->devices[i].dev = dev;
 	}
 
 	free(filelist);
-
-	/* Create emulated uinput device. */
-	hl_evdev->uinput.dev = libevdev_new();
-	libevdev_set_name(hl_evdev->uinput.dev, "Lamprey Emulated Device");
-
-	/* Emulate all keys in the code table. */
-	for (int i = 0; i < codelookup_count / sizeof(*codelookups); i++) {
-		struct codelookup emu = codelookups[i];
-		void *codedata = NULL;
-		switch (emu.type) {
-		case EV_ABS:
-			codedata = calloc(1, sizeof(struct input_absinfo));
-			((struct input_absinfo *)codedata)->value = 0;
-			((struct input_absinfo *)codedata)->minimum = -1;
-			((struct input_absinfo *)codedata)->maximum = 1;
-			((struct input_absinfo *)codedata)->fuzz = 0;
-			((struct input_absinfo *)codedata)->flat = 0;
-			((struct input_absinfo *)codedata)->resolution = 0;
-			break;
-		}
-
-		libevdev_enable_event_type(hl_evdev->uinput.dev, emu.type);
-		for (int j = 0; j < sizeof(emu.codes) / sizeof(*emu.codes); j++) {
-			libevdev_enable_event_code(hl_evdev->uinput.dev, emu.type, emu.codes[j].code, codedata);
-		}
-	}
-
-	if (libevdev_uinput_create_from_device(hl_evdev->uinput.dev, LIBEVDEV_UINPUT_OPEN_MANAGED, &hl_evdev->uinput.uidev)) {
-		libevdev_free(hl_evdev->uinput.dev);
-		printf("Error creating uinput device.\n");
-	}
 
 	/* Spawn off a thread to handle evdev polling. */
 	hl_thread_create(&t_evdev, hl_input_evdev_poll, NULL);
@@ -208,7 +177,7 @@ void *hl_input_evdev_poll() {
 	do {
 		//TODO Avoid locking around the poll.  This is gross.
 		hl_mutex_lock(&mutex_evdev);
-		rc = poll(hl_evdev->fds, sizeof(hl_evdev->fds) / sizeof(struct pollfd), 1000);
+		rc = poll(hl_input_evdev->fds, sizeof(hl_input_evdev->fds) / sizeof(struct pollfd), 1000);
 		hl_mutex_unlock(&mutex_evdev);
 		if (rc < 0) {
 			break;
@@ -218,14 +187,14 @@ void *hl_input_evdev_poll() {
 		}
 
 		hl_mutex_lock(&mutex_evdev);
-		for (int i = 0; i < sizeof(hl_evdev->devices) / sizeof(*hl_evdev->devices); i++) {
+		for (int i = 0; i < sizeof(hl_input_evdev->devices) / sizeof(*hl_input_evdev->devices); i++) {
 			struct libevdev *dev = NULL;
 
-			if (hl_evdev->fds[i].revents != POLLIN) {
+			if (hl_input_evdev->fds[i].revents != POLLIN) {
 				continue;
 			}
 
-			dev = hl_evdev->devices[i].dev;
+			dev = hl_input_evdev->devices[i].dev;
 
 			do {
 				struct input_event ev;
@@ -237,29 +206,29 @@ void *hl_input_evdev_poll() {
 				switch (ev.type) {
 				case EV_KEY:
 					if (ev.code >= LOW_KEY && ev.code <= HIGH_KEY) {
-						__attribute__((__unused__)) struct key_data key = hl_evdev->maps.key_map[ev.code - LOW_KEY];
+						__attribute__((__unused__)) struct key_data key = hl_input_evdev->maps.key_map[ev.code - LOW_KEY];
 						hl_mutex_unlock(&mutex_evdev);
 						debug_print("Key %s %s\n", libevdev_event_code_get_name(ev.type, ev.code), ev.value ? "pressed" : "released");
-						hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, ev.value);
+						hl_controller_change(libevdev_get_uniq(hl_input_evdev->devices[i].dev), i, ev.type, ev.code, ev.value);
 						hl_mutex_lock(&mutex_evdev);
 					}
 					break;
 				case EV_ABS:
 					if (ev.code >= LOW_HAT && ev.code <= HIGH_HAT) {
-						struct hat_data hat = hl_evdev->maps.hat_map[ev.code - LOW_HAT];
+						struct hat_data hat = hl_input_evdev->maps.hat_map[ev.code - LOW_HAT];
 						int value = hl_controller_scale_range(ev.value, hat.min, hat.max);
 
 						hl_mutex_unlock(&mutex_evdev);
 						debug_print("Hat %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-						hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
+						hl_controller_change(libevdev_get_uniq(hl_input_evdev->devices[i].dev), i, ev.type, ev.code, value);
 						hl_mutex_lock(&mutex_evdev);
 					} else if (ev.code >= LOW_AXIS && ev.code <= HIGH_AXIS) {
-						struct axis_data axis = hl_evdev->maps.abs_map[ev.code - LOW_AXIS];
+						struct axis_data axis = hl_input_evdev->maps.abs_map[ev.code - LOW_AXIS];
 						int value = hl_controller_scale_range(ev.value, axis.min, axis.max);
 
 						hl_mutex_unlock(&mutex_evdev);
 						debug_print("Axis %s Value %d\n", libevdev_event_code_get_name(ev.type, ev.code), value);
-						hl_controller_change(libevdev_get_uniq(hl_evdev->devices[i].dev), i, ev.type, ev.code, value);
+						hl_controller_change(libevdev_get_uniq(hl_input_evdev->devices[i].dev), i, ev.type, ev.code, value);
 						hl_mutex_lock(&mutex_evdev);
 					}
 					break;
@@ -282,49 +251,21 @@ void *hl_input_evdev_poll() {
 void hl_input_evdev_destroy() {
 	hl_mutex_lock(&mutex_evdev);
 
-	if (hl_evdev == NULL) {
+	if (hl_input_evdev == NULL) {
 		hl_mutex_unlock(&mutex_evdev);
 		return;
 	}
 
-	for (int i = 0; i < sizeof(hl_evdev->devices) / sizeof(*hl_evdev->devices); i++) {
-		if (hl_evdev->devices[i].dev != NULL) {
-			libevdev_free(hl_evdev->devices[i].dev);
+	for (int i = 0; i < sizeof(hl_input_evdev->devices) / sizeof(*hl_input_evdev->devices); i++) {
+		if (hl_input_evdev->devices[i].dev != NULL) {
+			libevdev_free(hl_input_evdev->devices[i].dev);
 		}
 	}
 
-	if (hl_evdev->uinput.uidev != NULL) {
-		libevdev_uinput_destroy(hl_evdev->uinput.uidev);
-	}
-
-	if (hl_evdev->uinput.dev != NULL) {
-		libevdev_free(hl_evdev->uinput.dev);
-	}
-
-	free(hl_evdev);
-	hl_evdev = NULL;
+	free(hl_input_evdev);
+	hl_input_evdev = NULL;
 
 	hl_mutex_unlock(&mutex_evdev);
 
 	hl_thread_exit();
-}
-
-void hl_input_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value) {
-	hl_mutex_lock(&mutex_evdev);
-	if (hl_evdev->uinput.uidev != NULL) {
-		libevdev_uinput_write_event(hl_evdev->uinput.uidev, type, code, value);
-		libevdev_uinput_write_event(hl_evdev->uinput.uidev, EV_SYN, SYN_REPORT, 0);
-
-		if (hl_evdev->devices[id].ff_id != -1) {
-			struct input_event play = {
-				.type = EV_FF,
-				.value = 1,
-				.code = hl_evdev->devices[id].ff_id,
-			};
-
-			if (write(hl_evdev->fds[id].fd, &play, sizeof(play)) <= 0) {
-			}
-		}
-	}
-	hl_mutex_unlock(&mutex_evdev);
 }

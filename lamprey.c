@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
 	// Do...stuff.
 
 #if defined(HAVE_EVDEV)
-	if (hl_evdev) {
+	if (hl_input_evdev) {
 		hl_thread_join(t_evdev);
 	}
 #endif

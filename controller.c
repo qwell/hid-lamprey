@@ -17,7 +17,6 @@
 #include "include/controller.h"
 #include "include/display.h"
 
-
 struct codelookup codelookups[] = {
 	CODETABLE
 };
@@ -211,7 +210,7 @@ void controller_emulations(int id, uint8_t type, uint16_t code, int16_t value) {
 				emuvalue = emu->out->trigger;
 			}
 
-			hl_input_inject(id, emu->out->type, emu->out->code, emuvalue);
+			hl_output_inject(emu->out->type, emu->out->code, emuvalue);
 			debug_print("Code %d (%d) converted to %d (%d)\n",
 				emu->in->code, value,
 				emu->out->code, emuvalue);

@@ -11,6 +11,7 @@
 #define LAMPREY_CONTROLLER_H
 
 #include "input.h"
+#include "output.h"
 #include "shortcut_cb.h"
 #include "skin.h"
 

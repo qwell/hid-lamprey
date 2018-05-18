@@ -13,11 +13,10 @@
 #include <sys/poll.h>
 
 #include <libevdev/libevdev.h>
-#include <libevdev/libevdev-uinput.h>
 
 extern hl_thread_t t_evdev;
 extern hl_mutex_t mutex_evdev;
-extern struct hl_evdev *hl_evdev;
+extern struct hl_input_evdev *hl_input_evdev;
 
 /* For list of codes, see
  * https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
@@ -48,11 +47,7 @@ struct hat_data {
 	int max;
 };
 
-struct hl_evdev {
-	struct uinput {
-		struct libevdev *dev;
-		struct libevdev_uinput *uidev;
-	} uinput;
+struct hl_input_evdev {
 	struct devices {
 		struct libevdev *dev;
 		int16_t ff_id;
@@ -68,6 +63,5 @@ struct hl_evdev {
 void hl_input_evdev_init();
 void hl_input_evdev_destroy();
 void *hl_input_evdev_poll();
-void hl_input_evdev_inject(int id, uint8_t type, uint16_t code, int16_t value);
 
 #endif

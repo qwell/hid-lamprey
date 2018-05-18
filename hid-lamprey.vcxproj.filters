@@ -63,6 +63,12 @@
     <ClCompile Include="display-win32-settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="output-win32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="output-evdev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\controller.h">
@@ -126,6 +132,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\display-win32-settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\output.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\output-win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\output-evdev.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

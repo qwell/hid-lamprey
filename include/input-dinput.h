@@ -10,7 +10,7 @@
 #ifndef LAMPREY_INPUT_DINPUT_H
 #define LAMPREY_INPUT_DINPUT_H
 
-#define DIRECTINPUT_VERSION 0x0800 
+#define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
 #include "lamprey.h"
@@ -42,7 +42,6 @@ extern struct hl_input_dinput *hl_input_dinput;
 void hl_input_dinput_init();
 void hl_input_dinput_destroy();
 void *hl_input_dinput_poll();
-void hl_input_dinput_inject(int id, uint8_t type, uint16_t code, int16_t value);
 
 #define DINPUT_DEFAULT_KEYMAP \
 	{ DIK_A, EV_KEY, KEY_A },\
