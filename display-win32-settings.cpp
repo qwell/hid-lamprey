@@ -115,6 +115,7 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 	toolTip1->SetToolTip(this->tvMapButtons, "Drag a button to a mapping target (left) to assign a button mapping.");
 
 	tvSkins->BeginUpdate();
+	tvSkins->Nodes->Clear();
 	for (int i = 0; i < hl_skin_count; i++) {
 		TreeNode ^node = gcnew TreeNode(gcnew String(hl_skins[i]->name));
 		for (int j = 0; j < hl_skins[i]->background_count; j++) {
@@ -125,6 +126,7 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 	tvSkins->EndUpdate();
 
 	tvMappings->BeginUpdate();
+	tvMappings->Nodes->Clear();
 	for (int i = 0; i < input_mapping_count; i++) {
 		if (!input_mappings[i]->builtin) {
 			String ^strDevice = gcnew String(input_mappings[i]->device);
@@ -175,6 +177,7 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 	tvMappings->EndUpdate();
 
 	tvMapButtons->BeginUpdate();
+	tvMapButtons->Nodes->Clear();
 	for (int i = 0; i < codelookup_count / sizeof(*codelookups); i++) {
 		TreeNode ^nodeCategory;
 
@@ -248,6 +251,7 @@ System::Void formSettings::formSettings_Load(System::Object^  sender, System::Ev
 	tvMapButtons->EndUpdate();
 
 	tvShortcuts->BeginUpdate();
+	tvShortcuts->Nodes->Clear();
 	for (int i = 0; i < shortcut_count; i++) {
 		struct shortcut *shortcut = shortcuts[i];
 
