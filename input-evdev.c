@@ -22,7 +22,7 @@
 #include "include/controller.h"
 #include "include/input.h"
 
-hl_thread_t t_evdev;
+hl_thread_t t_input_evdev;
 hl_mutex_t mutex_evdev;
 struct hl_input_evdev *hl_input_evdev = NULL;
 
@@ -163,7 +163,7 @@ void hl_input_evdev_init() {
 	free(filelist);
 
 	/* Spawn off a thread to handle evdev polling. */
-	hl_thread_create(&t_evdev, hl_input_evdev_poll, NULL);
+	hl_thread_create(&t_input_evdev, hl_input_evdev_poll, NULL);
 
 	hl_mutex_unlock(&mutex_evdev);
 

@@ -63,6 +63,9 @@ int main(int argc, char **argv) {
 	/* Initialize input data. */
 	hl_input_init();
 
+	/* Initialize output data. */
+	hl_output_init();
+
 #if defined(HAVE_XDO)
 	/* Initialize xdo data. */
 	hl_xdo = hl_xdo_init();
@@ -72,9 +75,11 @@ int main(int argc, char **argv) {
 
 	// Do...stuff.
 
+	hl_output_destroy();
+
 #if defined(HAVE_EVDEV)
 	if (hl_input_evdev) {
-		hl_thread_join(t_evdev);
+		hl_thread_join(t_input_evdev);
 	}
 #endif
 
