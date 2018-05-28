@@ -91,34 +91,34 @@ void *hl_input_xinput_poll() {
 				}
 			}
 
-			if (hl_controller_scale_range(xinput_devices[i].state.Gamepad.bLeftTrigger, 0, 255) != hl_controller_scale_range(newState.Gamepad.bLeftTrigger, 0, 255)) {
-				int value = hl_controller_scale_range(newState.Gamepad.bLeftTrigger, 0, 255);
+			if (hl_controller_scale_range(xinput_devices[i].state.Gamepad.bLeftTrigger, 0, 255, true) != hl_controller_scale_range(newState.Gamepad.bLeftTrigger, 0, 255, true)) {
+				int value = hl_controller_scale_range(newState.Gamepad.bLeftTrigger, 0, 255, true);
 				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_HAT2Y, value);
 				debug_print("Controller %s, ABS_HAT2Y: %d\n", xinput_devices[i].name, value);
 			}
-			if (hl_controller_scale_range(xinput_devices[i].state.Gamepad.bRightTrigger, 0, 255) != hl_controller_scale_range(newState.Gamepad.bRightTrigger, 0, 255)) {
-				int value = hl_controller_scale_range(newState.Gamepad.bRightTrigger, 0, 255);
+			if (hl_controller_scale_range(xinput_devices[i].state.Gamepad.bRightTrigger, 0, 255, true) != hl_controller_scale_range(newState.Gamepad.bRightTrigger, 0, 255, true)) {
+				int value = hl_controller_scale_range(newState.Gamepad.bRightTrigger, 0, 255, true);
 				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_HAT2X, value);
 				debug_print("Controller %s, ABS_HAT2X: %d\n", xinput_devices[i].name, value);
 			}
-			if (hl_controller_scale_range(xinput_devices[i].state.Gamepad.sThumbLX, -32768, 32767) != hl_controller_scale_range(newState.Gamepad.sThumbLX, -32768, 32767)) {
-				int value = hl_controller_scale_range(newState.Gamepad.sThumbLX, -32768, 32767);
+			if (hl_controller_scale_range(xinput_devices[i].state.Gamepad.sThumbLX, -32768, 32767, true) != hl_controller_scale_range(newState.Gamepad.sThumbLX, -32768, 32767, true)) {
+				int value = hl_controller_scale_range(newState.Gamepad.sThumbLX, -32768, 32767, true);
 				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_X, value);
 				debug_print("Controller %s, ABS_X: %d\n", xinput_devices[i].name, value);
 			}
 			/* Use 0 - sThumbLY here, because up and down are backwards from every other input type. */
-			if (hl_controller_scale_range(0 - xinput_devices[i].state.Gamepad.sThumbLY, -32768, 32767) != hl_controller_scale_range(0 - newState.Gamepad.sThumbLY, -32768, 32767)) {
-				int value = hl_controller_scale_range(0 - newState.Gamepad.sThumbLY, -32768, 32767);
+			if (hl_controller_scale_range(0 - xinput_devices[i].state.Gamepad.sThumbLY, -32768, 32767, true) != hl_controller_scale_range(0 - newState.Gamepad.sThumbLY, -32768, 32767, true)) {
+				int value = hl_controller_scale_range(0 - newState.Gamepad.sThumbLY, -32768, 32767, true);
 				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_Y, value);
 				debug_print("Controller %s, ABS_Y: %d\n", xinput_devices[i].name, value);
 			}
-			if (hl_controller_scale_range(xinput_devices[i].state.Gamepad.sThumbRX, -32768, 32767) != hl_controller_scale_range(newState.Gamepad.sThumbRX, -32768, 32767)) {
-				int value = hl_controller_scale_range(newState.Gamepad.sThumbRX, -32768, 32767);
+			if (hl_controller_scale_range(xinput_devices[i].state.Gamepad.sThumbRX, -32768, 32767, true) != hl_controller_scale_range(newState.Gamepad.sThumbRX, -32768, 32767, true)) {
+				int value = hl_controller_scale_range(newState.Gamepad.sThumbRX, -32768, 32767, true);
 				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_RX, value);
 				debug_print("Controller %s, ABS_RX: %d\n", xinput_devices[i].name, value);
 			}
-			if (hl_controller_scale_range(xinput_devices[i].state.Gamepad.sThumbRY, -32768, 32767) != hl_controller_scale_range(newState.Gamepad.sThumbRY, -32768, 32767)) {
-				int value = hl_controller_scale_range(newState.Gamepad.sThumbRY, -32768, 32767);
+			if (hl_controller_scale_range(xinput_devices[i].state.Gamepad.sThumbRY, -32768, 32767, true) != hl_controller_scale_range(newState.Gamepad.sThumbRY, -32768, 32767, true)) {
+				int value = hl_controller_scale_range(newState.Gamepad.sThumbRY, -32768, 32767, true);
 				hl_controller_change(xinput_devices[i].name, i, EV_ABS, ABS_RY, value);
 				debug_print("Controller %s, ABS_RY: %d\n", xinput_devices[i].name, value);
 			}

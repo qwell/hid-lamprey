@@ -1,0 +1,9 @@
+﻿<skin name="mouse-lamprey">
+	<background name="default" image="mouse-base.png"/>
+
+	<button image="mouse-left.png" type="EV_KEY" code="BTN_LEFT" x="15" y="3"/>
+	<button image="mouse-right.png" type="EV_KEY" code="BTN_RIGHT" x="75" y="3"/>
+
+	<axis image="mouse-scrollup.png" type_y="EV_REL" code_y="REL_WHEEL" trigger_y="1" x="61" y="16" offset_y="-256"/>
+	<axis image="mouse-scrolldown.png" type_y="EV_REL" code_y="REL_WHEEL" trigger_y="-1" x="61" y="42" offset_y="-256"/>
+</skin>

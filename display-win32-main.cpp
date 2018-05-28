@@ -27,10 +27,7 @@ System::Void formMain::picController_onPaint(System::Object^ sender, System::Win
 			struct hl_skin_button *skin_button = skinActive->buttons[j];
 			if (button->type == skin_button->type && button->code == skin_button->code) {
 				if (button->value) {
-					this->skinButtons[j]->Visible = true;
-				}
-				else {
-					this->skinButtons[j]->Visible = false;
+					e->Graphics->DrawImage(this->skinButtons[j]->Image, RectangleF(this->skinButtons[j]->Location, this->skinButtons[j]->Size));
 				}
 			}
 		}
@@ -41,31 +38,37 @@ System::Void formMain::picController_onPaint(System::Object^ sender, System::Win
 				(button->type == skin_axis->type_y && button->code == skin_axis->code_y)) {
 				int offset_x = this->skinAxes[j]->Location.X - skin_axis->x;
 				int offset_y = this->skinAxes[j]->Location.Y - skin_axis->y;
+				int visible = false;
 
-				if (button->type == skin_axis->type_x && button->code == skin_axis->code_x) {
+				if (button->type == skin_axis->type_x && button->code == skin_axis->code_x && (skin_axis->trigger_x == 0 || (skin_axis->trigger_x > 0 && button->value > skin_axis->trigger_x) || (skin_axis->trigger_x < 0 && button->value < skin_axis->trigger_x))) {
 					if (button->value) {
-						offset_x = button->value / (256 / skin_axis->offset_x);
-					}
-					else {
+						if (skin_axis->offset_x) {
+							offset_x = (button->type == EV_REL ? button->decay : button->value) / (256 / skin_axis->offset_x);
+						} else {
+							offset_x = 0;
+						}
+						visible = true;
+					} else {
 						offset_x = 0;
 					}
 				}
 
-				if (button->type == skin_axis->type_y && button->code == skin_axis->code_y) {
+				if (button->type == skin_axis->type_y && button->code == skin_axis->code_y && (skin_axis->trigger_y == 0 || (skin_axis->trigger_y > 0 && button->value > skin_axis->trigger_y) || (skin_axis->trigger_y < 0 && button->value < skin_axis->trigger_y))) {
 					if (button->value) {
-						offset_y = button->value / (256 / skin_axis->offset_y);
-					}
-					else {
+						if (skin_axis->offset_y) {
+							offset_y = (button->type == EV_REL ? button->decay : button->value) / (256 / skin_axis->offset_y);
+						} else {
+							offset_y = 0;
+						}
+						visible = true;
+					} else {
 						offset_y = 0;
 					}
 				}
 
 				this->skinAxes[j]->Location = Drawing::Point(skin_axis->x + offset_x, skin_axis->y + offset_y);
-				if (offset_x || offset_y) {
-					this->skinAxes[j]->Visible = true;
-				}
-				else {
-					this->skinAxes[j]->Visible = false;
+				if (visible) {
+					e->Graphics->DrawImage(this->skinAxes[j]->Image, RectangleF(this->skinAxes[j]->Location, this->skinAxes[j]->Size));
 				}
 			}
 		}
@@ -94,6 +97,7 @@ System::Void formMain::formMain_Closed(System::Object^ sender, System::EventArgs
 System::Void formMain::formMain_Shown(System::Object^ sender, System::EventArgs^ e) {
 	this->loadSkinImages(hl_settings->skin->name, hl_settings->skin->background);
 }
+
 System::Void formMain::formMain_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 	if (e->Button == System::Windows::Forms::MouseButtons::Left) {
 		const int HT_CAPTION = 2;
@@ -102,7 +106,45 @@ System::Void formMain::formMain_MouseDown(System::Object^ sender, System::Window
 	}
 }
 
+System::Void formMain::timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
+	bool refresh;
+	if (!this->controller) {
+		return;
+	}
+
+	hl_mutex_lock(&controller_mutex);
+	for (int i = 0; i < this->controller->button_count; i++) {
+		if (this->controller->buttons[i]->type == EV_REL && this->controller->buttons[i]->value != 0) {
+			int16_t decay_amount;
+			if (abs(this->controller->buttons[i]->value) < 10) {
+				decay_amount = this->controller->buttons[i]->value;
+			} else {
+				decay_amount = this->controller->buttons[i]->value * .1;
+			}
+			this->controller->buttons[i]->decay -= decay_amount;
+			if (abs(this->controller->buttons[i]->decay) < abs(decay_amount)) {
+				this->controller->buttons[i]->decay = 0;
+				this->controller->buttons[i]->value = 0;
+			}
+			refresh = true;
+		}
+	}
+	hl_mutex_unlock(&controller_mutex);
+
+	if (refresh) {
+		if (this->picController->InvokeRequired) {
+			this->picController->Invoke(gcnew Action(this, &formMain::refreshImage));
+		} else {
+			this->refreshImage();
+		}
+	}
+}
+
 void formMain::refreshImage() {
+	if (!this->timer1->Enabled) {
+		this->timer1->Interval = 100;
+		this->timer1->Enabled = true;
+	}
 	this->picController->Refresh();
 }
 
@@ -117,8 +159,7 @@ void formMain::output_controller(struct controller *c) {
 
 	if (this->picController->InvokeRequired) {
 		this->picController->Invoke(gcnew Action(this, &formMain::refreshImage));
-	}
-	else {
+	} else {
 		this->refreshImage();
 	}
 }
@@ -158,7 +199,7 @@ void formMain::loadSkinImages(char *skin_name, char *skin_background) {
 	}
 
 	Drawing::Bitmap ^backgroundImage = gcnew Bitmap(String::Concat(gcnew String(skinActive->path), gcnew String(skinActiveBackground->filename)));
-	//backgroundImage->MakeTransparent(Color::White);
+	backgroundImage->MakeTransparent(Color::White);
 
 	picController->Image = backgroundImage;
 	picController->Size = backgroundImage->Size;
@@ -216,7 +257,15 @@ void formMain::loadSkinImages(char *skin_name, char *skin_background) {
 		picAxis->Parent = this->picController;
 	}
 
-	float scale = 640 * ((float)1 / backgroundImage->Width);
-	picController->Scale(SizeF(scale, scale));
+	if (backgroundImage->Width > 640 || backgroundImage->Height > 640) {
+		/* Scale down to a maximum of 640px */
+		float scale;
+		if (backgroundImage->Width > backgroundImage->Height) {
+			scale = 640 * ((float)1 / backgroundImage->Width);
+		} else {
+			scale = 640 * ((float)1 / backgroundImage->Height);
+		}
+		picController->Scale(SizeF(scale, scale));
+	}
 	picController->Visible = true;
 }

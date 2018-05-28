@@ -58,6 +58,7 @@ namespace hidlamprey {
 		struct hl_skin *skinActive;
 		struct hl_skin_background *skinActiveBackground;
 		Form ^settings;
+		ArrayList ^foo = gcnew ArrayList();
 
 		array<System::Windows::Forms::PictureBox^>^ skinButtons;
 		array<System::Windows::Forms::PictureBox^>^ skinAxes;
@@ -66,7 +67,8 @@ namespace hidlamprey {
 		System::Windows::Forms::ToolStripMenuItem^  tsmiSettings;
 		System::Windows::Forms::ToolStripMenuItem^  tsmiAlwaysOnTop;
 		System::Windows::Forms::ToolStripMenuItem^  tsmiExit;
-		System::ComponentModel::IContainer^  components;
+	private: System::Windows::Forms::Timer^  timer1;
+			 System::ComponentModel::IContainer^  components;
 
 
 
@@ -88,6 +90,7 @@ namespace hidlamprey {
 			this->tsmiSettings = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tsmiAlwaysOnTop = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tsmiExit = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picController))->BeginInit();
 			this->contextMenuStrip->SuspendLayout();
 			this->SuspendLayout();
@@ -138,6 +141,10 @@ namespace hidlamprey {
 			this->tsmiExit->Text = L"Exit";
 			this->tsmiExit->Click += gcnew System::EventHandler(this, &formMain::tsmiExit_Click);
 			// 
+			// timer1
+			// 
+			this->timer1->Tick += gcnew System::EventHandler(this, &formMain::timer1_Tick);
+			// 
 			// formMain
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
@@ -166,5 +173,6 @@ namespace hidlamprey {
 			System::Void formMain_Closed(System::Object^ sender, System::EventArgs^ e);
 			System::Void formMain_Shown(System::Object^ sender, System::EventArgs^ e);
 			System::Void formMain_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
+			System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e);
 };
 }

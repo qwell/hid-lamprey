@@ -38,10 +38,12 @@ struct hl_skin_axis {
 	uint16_t code_x;
 	int x;
 	int offset_x;
+	int trigger_x;
 	uint8_t type_y;
 	uint16_t code_y;
 	int y;
 	int offset_y;
+	int trigger_y;
 };
 
 struct hl_skin {

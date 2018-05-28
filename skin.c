@@ -285,15 +285,21 @@ void hl_skin_load(char *skin_name, char *background_name) {
 								xmlChar *type_x = xmlGetProp(cur, (const xmlChar *)"type_x");
 								xmlChar *code_x = xmlGetProp(cur, (const xmlChar *)"code_x");
 								xmlChar *pos_x = xmlGetProp(cur, (const xmlChar *)"x");
-								xmlChar *offset_x = xmlGetProp(cur, (const xmlChar *)"xoffset");
+								xmlChar *offset_x = xmlGetProp(cur, (const xmlChar *)"offset_x");
+								xmlChar *trigger_x = xmlGetProp(cur, (const xmlChar *)"trigger_x");
 
 								xmlChar *type_y = xmlGetProp(cur, (const xmlChar *)"type_y");
 								xmlChar *code_y = xmlGetProp(cur, (const xmlChar *)"code_y");
 								xmlChar *pos_y = xmlGetProp(cur, (const xmlChar *)"y");
-								xmlChar *offset_y = xmlGetProp(cur, (const xmlChar *)"yoffset");
+								xmlChar *offset_y = xmlGetProp(cur, (const xmlChar *)"offset_y");
+								xmlChar *trigger_y = xmlGetProp(cur, (const xmlChar *)"trigger_y");
 
-								button_code_x = hl_controller_get_code_by_name((char *)type_x, (char *)code_x);
-								button_code_y = hl_controller_get_code_by_name((char *)type_y, (char *)code_y);
+								if (type_x && code_x) {
+									button_code_x = hl_controller_get_code_by_name((char *)type_x, (char *)code_x);
+								}
+								if (type_y && code_y) {
+									button_code_y = hl_controller_get_code_by_name((char *)type_y, (char *)code_y);
+								}
 
 								if (button_code_x || button_code_y) {
 									struct hl_skin_axis *axis = (struct hl_skin_axis *)calloc(1, sizeof(struct hl_skin_axis));
@@ -301,8 +307,18 @@ void hl_skin_load(char *skin_name, char *background_name) {
 									strncpy(axis->filename, (char *)image, sizeof(axis->filename) - 1);
 									axis->x = atoi((char *)pos_x);
 									axis->y = atoi((char *)pos_y);
-									axis->offset_x = atoi((char *)offset_x);
-									axis->offset_y = atoi((char *)offset_y);
+									if (offset_x) {
+										axis->offset_x = strtoul((char *)offset_x, (char **)NULL, 10);
+									}
+									if (offset_y) {
+										axis->offset_y = strtoul((char *)offset_y, (char **)NULL, 10);
+									}
+									if (trigger_x) {
+										axis->trigger_x = strtoul((char *)trigger_x, (char **)NULL, 10);
+									}
+									if (trigger_y) {
+										axis->trigger_y = strtoul((char *)trigger_y, (char **)NULL, 10);
+									}
 
 									if (button_code_x) {
 										axis->code_x = button_code_x->code;
@@ -325,10 +341,12 @@ void hl_skin_load(char *skin_name, char *background_name) {
 								xmlFree(code_x);
 								xmlFree(pos_x);
 								xmlFree(offset_x);
+								xmlFree(trigger_x);
 								xmlFree(type_y);
 								xmlFree(code_y);
 								xmlFree(pos_y);
 								xmlFree(offset_y);
+								xmlFree(trigger_y);
 							}
 							else if (!xmlStrcmp(cur->name, (const xmlChar *)"stick")) {
 								/* For compatibility. */

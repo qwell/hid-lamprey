@@ -365,28 +365,28 @@ void *hl_input_dinput_poll() {
 						}
 					}
 
-					if (hl_controller_scale_range(newstate.lX, -256, 256) != hl_controller_scale_range(oldstate.lX, -256, 256)) {
+					if (hl_controller_scale_range(newstate.lX, -256, 256, true) != hl_controller_scale_range(oldstate.lX, -256, 256, true)) {
 						snprintf(rawname, sizeof(rawname), "axis:lX");
-						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lY, -256, 256));
+						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lX, -256, 256, true));
 						if ((inputmap = dinput_get_map(input->name, rawname))) {
-							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lX, -256, 256));
+							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lX, -256, 256, true));
 						}
 					}
-					if (hl_controller_scale_range(newstate.lY, -256, 256) != hl_controller_scale_range(oldstate.lY, -256, 256)) {
+					if (hl_controller_scale_range(newstate.lY, -256, 256, true) != hl_controller_scale_range(oldstate.lY, -256, 256, true)) {
 						snprintf(rawname, sizeof(rawname), "axis:lY");
-						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lY, -256, 256));
+						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lY, -256, 256, true));
 						if ((inputmap = dinput_get_map(input->name, rawname))) {
-							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lY, -256, 256));
+							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lY, -256, 256, true));
 						}
 					}
 
 					/* TODO Is this what all controllers look like for right stick?
 					 * Confirmed: No.
-					if (hl_controller_scale_range(newstate.rglSlider[0], -256, 256) != hl_controller_scale_range(oldstate.rglSlider[0], -256, 256)) {
-						hl_controller_change(input->name, 0, EV_ABS, ABS_RX, hl_controller_scale_range(newstate.rglSlider[0], -256, 256));
+					if (hl_controller_scale_range(newstate.rglSlider[0], -256, 256, true) != hl_controller_scale_range(oldstate.rglSlider[0], -256, 256, true)) {
+						hl_controller_change(input->name, 0, EV_ABS, ABS_RX, hl_controller_scale_range(newstate.rglSlider[0], -256, 256, true));
 					}
-					if (hl_controller_scale_range(newstate.lRz, -256, 256) != hl_controller_scale_range(oldstate.lRz, -256, 256)) {
-						hl_controller_change(input->name, 0, EV_ABS, ABS_RY, hl_controller_scale_range(newstate.lRz, -256, 256));
+					if (hl_controller_scale_range(newstate.lRz, -256, 256, true) != hl_controller_scale_range(oldstate.lRz, -256, 256, true)) {
+						hl_controller_change(input->name, 0, EV_ABS, ABS_RY, hl_controller_scale_range(newstate.lRz, -256, 256, true));
 					}
 					*/
 				}
@@ -400,6 +400,58 @@ void *hl_input_dinput_poll() {
 				if ((hr = input->device->GetDeviceState(sizeof(DIMOUSESTATE2), &newstate)) == DI_OK) {
 					memcpy(&oldstate, &hl_input_dinput->devices[devnum]->state, sizeof(oldstate));
 					memcpy(&state, &newstate, sizeof(newstate));
+
+					for (int i = 0; i < input->capabilities.dwButtons; i++) {
+						if (newstate.rgbButtons[i] != oldstate.rgbButtons[i]) {
+							snprintf(rawname, sizeof(rawname), "button:%d", i);
+							inputmap = dinput_get_map(input->name, rawname);
+
+							if (newstate.rgbButtons[i] & 0x80) {
+								hl_controller_raw(input->name, rawname, 1);
+								if (inputmap) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, inputmap->mapvalue ? inputmap->mapvalue : 1);
+								}
+							} else {
+								hl_controller_raw(input->name, rawname, 0);
+								if (inputmap) {
+									hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, 0);
+								}
+							}
+						}
+					}
+
+					/* TODO Fix the min and max values.  Is there one? */
+					if (hl_controller_scale_range(newstate.lX, -512, 512, false) != 0) {
+						snprintf(rawname, sizeof(rawname), "axis:lX");
+						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lX, -512, 512, false));
+						if ((inputmap = dinput_get_map(input->name, rawname))) {
+							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lX, -512, 512, false));
+						}
+					}
+					if (hl_controller_scale_range(newstate.lY, -512, 512, false) != 0) {
+						snprintf(rawname, sizeof(rawname), "axis:lY");
+						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lY, -512, 512, false));
+						if ((inputmap = dinput_get_map(input->name, rawname))) {
+							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lY, -512, 512, false));
+						}
+					}
+
+					if (newstate.lZ != oldstate.lZ) {
+						/* Fake a relative value. */
+						LONG relval = newstate.lZ - oldstate.lZ;
+						if (relval < -512) {
+							relval = -512;
+						} else if (relval > 512) {
+							relval = 512;
+						}
+//						if (relval != 0) {
+							snprintf(rawname, sizeof(rawname), "axis:lZ");
+							hl_controller_raw(input->name, rawname, hl_controller_scale_range(relval, -512, 512, false));
+							if ((inputmap = dinput_get_map(input->name, rawname))) {
+								hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(relval, -512, 512, false));
+							}
+//						}
+					}
 				}
 				break;
 			}

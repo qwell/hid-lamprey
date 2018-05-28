@@ -14,4 +14,9 @@
   <mapping device="Dinput gamepad0" rawname="dpad_left:0" maptype="EV_KEY" mapcode="BTN_DPAD_LEFT"/>
   <mapping device="Dinput gamepad0" rawname="axis:lX" maptype="EV_ABS" mapcode="ABS_X"/>
   <mapping device="Dinput gamepad0" rawname="axis:lY" maptype="EV_ABS" mapcode="ABS_Y"/>
+  <mapping device="Dinput mouse0" rawname="axis:lZ" maptype="EV_REL" mapcode="REL_WHEEL"/>
+  <mapping device="Dinput mouse0" rawname="button:0" maptype="EV_KEY" mapcode="BTN_LEFT"/>
+  <mapping device="Dinput mouse0" rawname="button:1" maptype="EV_KEY" mapcode="BTN_RIGHT"/>
+  <mapping device="Dinput mouse0" rawname="axis:lX" maptype="EV_REL" mapcode="REL_X"/>
+  <mapping device="Dinput mouse0" rawname="axis:lY" maptype="EV_REL" mapcode="REL_Y"/>
 </mappings>

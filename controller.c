@@ -51,7 +51,7 @@ struct button_code *hl_controller_get_code_by_name(char *type, char *name) {
 	return NULL;
 }
 
-int hl_controller_scale_range(int curvalue, int curmin, int curmax) {
+int hl_controller_scale_range(int curvalue, int curmin, int curmax, bool usedeadzone) {
 	int newmin = -256;
 	int newmax = 255;
 	int value = 0;
@@ -67,7 +67,10 @@ int hl_controller_scale_range(int curvalue, int curmin, int curmax) {
 	int relzero = zeroish ? round(zeroish / 2) : zeroish;
 
 	int rangesize = (curmax - curmin);
-	int deadsize = ((rangesize % 2 ? rangesize : rangesize + 1) / 2) * hl_settings->deadzone_axis;
+	int deadsize = 0;
+	if (usedeadzone) {
+		deadsize = ((rangesize % 2 ? rangesize : rangesize + 1) / 2) * hl_settings->deadzone_axis;
+	}
 
 	/* Scale value
 	 * from min > relzero +/- deadsize > max
@@ -226,6 +229,9 @@ void controller_set_button(struct controller *controller, uint8_t type, uint16_t
 		if (type == controller->buttons[j]->type && code == controller->buttons[j]->code) {
 			/* We're good.  Set it and bail out. */
 			controller->buttons[j]->value = value;
+			if (type == EV_REL && value != 0) {
+				controller->buttons[j]->decay = value;
+			}
 
 			return;
 		}
@@ -237,6 +243,9 @@ void controller_set_button(struct controller *controller, uint8_t type, uint16_t
 	button->type = type;
 	button->code = code;
 	button->value = value;
+	if (type == EV_REL && value != 0) {
+		button->decay = value;
+	}
 
 	controller->buttons = (struct button_state **)realloc(controller->buttons, (controller->button_count + 1) * sizeof(*controller->buttons));
 	controller->buttons[controller->button_count] = button;

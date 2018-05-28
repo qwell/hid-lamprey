@@ -18,7 +18,7 @@
 void hl_controller_raw(const char *device, const char *rawname, int value);
 void hl_controller_change(const char *device, int id, uint8_t type, uint16_t code, int16_t value);
 struct button_code *hl_controller_get_code_by_name(char *type, char *name);
-int hl_controller_scale_range(int curvalue, int curmin, int curmax);
+int hl_controller_scale_range(int curvalue, int curmin, int curmax, bool usedeadzone);
 
 struct button_code {
 	uint8_t type;
@@ -29,6 +29,7 @@ struct button_state {
 	uint8_t type;
 	uint16_t code;
 	int16_t value;
+	int16_t decay;
 };
 
 struct controller {
