@@ -277,8 +277,8 @@ void hl_skin_load(char *skin_name, char *background_name) {
 								xmlFree(pos_y);
 							}
 							else if (!xmlStrcmp(cur->name, (const xmlChar *)"axis")) {
-								struct button_code *button_code_x;
-								struct button_code *button_code_y;
+								struct button_code *button_code_x = NULL;
+								struct button_code *button_code_y = NULL;
 
 								xmlChar *image = xmlGetProp(cur, (const xmlChar *)"image");
 
