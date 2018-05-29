@@ -4,6 +4,8 @@
 	<button image="mouse-left.png" type="EV_KEY" code="BTN_LEFT" x="15" y="3"/>
 	<button image="mouse-right.png" type="EV_KEY" code="BTN_RIGHT" x="75" y="3"/>
 
-	<axis image="mouse-scrollup.png" type_y="EV_REL" code_y="REL_WHEEL" trigger_y="1" x="61" y="16" offset_y="-256"/>
-	<axis image="mouse-scrolldown.png" type_y="EV_REL" code_y="REL_WHEEL" trigger_y="-1" x="61" y="42" offset_y="-256"/>
+	<axis image="mouse-scrollup.png" type_y="EV_REL" code_y="REL_WHEEL" trigger_y="1" x="61" y="16"/>
+	<axis image="mouse-scrolldown.png" type_y="EV_REL" code_y="REL_WHEEL" trigger_y="-1" x="61" y="42"/>
+
+	<axis image="mouse-XY.png" type_x="EV_REL" code_x="REL_X" type_y="EV_REL" code_y="REL_Y" x="69" y="101" offset_x="69" offset_y="101"/>
 </skin>
