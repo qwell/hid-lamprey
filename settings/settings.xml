@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
-  <skin name="mouse-lamprey" background="default"/>
+  <skin name="kbmouse-lamprey" background="default"/>
   <option name="deadzone_hat">0</option>
   <option name="deadzone_axis">0.2</option>
   <device name="rockcandy">3/e6f-11f:Rock Candy Gamepad Wired Controller</device>
