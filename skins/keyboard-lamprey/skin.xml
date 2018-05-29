@@ -1,0 +1,8 @@
+﻿<skin name="keyboard-lamprey">
+	<background name="default" image="keyboard-base.png"/>
+
+	<button image="keyboard-button.png" type="EV_KEY" code="KEY_W" x="60" y="0"/>
+	<button image="keyboard-button.png" type="EV_KEY" code="KEY_A" x="0" y="60"/>
+	<button image="keyboard-button.png" type="EV_KEY" code="KEY_S" x="70" y="60"/>
+	<button image="keyboard-button.png" type="EV_KEY" code="KEY_D" x="140" y="60"/>
+</skin>
