@@ -421,36 +421,29 @@ void *hl_input_dinput_poll() {
 					}
 
 					/* TODO Fix the min and max values.  Is there one? */
-					if (hl_controller_scale_range(newstate.lX, -512, 512, false) != 0) {
+					if (hl_controller_scale_range(newstate.lX, -256, 256, false) != 0) {
 						snprintf(rawname, sizeof(rawname), "axis:lX");
-						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lX, -512, 512, false));
+						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lX, -256, 256, false));
 						if ((inputmap = dinput_get_map(input->name, rawname))) {
-							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lX, -512, 512, false));
+							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lX, -256, 256, false));
 						}
 					}
-					if (hl_controller_scale_range(newstate.lY, -512, 512, false) != 0) {
+					if (hl_controller_scale_range(newstate.lY, -256, 256, false) != 0) {
 						snprintf(rawname, sizeof(rawname), "axis:lY");
-						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lY, -512, 512, false));
+						hl_controller_raw(input->name, rawname, hl_controller_scale_range(newstate.lY, -256, 256, false));
 						if ((inputmap = dinput_get_map(input->name, rawname))) {
-							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lY, -512, 512, false));
+							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(newstate.lY, -256, 256, false));
 						}
 					}
 
 					if (newstate.lZ != oldstate.lZ) {
 						/* Fake a relative value. */
 						LONG relval = newstate.lZ - oldstate.lZ;
-						if (relval < -512) {
-							relval = -512;
-						} else if (relval > 512) {
-							relval = 512;
+						snprintf(rawname, sizeof(rawname), "axis:lZ");
+						hl_controller_raw(input->name, rawname, hl_controller_scale_range(relval, -256, 256, false));
+						if ((inputmap = dinput_get_map(input->name, rawname))) {
+							hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(relval, -256, 256, false));
 						}
-//						if (relval != 0) {
-							snprintf(rawname, sizeof(rawname), "axis:lZ");
-							hl_controller_raw(input->name, rawname, hl_controller_scale_range(relval, -512, 512, false));
-							if ((inputmap = dinput_get_map(input->name, rawname))) {
-								hl_controller_change(input->name, 0, inputmap->maptype, inputmap->mapcode, hl_controller_scale_range(relval, -512, 512, false));
-							}
-//						}
 					}
 				}
 				break;
