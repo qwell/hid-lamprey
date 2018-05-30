@@ -152,13 +152,8 @@ void formMain::output_controller(struct controller *c) {
 
 	hl_mutex_lock(&controller_mutex);
 	this->controller = c;
+	this->needRefresh = true;
 	hl_mutex_unlock(&controller_mutex);
-
-	if (this->picController->InvokeRequired) {
-		this->picController->Invoke(gcnew Action(this, &formMain::refreshImage));
-	} else {
-		this->refreshImage();
-	}
 }
 
 void formMain::output_raw(const char *device, const char *rawname, int value) {
