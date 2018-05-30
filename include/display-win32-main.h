@@ -58,7 +58,7 @@ namespace hidlamprey {
 		struct hl_skin *skinActive;
 		struct hl_skin_background *skinActiveBackground;
 		Form ^settings;
-		ArrayList ^foo = gcnew ArrayList();
+		bool needRefresh;
 
 		array<System::Windows::Forms::PictureBox^>^ skinButtons;
 		array<System::Windows::Forms::PictureBox^>^ skinAxes;
@@ -67,8 +67,8 @@ namespace hidlamprey {
 		System::Windows::Forms::ToolStripMenuItem^  tsmiSettings;
 		System::Windows::Forms::ToolStripMenuItem^  tsmiAlwaysOnTop;
 		System::Windows::Forms::ToolStripMenuItem^  tsmiExit;
-	private: System::Windows::Forms::Timer^  timer1;
-			 System::ComponentModel::IContainer^  components;
+		System::Windows::Forms::Timer^  timer1;
+		System::ComponentModel::IContainer^  components;
 
 
 
@@ -143,6 +143,8 @@ namespace hidlamprey {
 			// 
 			// timer1
 			// 
+			this->timer1->Enabled = true;
+			this->timer1->Interval = 10;
 			this->timer1->Tick += gcnew System::EventHandler(this, &formMain::timer1_Tick);
 			// 
 			// formMain

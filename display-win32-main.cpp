@@ -107,7 +107,6 @@ System::Void formMain::formMain_MouseDown(System::Object^ sender, System::Window
 }
 
 System::Void formMain::timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
-	bool refresh;
 	if (!this->controller) {
 		return;
 	}
@@ -126,12 +125,12 @@ System::Void formMain::timer1_Tick(System::Object^  sender, System::EventArgs^  
 				this->controller->buttons[i]->decay = 0;
 				this->controller->buttons[i]->value = 0;
 			}
-			refresh = true;
+			this->needRefresh = true;
 		}
 	}
 	hl_mutex_unlock(&controller_mutex);
 
-	if (refresh) {
+	if (this->needRefresh) {
 		if (this->picController->InvokeRequired) {
 			this->picController->Invoke(gcnew Action(this, &formMain::refreshImage));
 		} else {
@@ -141,10 +140,8 @@ System::Void formMain::timer1_Tick(System::Object^  sender, System::EventArgs^  
 }
 
 void formMain::refreshImage() {
-	if (!this->timer1->Enabled) {
-		this->timer1->Interval = 100;
-		this->timer1->Enabled = true;
-	}
+	this->needRefresh = false;
+
 	this->picController->Refresh();
 }
 
