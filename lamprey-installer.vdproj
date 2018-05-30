@@ -21,6 +21,30 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1B3529563A584EBEA9217F68F267D560"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_26CAA13C909747B582F3355244F2E375"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_26EECDE2C7F1477A9E91043DBD2303DB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2DD84600BD6F42419219545239A4E482"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2E35ED34D62C4E6FBD5B531D8C457FA5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -28,6 +52,12 @@
         "Entry"
         {
         "MsmKey" = "8:_35C3E7CBF40343869BC24C9D7A55697A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4884951A64B8468287EF05596D95E68D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -51,7 +81,25 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_62CEDD8D78BF437FB595974EEAE0D3D3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_63667700A0A24C628A213BE150E1FFE0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6BED4AE3BB4C43CFB178ECBFEDFF912F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_74F85160DC68430093551DBC71C588AE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -63,7 +111,25 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_7C052753398948CB8188677E0C844B1A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_83BE3B8046F241D2A93A2A0F6A0384B3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_85CABDA772EB4A80A3E90561C690E169"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_862E3D9338084717BACAF19276070A50"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -87,6 +153,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_888457D0EC8742658B26D73328710BA6"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_8F22C2F6ADC54D0D9E4DA174B306582F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -99,7 +171,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_99A234CA410B4D4E96DCB507B57238B8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_9DA7057EE5BF493F857566C9D4A41696"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A1DA2BB66C644C9692A23CF60220DF45"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B0FF176994DD4F50BDB1CDD141C95503"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B14C312894FF4DAC8D86FEF78BA0291A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -118,6 +214,12 @@
         "Entry"
         {
         "MsmKey" = "8:_D494E433CF8B468CBA04C7D2BD1C6FD8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DB640E0225114C93B1948B54278730C0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -142,6 +244,12 @@
         "Entry"
         {
         "MsmKey" = "8:_F5693FAA1ECA4526A8FD2BD92291F906"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F6340AE53DB64EF3B611649389BD586C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -240,6 +348,86 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1B3529563A584EBEA9217F68F267D560"
+            {
+            "SourcePath" = "8:skins\\keyboard-lamprey\\keyboard-base.png"
+            "TargetName" = "8:keyboard-base.png"
+            "Tag" = "8:"
+            "Folder" = "8:_2E613225772A4BC4997B05EF6D5473D7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_26CAA13C909747B582F3355244F2E375"
+            {
+            "SourcePath" = "8:skins\\mouse-lamprey\\mouse-scrollup.png"
+            "TargetName" = "8:mouse-scrollup.png"
+            "Tag" = "8:"
+            "Folder" = "8:_FAB814B6BEC84B70BB1FD59A0DC15374"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_26EECDE2C7F1477A9E91043DBD2303DB"
+            {
+            "SourcePath" = "8:skins\\kbmouse-lamprey\\kbmouse-base.png"
+            "TargetName" = "8:kbmouse-base.png"
+            "Tag" = "8:"
+            "Folder" = "8:_B0E9287D34994B388808F5EEF6CC0B55"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2DD84600BD6F42419219545239A4E482"
+            {
+            "SourcePath" = "8:skins\\keyboard-lamprey\\skin.xml"
+            "TargetName" = "8:skin.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_2E613225772A4BC4997B05EF6D5473D7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2E35ED34D62C4E6FBD5B531D8C457FA5"
             {
             "SourcePath" = "8:resources\\settings.xsd"
@@ -266,6 +454,26 @@
             "TargetName" = "8:settings.xml"
             "Tag" = "8:"
             "Folder" = "8:_7C583BCA6B91404FB1BA1101FC142A3B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4884951A64B8468287EF05596D95E68D"
+            {
+            "SourcePath" = "8:skins\\kbmouse-lamprey\\skin.xml"
+            "TargetName" = "8:skin.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_B0E9287D34994B388808F5EEF6CC0B55"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -340,12 +548,72 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_62CEDD8D78BF437FB595974EEAE0D3D3"
+            {
+            "SourcePath" = "8:skins\\kbmouse-lamprey\\mouse-XY.png"
+            "TargetName" = "8:mouse-XY.png"
+            "Tag" = "8:"
+            "Folder" = "8:_B0E9287D34994B388808F5EEF6CC0B55"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_63667700A0A24C628A213BE150E1FFE0"
             {
             "SourcePath" = "8:skins\\snes-lamprey\\R.png"
             "TargetName" = "8:R.png"
             "Tag" = "8:"
             "Folder" = "8:_5ABC290005F34677904E8E2E2F7D37D7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6BED4AE3BB4C43CFB178ECBFEDFF912F"
+            {
+            "SourcePath" = "8:skins\\mouse-lamprey\\mouse-XY.png"
+            "TargetName" = "8:mouse-XY.png"
+            "Tag" = "8:"
+            "Folder" = "8:_FAB814B6BEC84B70BB1FD59A0DC15374"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_74F85160DC68430093551DBC71C588AE"
+            {
+            "SourcePath" = "8:skins\\mouse-lamprey\\mouse-right.png"
+            "TargetName" = "8:mouse-right.png"
+            "Tag" = "8:"
+            "Folder" = "8:_FAB814B6BEC84B70BB1FD59A0DC15374"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -380,12 +648,72 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7C052753398948CB8188677E0C844B1A"
+            {
+            "SourcePath" = "8:skins\\keyboard-lamprey\\keyboard-button.png"
+            "TargetName" = "8:keyboard-button.png"
+            "Tag" = "8:"
+            "Folder" = "8:_2E613225772A4BC4997B05EF6D5473D7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_83BE3B8046F241D2A93A2A0F6A0384B3"
+            {
+            "SourcePath" = "8:skins\\kbmouse-lamprey\\mouse-scrollup.png"
+            "TargetName" = "8:mouse-scrollup.png"
+            "Tag" = "8:"
+            "Folder" = "8:_B0E9287D34994B388808F5EEF6CC0B55"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_85CABDA772EB4A80A3E90561C690E169"
             {
             "SourcePath" = "8:LICENSE"
             "TargetName" = "8:LICENSE"
             "Tag" = "8:"
             "Folder" = "8:_CAAF8A812C7D4108A186E78218C410A9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_862E3D9338084717BACAF19276070A50"
+            {
+            "SourcePath" = "8:skins\\mouse-lamprey\\mouse-base.png"
+            "TargetName" = "8:mouse-base.png"
+            "Tag" = "8:"
+            "Folder" = "8:_FAB814B6BEC84B70BB1FD59A0DC15374"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -460,6 +788,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_888457D0EC8742658B26D73328710BA6"
+            {
+            "SourcePath" = "8:skins\\mouse-lamprey\\mouse-scrolldown.png"
+            "TargetName" = "8:mouse-scrolldown.png"
+            "Tag" = "8:"
+            "Folder" = "8:_FAB814B6BEC84B70BB1FD59A0DC15374"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8F22C2F6ADC54D0D9E4DA174B306582F"
             {
             "SourcePath" = "8:skins\\snes-lamprey\\select.png"
@@ -500,12 +848,92 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_99A234CA410B4D4E96DCB507B57238B8"
+            {
+            "SourcePath" = "8:skins\\kbmouse-lamprey\\keyboard-button.png"
+            "TargetName" = "8:keyboard-button.png"
+            "Tag" = "8:"
+            "Folder" = "8:_B0E9287D34994B388808F5EEF6CC0B55"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9DA7057EE5BF493F857566C9D4A41696"
             {
             "SourcePath" = "8:resources\\emulations.xsd"
             "TargetName" = "8:emulations.xsd"
             "Tag" = "8:"
             "Folder" = "8:_12995530E8EC467B810158ACFD101B3B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A1DA2BB66C644C9692A23CF60220DF45"
+            {
+            "SourcePath" = "8:skins\\kbmouse-lamprey\\mouse-scrolldown.png"
+            "TargetName" = "8:mouse-scrolldown.png"
+            "Tag" = "8:"
+            "Folder" = "8:_B0E9287D34994B388808F5EEF6CC0B55"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B0FF176994DD4F50BDB1CDD141C95503"
+            {
+            "SourcePath" = "8:skins\\kbmouse-lamprey\\mouse-right.png"
+            "TargetName" = "8:mouse-right.png"
+            "Tag" = "8:"
+            "Folder" = "8:_B0E9287D34994B388808F5EEF6CC0B55"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B14C312894FF4DAC8D86FEF78BA0291A"
+            {
+            "SourcePath" = "8:skins\\mouse-lamprey\\mouse-left.png"
+            "TargetName" = "8:mouse-left.png"
+            "Tag" = "8:"
+            "Folder" = "8:_FAB814B6BEC84B70BB1FD59A0DC15374"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -566,6 +994,26 @@
             "TargetName" = "8:right.png"
             "Tag" = "8:"
             "Folder" = "8:_5ABC290005F34677904E8E2E2F7D37D7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DB640E0225114C93B1948B54278730C0"
+            {
+            "SourcePath" = "8:skins\\kbmouse-lamprey\\mouse-left.png"
+            "TargetName" = "8:mouse-left.png"
+            "Tag" = "8:"
+            "Folder" = "8:_B0E9287D34994B388808F5EEF6CC0B55"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -660,6 +1108,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F6340AE53DB64EF3B611649389BD586C"
+            {
+            "SourcePath" = "8:skins\\mouse-lamprey\\skin.xml"
+            "TargetName" = "8:skin.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_FAB814B6BEC84B70BB1FD59A0DC15374"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -707,6 +1175,17 @@
                     "Property" = "8:_F94F82BA6F6F4300A9619B15E4C672CD"
                         "Folders"
                         {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_2E613225772A4BC4997B05EF6D5473D7"
+                            {
+                            "Name" = "8:keyboard-lamprey"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_8734AE02A0C34AED9AFB3D32D3DB28DB"
+                                "Folders"
+                                {
+                                }
+                            }
                             "{9EF0B969-E518-4E46-987F-47570745A589}:_5ABC290005F34677904E8E2E2F7D37D7"
                             {
                             "Name" = "8:snes-lamprey"
@@ -714,6 +1193,28 @@
                             "Condition" = "8:"
                             "Transitive" = "11:FALSE"
                             "Property" = "8:_ED3FBDF64D80408C81E0EB69FA46FA83"
+                                "Folders"
+                                {
+                                }
+                            }
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_B0E9287D34994B388808F5EEF6CC0B55"
+                            {
+                            "Name" = "8:kbmouse-lamprey"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_34295D30BDCE4A56BE402675272C00D7"
+                                "Folders"
+                                {
+                                }
+                            }
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_FAB814B6BEC84B70BB1FD59A0DC15374"
+                            {
+                            "Name" = "8:mouse-lamprey"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_F98BEBA2F166414B8B1D267625491740"
                                 "Folders"
                                 {
                                 }
@@ -760,15 +1261,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:lamprey"
-        "ProductCode" = "8:{ED5B547B-B5AA-4358-AA40-71F5CDE9D7E4}"
-        "PackageCode" = "8:{93EAFC97-861A-468C-BC0E-C3C58FB5CE5E}"
+        "ProductCode" = "8:{1A59EDD4-7501-4D60-B3A0-38D999C8F70F}"
+        "PackageCode" = "8:{D10B1415-ACB9-4E48-9F15-D1427CBD97BE}"
         "UpgradeCode" = "8:{A07C38F7-399C-4E3E-B519-65C84AD8362A}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.3"
+        "ProductVersion" = "8:0.0.5"
         "Manufacturer" = "8:ntbox.com"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
