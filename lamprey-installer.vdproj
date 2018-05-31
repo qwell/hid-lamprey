@@ -99,6 +99,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_71CF746DA46F44F391D429798A5A4A15"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_74F85160DC68430093551DBC71C588AE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -316,6 +322,11 @@
                     {
                     "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Visual.C++.14.0.x86"
+                    {
+                    "Name" = "8:Visual C++ \"14\" Runtime Libraries (x86)"
+                    "ProductCode" = "8:Microsoft.Visual.C++.14.0.x86"
                     }
                 }
             }
@@ -594,6 +605,26 @@
             "TargetName" = "8:mouse-XY.png"
             "Tag" = "8:"
             "Folder" = "8:_FAB814B6BEC84B70BB1FD59A0DC15374"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_71CF746DA46F44F391D429798A5A4A15"
+            {
+            "SourcePath" = "8:settings\\mappings.xml"
+            "TargetName" = "8:mappings.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_7C583BCA6B91404FB1BA1101FC142A3B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1260,20 +1291,20 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:lamprey"
-        "ProductCode" = "8:{1A59EDD4-7501-4D60-B3A0-38D999C8F70F}"
-        "PackageCode" = "8:{D10B1415-ACB9-4E48-9F15-D1427CBD97BE}"
+        "ProductName" = "8:Lamprey"
+        "ProductCode" = "8:{260AF5D8-223D-4D37-AABB-F4B64A7B4759}"
+        "PackageCode" = "8:{5AB7F8AC-8B3D-4DC3-B0E0-D688D3A96DE8}"
         "UpgradeCode" = "8:{A07C38F7-399C-4E3E-B519-65C84AD8362A}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.5"
+        "ProductVersion" = "8:0.0.7"
         "Manufacturer" = "8:ntbox.com"
         "ARPHELPTELEPHONE" = "8:"
-        "ARPHELPLINK" = "8:"
-        "Title" = "8:lamprey"
+        "ARPHELPLINK" = "8:github.com/qwell/hid-lamprey/"
+        "Title" = "8:Lamprey"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Jason Parker"
         "Keywords" = "8:"
@@ -1386,7 +1417,7 @@
             {
             "Name" = "8:Lamprey"
             "Arguments" = "8:"
-            "Description" = "8:"
+            "Description" = "8:Lamprey"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
@@ -1797,7 +1828,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0F9FA054567D40039C97A2F83A59D3EA"
             {
-            "SourcePath" = "8:Debug\\hid-lamprey.exe"
+            "SourcePath" = "8:Release\\hid-lamprey.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CAAF8A812C7D4108A186E78218C410A9"
