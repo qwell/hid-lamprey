@@ -11,7 +11,7 @@ namespace Lamprey
         private Settings() { }
 
         public void Save() { }
-        public String SkinName { get; set; }
-        public String SkinBackground { get; set; }
+        public Skin Skin { get; set; }
+        public Skin.Background SkinBackground { get; set; }
     }
 }

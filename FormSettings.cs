@@ -296,10 +296,24 @@ namespace Lamprey
             Settings settings = Settings.Instance;
             if (e.Node.Level == 1)
             {
-                settings.SkinName = e.Node.Parent.Text;
-                settings.SkinBackground = e.Node.Text;
+                foreach (Skin Skin in Skins.Instance)
+                {
+                    if (Skin.Name == e.Node.Parent.Text)
+                    {
+                        settings.Skin = Skin;
+                        foreach (Skin.Background Background in Skin.Backgrounds)
+                        {
+                            if (Background.Name == e.Node.Text)
+                            {
+                                settings.SkinBackground = Background;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
 
-//                formMain.loadSkinImages(settings.SkinName, settings.SkinBackground);
+                //formMain.loadSkinImages();
             }
         }
 
