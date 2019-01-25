@@ -13,6 +13,7 @@ config.status
 config.out
 include/config.h
 .vs/
+obj/
 x86/
 x64/
 Debug/
