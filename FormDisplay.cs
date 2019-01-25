@@ -195,7 +195,7 @@ namespace Lamprey
 
     void loadSkinImages()
     {
-        if (!Settings.Instance.Skin)
+        if (Settings.Instance.Skin == null)
         {
             return;
         }
@@ -219,10 +219,10 @@ namespace Lamprey
             picButton.BackColor = Color.Transparent;
             picButton.Enabled = false;
             picButton.Image = buttonImage;
-            picButton.Location = System.Drawing.Point(skinActive.buttons[i].x, skinActive.buttons[i].y);
-            picButton.Name = L"picButton";
+            picButton.Location = new Point(skinActive.buttons[i].x, skinActive.buttons[i].y);
+            picButton.Name = "picButton";
             picButton.Name += i;
-            picButton.Padding = System.Windows.Forms.Padding(0, 0, 0, 0);
+            picButton.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             picButton.Size = buttonImage.Size;
             picButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             picButton.Visible = false;
@@ -235,7 +235,7 @@ namespace Lamprey
         }
 
 
-        this.skinAxes = new array<System.Windows.Forms.PictureBox>(skinActive.axis_count);
+        this.skinAxes = new System.Windows.Forms.PictureBox[skinActive.axis_count];
         for (int i = 0; i < skinActive.axis_count; i++)
         {
             System.Windows.Forms.PictureBox picAxis = (new System.Windows.Forms.PictureBox());
@@ -248,7 +248,7 @@ namespace Lamprey
             picAxis.Enabled = false;
             picAxis.Image = axisImage;
             picAxis.Location = System.Drawing.Point(skinActive.axes[i].x, skinActive.axes[i].y);
-            picAxis.Name = L"picAxis";
+            picAxis.Name = "picAxis";
             picAxis.Name += i;
             picAxis.Padding = System.Windows.Forms.Padding(0, 0, 0, 0);
             picAxis.Size = axisImage.Size;
