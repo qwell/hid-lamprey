@@ -4,13 +4,14 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationIcon>resources/lamprey.ico</ApplicationIcon>
+    <ApplicationIcon>resources\lamprey.ico</ApplicationIcon>
     <AssemblyName>Lamprey</AssemblyName>
     <RootNamespace>Lamprey</RootNamespace>
     <Authors>Jason Parker</Authors>
     <Company>ntbox.com</Company>
     <Version>1.0.0</Version>
     <SignAssembly>false</SignAssembly>
+    <Win32Resource />
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,6 +45,36 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="System">
+      <HintPath>System</HintPath>
+    </Reference>
+    <Reference Include="System.Data">
+      <HintPath>System.Data</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <HintPath>System.Drawing</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>System.Windows.Forms</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>System.Xml</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="FormDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormDisplay.Designer.cs">
+      <DependentUpon>FormDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Update="FormSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormSettings.Designer.cs">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </Compile>
     <Compile Update="Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
