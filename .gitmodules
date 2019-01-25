@@ -1,9 +1,0 @@
-[submodule "third-party/zlib-win-build"]
-	path = third-party/zlib-win-build
-	url = https://github.com/qwell/zlib-win-build
-[submodule "third-party/libxml2-win-build"]
-	path = third-party/libxml2-win-build
-	url = https://github.com/qwell/libxml2-win-build
-[submodule "third-party/libiconv-win-build"]
-	path = third-party/libiconv-win-build
-	url = https://github.com/qwell/libiconv-win-build
