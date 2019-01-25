@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace lamprey
+namespace Lamprey
 {
     static class Program
     {

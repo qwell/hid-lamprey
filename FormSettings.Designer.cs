@@ -1,4 +1,4 @@
-﻿namespace lamprey
+﻿namespace Lamprey
 {
     partial class FormSettings
     {

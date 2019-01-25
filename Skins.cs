@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace lamprey
+namespace Lamprey
 {
     public sealed class Skins : IEnumerable<Skin>
     {

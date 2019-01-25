@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace lamprey
+namespace Lamprey
 {
     public class InputCode
     {

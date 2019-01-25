@@ -5,8 +5,8 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>resources/lamprey.ico</ApplicationIcon>
-    <AssemblyName>lamprey</AssemblyName>
-    <RootNamespace>lamprey</RootNamespace>
+    <AssemblyName>Lamprey</AssemblyName>
+    <RootNamespace>Lamprey</RootNamespace>
     <Authors>Jason Parker</Authors>
     <Company>ntbox.com</Company>
     <Version>1.0.0</Version>

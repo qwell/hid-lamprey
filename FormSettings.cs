@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace lamprey
+namespace Lamprey
 {
     public partial class FormSettings : Form
     {
