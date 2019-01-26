@@ -13,7 +13,8 @@ namespace Lamprey
 
         public class Button : InputCode
         {
-            public int Value { get; }
+            public int Value { get; set; }
+            public int Decay { get; set; }
         }
 
         public class ControllerButtons : IEnumerable<Controller.Button>
@@ -36,5 +37,4 @@ namespace Lamprey
         public String Name { get; }
         public ControllerButtons Buttons { get; set; }
     }
-}
 }

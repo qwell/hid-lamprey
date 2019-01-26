@@ -10,10 +10,12 @@ namespace Lamprey
         public class Background
         {
             public string Name { get; }
+            public string Filename { get; }
         }
 
         public class Button : InputCode
         {
+            public string Filename { get; }
             public int X { get; }
             public int Y { get; }
         }
@@ -34,6 +36,7 @@ namespace Lamprey
                 public int Trigger { get; }
             }
 
+            public string Filename { get; }
             public AxisX X { get; }
             public AxisY Y { get; }
         }
@@ -90,6 +93,7 @@ namespace Lamprey
         }
 
         public string Name { get; set; }
+        public string Path { get; }
         public SkinBackgrounds Backgrounds { get; set; }
         public SkinButtons Buttons { get; set; }
         public SkinAxes Axes { get; set; }

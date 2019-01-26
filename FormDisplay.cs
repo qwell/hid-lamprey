@@ -1,42 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Lamprey
 {
     public partial class FormDisplay : Form
     {
+        const int WM_NCLBUTTONDOWN = 0xA1;
+        const int HT_CAPTION = 0x2;
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int wMsg, int wParam, int lParam);
+
         public FormDisplay()
         {
             InitializeComponent();
         }
 
-        void picController_onPaint(object sender, System.Windows.Forms.PaintEventArgs e)
+        bool needRefresh = true;
+
+        private class SkinButtonPictureBox : PictureBox
+        {
+            public Skin.Button SkinButton { get; set; }
+        }
+
+        private class SkinAxisPictureBox : PictureBox
+        {
+            public Skin.Axis SkinAxis { get; set; }
+        }
+
+        void picController_onPaint(object sender, PaintEventArgs e)
         {
             foreach (Controller.Button ControllerButton in Controller.Instance.Buttons)
             {
-                foreach (Skin.Button SkinButton in Settings.Instance.Skin.Buttons)
+                foreach (SkinButtonPictureBox SkinButtonPictureBox in this.skinButtons)
                 {
-                    if (ControllerButton.Type == SkinButton.Type && ControllerButton.Code == SkinButton.Code)
+                    Skin.Button SkinButton = SkinButtonPictureBox.SkinButton;
+                    if (ControllerButton.Type == SkinButtonPictureBox.SkinButton.Type && ControllerButton.Code == SkinButtonPictureBox.SkinButton.Code)
                     {
                         if (ControllerButton.Value != 0)
                         {
-                            e.Graphics.DrawImage(this.skinButtons[j].Image, new RectangleF(this.skinButtons[j].Location, this.skinButtons[j].Size));
+                            e.Graphics.DrawImage(SkinButtonPictureBox.Image, new RectangleF(SkinButtonPictureBox.Location, SkinButtonPictureBox.Size));
                         }
                     }
                 }
 
-                foreach (Skin.Axis SkinAxis in Settings.Instance.Skin.Axes)
+                foreach (SkinAxisPictureBox SkinAxisPictureBox in this.skinAxes)
                 {
+                    Skin.Axis SkinAxis = SkinAxisPictureBox.SkinAxis;
                     if ((ControllerButton.Type == SkinAxis.X.Type && ControllerButton.Code == SkinAxis.X.Code) ||
                         (ControllerButton.Type == SkinAxis.Y.Type && ControllerButton.Code == SkinAxis.Y.Code))
                     {
-                        int offset_x = this.skinAxes[j].Location.X - SkinAxis.X.X;
-                        int offset_y = this.skinAxes[j].Location.Y - SkinAxis.Y.Y;
+                        int offset_x = SkinAxisPictureBox.Location.X - SkinAxis.X.X;
+                        int offset_y = SkinAxisPictureBox.Location.Y - SkinAxis.Y.Y;
                         bool visible = false;
 
                         if (ControllerButton.Type == SkinAxis.X.Type && ControllerButton.Code == SkinAxis.X.Code && (SkinAxis.X.Trigger == 0 || (SkinAxis.X.Trigger > 0 && ControllerButton.Value > SkinAxis.X.Trigger) || (SkinAxis.X.Trigger < 0 && ControllerButton.Value < SkinAxis.X.Trigger)))
@@ -79,77 +98,76 @@ namespace Lamprey
                             }
                         }
 
-                        this.skinAxes[j].Location = new Point(SkinAxis.X.X + offset_x, SkinAxis.Y.Y + offset_y);
+                        SkinAxisPictureBox.Location = new Point(SkinAxis.X.X + offset_x, SkinAxis.Y.Y + offset_y);
                         if (visible)
                         {
-                            e.Graphics.DrawImage(this.skinAxes[j].Image, new RectangleF(this.skinAxes[j].Location, this.skinAxes[j].Size));
+                            e.Graphics.DrawImage(SkinAxisPictureBox.Image, new RectangleF(SkinAxisPictureBox.Location, SkinAxisPictureBox.Size));
                         }
                     }
                 }
             }
         }
 
-        void tsmiAlwaysOnTop_Click(object sender, System.EventArgs e)
+        void tsmiAlwaysOnTop_Click(object sender, EventArgs e)
         {
             this.TopMost = tsmiAlwaysOnTop.Checked;
         }
 
-        void tsmiExit_Click(object sender, System.EventArgs e)
+        void tsmiExit_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        void tmsiSettings_Click(object sender, System.EventArgs e)
+        void tmsiSettings_Click(object sender, EventArgs e)
         {
             settings.ShowDialog();
         }
 
-        void formMain_Load(object sender, System.EventArgs e)
+        void FormDisplay_Load(object sender, EventArgs e)
         {
             this.DoubleBuffered = true;
 
             settings = new formSettings(this);
         }
 
-        void formMain_Closed(object sender, System.EventArgs e)
+        void FormDisplay_Closed(object sender, EventArgs e)
         {
         }
 
-        void formMain_Shown(object sender, System.EventArgs e)
+        void FormDisplay_Shown(object sender, EventArgs e)
         {
             this.loadSkinImages();
         }
 
-        void formMain_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        void FormDisplay_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
-                const int HT_CAPTION = 2;
                 ReleaseCapture();
-                SendMessage(static_cast<HWND>(this.Handle.ToPointer()), WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
 
-        void timer1_Tick(object sender, System.EventArgs e)
+        void timer1_Tick(object sender, EventArgs e)
         {
-            for (int i = 0; i < this.controller.button_count; i++)
+            foreach (Controller.Button Button in Controller.Instance.Buttons)
             {
-                if (this.controller.buttons[i].type == EV_REL && this.controller.buttons[i].value != 0)
+                if (Button.Type == EV_REL && Button.Value != 0)
                 {
-                    int16_t decay_amount;
-                    if (abs(this.controller.buttons[i].value) < 10)
+                    int decay_amount;
+                    if (Math.Abs(Button.Value) < 10)
                     {
-                        decay_amount = this.controller.buttons[i].value;
+                        decay_amount = Button.Value;
                     }
                     else
                     {
-                        decay_amount = this.controller.buttons[i].value * .1;
+                        decay_amount = (int)(Button.Value * .1);
                     }
-                    this.controller.buttons[i].decay -= decay_amount;
-                    if (abs(this.controller.buttons[i].decay) < abs(decay_amount))
+                    Button.Decay -= decay_amount;
+                    if (Math.Abs(Button.Decay) < Math.Abs(decay_amount))
                     {
-                        this.controller.buttons[i].decay = 0;
-                        this.controller.buttons[i].value = 0;
+                        Button.Decay = 0;
+                        Button.Value = 0;
                     }
                     this.needRefresh = true;
                 }
@@ -175,108 +193,92 @@ namespace Lamprey
             this.picController.Refresh();
         }
 
-        void output_controller(struct controller * c) {
-	        if (!skinActive) {
-		        return;
-	        }
-
-            this.controller = c;
-
+        void output_controller()
+        {
             this.needRefresh = true;
         }
 
-    void output_raw(const char* device, const char* rawname, int value)
-    {
-        if (settings && settings.Visible)
+        void loadSkinImages()
         {
-            ((formSettings)settings).output_raw(new String(device), new String(rawname), Int16(value));
+            Settings settings = Settings.Instance;
+            Bitmap backgroundImage = new Bitmap(settings.Skin.Path + settings.SkinBackground.Filename);
+            backgroundImage.MakeTransparent(Color.White);
+
+            picController.Image = backgroundImage;
+            picController.Size = backgroundImage.Size;
+            picController.SizeMode = PictureBoxSizeMode.Zoom;
+
+            this.skinButtons = new List<SkinButtonPictureBox>();
+
+            foreach (Skin.Button Button in settings.Skin.Buttons)
+            {
+                SkinButtonPictureBox picButton = new SkinButtonPictureBox();
+
+                Bitmap buttonImage = new Bitmap(settings.Skin.Path + Button.Filename);
+                buttonImage.MakeTransparent(Color.White);
+
+                picButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                picButton.BackColor = Color.Transparent;
+                picButton.Enabled = false;
+                picButton.Image = buttonImage;
+                picButton.Location = new Point(Button.X, Button.Y);
+                picButton.Name = "picButton" + Button.GetHashCode();
+                picButton.Padding = new Padding(0, 0, 0, 0);
+                picButton.Size = buttonImage.Size;
+                picButton.SizeMode = PictureBoxSizeMode.Zoom;
+                picButton.Visible = false;
+
+                picButton.SkinButton = Button;
+
+                this.skinButtons.Add(picButton);
+                this.Controls.Add(picButton);
+
+                picButton.Parent = this.picController;
+            }
+
+            this.skinAxes = new List<SkinAxisPictureBox>();
+
+            foreach (Skin.Axis Axis in settings.Skin.Axes)
+            {
+                SkinAxisPictureBox picAxis = new SkinAxisPictureBox();
+
+                Bitmap axisImage = new Bitmap(settings.Skin.Path + Axis.Filename);
+                axisImage.MakeTransparent(Color.White);
+
+                picAxis.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                picAxis.BackColor = Color.Transparent;
+                picAxis.Enabled = false;
+                picAxis.Image = axisImage;
+                picAxis.Location = new Point(Axis.X.X, Axis.Y.Y);
+                picAxis.Name = "picAxis" + Axis.GetHashCode();
+                picAxis.Padding = new Padding(0, 0, 0, 0);
+                picAxis.Size = axisImage.Size;
+                picAxis.SizeMode = PictureBoxSizeMode.Zoom;
+                picAxis.Visible = false;
+
+                picAxis.SkinAxis = Axis;
+
+                this.skinAxes.Add(picAxis);
+                this.Controls.Add(picAxis);
+
+                picAxis.Parent = this.picController;
+            }
+
+            if (backgroundImage.Width > 640 || backgroundImage.Height > 640)
+            {
+                /* Scale down to a maximum of 640px */
+                float scale;
+                if (backgroundImage.Width > backgroundImage.Height)
+                {
+                    scale = 640 * ((float)1 / backgroundImage.Width);
+                }
+                else
+                {
+                    scale = 640 * ((float)1 / backgroundImage.Height);
+                }
+                picController.Scale(new SizeF(scale, scale));
+            }
+            picController.Visible = true;
         }
     }
-
-    void loadSkinImages()
-    {
-        if (Settings.Instance.Skin == null)
-        {
-            return;
-        }
-
-        Drawing.Bitmap backgroundImage = new Bitmap(String.Concat(new String(skinActive.path), new String(skinActiveBackground.filename)));
-        backgroundImage.MakeTransparent(Color.White);
-
-        picController.Image = backgroundImage;
-        picController.Size = backgroundImage.Size;
-        picController.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-
-        this.skinButtons = new array<System.Windows.Forms.PictureBox>(skinActive.button_count);
-        for (int i = 0; i < skinActive.button_count; i++)
-        {
-            System.Windows.Forms.PictureBox picButton = (new System.Windows.Forms.PictureBox());
-
-            Drawing.Bitmap buttonImage = new Bitmap(String.Concat(new String(skinActive.path), new String(skinActive.buttons[i].filename)));
-            buttonImage.MakeTransparent(Color.White);
-
-            picButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-            picButton.BackColor = Color.Transparent;
-            picButton.Enabled = false;
-            picButton.Image = buttonImage;
-            picButton.Location = new Point(skinActive.buttons[i].x, skinActive.buttons[i].y);
-            picButton.Name = "picButton";
-            picButton.Name += i;
-            picButton.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            picButton.Size = buttonImage.Size;
-            picButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            picButton.Visible = false;
-
-            this.skinButtons[i] = picButton;
-
-            this.Controls.Add(picButton);
-
-            picButton.Parent = this.picController;
-        }
-
-
-        this.skinAxes = new System.Windows.Forms.PictureBox[skinActive.axis_count];
-        for (int i = 0; i < skinActive.axis_count; i++)
-        {
-            System.Windows.Forms.PictureBox picAxis = (new System.Windows.Forms.PictureBox());
-
-            Drawing.Bitmap axisImage = new Bitmap(String.Concat(new String(skinActive.path), new String(skinActive.axes[i].filename)));
-            axisImage.MakeTransparent(Color.White);
-
-            picAxis.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-            picAxis.BackColor = Color.Transparent;
-            picAxis.Enabled = false;
-            picAxis.Image = axisImage;
-            picAxis.Location = System.Drawing.Point(skinActive.axes[i].x, skinActive.axes[i].y);
-            picAxis.Name = "picAxis";
-            picAxis.Name += i;
-            picAxis.Padding = System.Windows.Forms.Padding(0, 0, 0, 0);
-            picAxis.Size = axisImage.Size;
-            picAxis.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            picAxis.Visible = false;
-
-            this.skinAxes[i] = picAxis;
-
-            this.Controls.Add(picAxis);
-
-            picAxis.Parent = this.picController;
-        }
-
-        if (backgroundImage.Width > 640 || backgroundImage.Height > 640)
-        {
-            /* Scale down to a maximum of 640px */
-            float scale;
-            if (backgroundImage.Width > backgroundImage.Height)
-            {
-                scale = 640 * ((float)1 / backgroundImage.Width);
-            }
-            else
-            {
-                scale = 640 * ((float)1 / backgroundImage.Height);
-            }
-            picController.Scale(SizeF(scale, scale));
-        }
-        picController.Visible = true;
-    }
-}
 }

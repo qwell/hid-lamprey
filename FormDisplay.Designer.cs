@@ -118,8 +118,8 @@ namespace Lamprey
 
         #endregion
 
-        private List<System.Windows.Forms.PictureBox> skinButtons;
-        private List<System.Windows.Forms.PictureBox> skinAxes;
+        private List<SkinButtonPictureBox> skinButtons;
+        private List<SkinAxisPictureBox> skinAxes;
         private System.Windows.Forms.PictureBox picController;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem tsmiSettings;
