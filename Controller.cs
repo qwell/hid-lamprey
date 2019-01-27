@@ -35,6 +35,6 @@ namespace Lamprey
         }
 
         public String Name { get; }
-        public ControllerButtons Buttons { get; set; }
+        public ControllerButtons Buttons { get; set; } = new ControllerButtons();
     }
 }

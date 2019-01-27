@@ -7,10 +7,12 @@ namespace Lamprey
 {
     public class Skin
     {
+        public Skin() { }
+
         public class Background
         {
-            public string Name { get; }
-            public string Filename { get; }
+            public string Name { get; set; }
+            public string Filename { get; set; }
         }
 
         public class Button : InputCode
@@ -56,6 +58,28 @@ namespace Lamprey
             private List<Skin.Background> List { get; } = new List<Skin.Background>();
 
             public int Count => List.Count;
+
+            public void Add(Skin.Background background)
+            {
+                List.Add(background);
+            }
+
+            public void Remove(Skin.Background background)
+            {
+                List.Remove(background);
+            }
+
+            public Skin.Background FindByName(string name)
+            {
+                foreach (Skin.Background background in List)
+                {
+                    if (name == background.Name)
+                    {
+                        return background;
+                    }
+                }
+                return null;
+            }
         }
 
         public class SkinButtons : IEnumerable<Skin.Button>
@@ -93,9 +117,9 @@ namespace Lamprey
         }
 
         public string Name { get; set; }
-        public string Path { get; }
-        public SkinBackgrounds Backgrounds { get; set; }
-        public SkinButtons Buttons { get; set; }
-        public SkinAxes Axes { get; set; }
+        public string Path { get; set; }
+        public SkinBackgrounds Backgrounds { get; set; } = new SkinBackgrounds();
+        public SkinButtons Buttons { get; set; } = new SkinButtons();
+        public SkinAxes Axes { get; set; } = new SkinAxes();
     }
 }

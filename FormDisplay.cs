@@ -8,6 +8,8 @@ namespace Lamprey
 {
     public partial class FormDisplay : Form
     {
+        const int EV_REL = 0;
+
         const int WM_NCLBUTTONDOWN = 0xA1;
         const int HT_CAPTION = 0x2;
         [DllImportAttribute("user32.dll")]
@@ -51,20 +53,20 @@ namespace Lamprey
                 foreach (SkinAxisPictureBox SkinAxisPictureBox in this.skinAxes)
                 {
                     Skin.Axis SkinAxis = SkinAxisPictureBox.SkinAxis;
-                    if ((ControllerButton.Type == SkinAxis.X.Type && ControllerButton.Code == SkinAxis.X.Code) ||
-                        (ControllerButton.Type == SkinAxis.Y.Type && ControllerButton.Code == SkinAxis.Y.Code))
+                    if ((ControllerButton.Category == SkinAxis.X.Category && ControllerButton.Code == SkinAxis.X.Code) ||
+                        (ControllerButton.Category == SkinAxis.Y.Category && ControllerButton.Code == SkinAxis.Y.Code))
                     {
                         int offset_x = SkinAxisPictureBox.Location.X - SkinAxis.X.X;
                         int offset_y = SkinAxisPictureBox.Location.Y - SkinAxis.Y.Y;
                         bool visible = false;
 
-                        if (ControllerButton.Type == SkinAxis.X.Type && ControllerButton.Code == SkinAxis.X.Code && (SkinAxis.X.Trigger == 0 || (SkinAxis.X.Trigger > 0 && ControllerButton.Value > SkinAxis.X.Trigger) || (SkinAxis.X.Trigger < 0 && ControllerButton.Value < SkinAxis.X.Trigger)))
+                        if (ControllerButton.Category == SkinAxis.X.Category && ControllerButton.Code == SkinAxis.X.Code && (SkinAxis.X.Trigger == 0 || (SkinAxis.X.Trigger > 0 && ControllerButton.Value > SkinAxis.X.Trigger) || (SkinAxis.X.Trigger < 0 && ControllerButton.Value < SkinAxis.X.Trigger)))
                         {
                             if (ControllerButton.Value != 0)
                             {
                                 if (SkinAxis.X.Offset != 0)
                                 {
-                                    offset_x = (ControllerButton.Type == EV_REL ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.X.Offset);
+                                    offset_x = (ControllerButton.Category == EV_REL ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.X.Offset);
                                 }
                                 else
                                 {
@@ -78,13 +80,13 @@ namespace Lamprey
                             }
                         }
 
-                        if (ControllerButton.Type == SkinAxis.Y.Type && ControllerButton.Code == SkinAxis.Y.Code && (SkinAxis.Y.Trigger == 0 || (SkinAxis.Y.Trigger > 0 && ControllerButton.Value > SkinAxis.Y.Trigger) || (SkinAxis.Y.Trigger < 0 && ControllerButton.Value < SkinAxis.Y.Trigger)))
+                        if (ControllerButton.Category == SkinAxis.Y.Category && ControllerButton.Code == SkinAxis.Y.Code && (SkinAxis.Y.Trigger == 0 || (SkinAxis.Y.Trigger > 0 && ControllerButton.Value > SkinAxis.Y.Trigger) || (SkinAxis.Y.Trigger < 0 && ControllerButton.Value < SkinAxis.Y.Trigger)))
                         {
                             if (ControllerButton.Value != 0)
                             {
                                 if (SkinAxis.Y.Offset != 0)
                                 {
-                                    offset_y = (ControllerButton.Type == EV_REL ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.Y.Offset);
+                                    offset_y = (ControllerButton.Category == EV_REL ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.Y.Offset);
                                 }
                                 else
                                 {
@@ -120,14 +122,14 @@ namespace Lamprey
 
         void tmsiSettings_Click(object sender, EventArgs e)
         {
-            settings.ShowDialog();
+            FormSettings settings = new FormSettings();
+            settings.ShowDialog(this);
+            settings.Dispose();
         }
 
         void FormDisplay_Load(object sender, EventArgs e)
         {
             this.DoubleBuffered = true;
-
-            settings = new formSettings(this);
         }
 
         void FormDisplay_Closed(object sender, EventArgs e)
@@ -152,7 +154,7 @@ namespace Lamprey
         {
             foreach (Controller.Button Button in Controller.Instance.Buttons)
             {
-                if (Button.Type == EV_REL && Button.Value != 0)
+                if (Button.Category == EV_REL && Button.Value != 0)
                 {
                     int decay_amount;
                     if (Math.Abs(Button.Value) < 10)

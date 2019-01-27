@@ -13,7 +13,7 @@ namespace Lamprey
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormSettings());
+            Application.Run(new FormDisplay());
         }
     }
 }

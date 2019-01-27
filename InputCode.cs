@@ -23,7 +23,7 @@ namespace Lamprey
         }
 
         public InputCategory Category { get; }
-        public InputCodeType Type { get; }
+        public InputCodeType Type { get; } = InputCodeType.UnknownType;
         public int Code { get; }
         public String Description { get; }
     }

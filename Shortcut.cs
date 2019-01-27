@@ -30,6 +30,6 @@ namespace Lamprey
         }
 
         public String Name { get; }
-        public ShortcutButtons Buttons { get; set; }
+        public ShortcutButtons Buttons { get; set; } = new ShortcutButtons();
     }
 }
