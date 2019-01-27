@@ -15,32 +15,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="autoconf\**" />
     <Compile Remove="Debug\**" />
-    <Compile Remove="glade\**" />
     <Compile Remove="Release\**" />
-    <EmbeddedResource Remove="autoconf\**" />
     <EmbeddedResource Remove="Debug\**" />
-    <EmbeddedResource Remove="glade\**" />
     <EmbeddedResource Remove="Release\**" />
-    <None Remove="autoconf\**" />
     <None Remove="Debug\**" />
-    <None Remove="glade\**" />
     <None Remove="Release\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove=".gitmodules" />
-    <None Remove="config.guess" />
-    <None Remove="config.out.in" />
-    <None Remove="config.sub" />
-    <None Remove="configure" />
-    <None Remove="configure.ac" />
-    <None Remove="install-sh" />
     <None Remove="LICENSE" />
     <None Remove="LICENSE.resources" />
-    <None Remove="Makefile" />
     <None Remove="README" />
   </ItemGroup>
 
@@ -87,6 +74,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="resources\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="settings\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="skins\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
