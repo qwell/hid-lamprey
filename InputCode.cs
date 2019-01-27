@@ -6,10 +6,12 @@ namespace Lamprey
     {
         public enum InputCategory
         {
+            UnknownCategory,
             Button,
             AxisAbsolute,
             AxisRelative,
         }
+
         public enum InputCodeType
         {
             UnknownType,
@@ -22,7 +24,7 @@ namespace Lamprey
             RelativeAxis,
         }
 
-        public InputCategory Category { get; }
+        public InputCategory Category { get; } = InputCategory.UnknownCategory;
         public InputCodeType Type { get; } = InputCodeType.UnknownType;
         public int Code { get; }
         public String Description { get; }
