@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tvSkins = new System.Windows.Forms.TreeView();
             this.tvMappings = new System.Windows.Forms.TreeView();
             this.tvMapButtons = new System.Windows.Forms.TreeView();
@@ -36,7 +37,7 @@
             this.tabMappings = new System.Windows.Forms.TabPage();
             this.tabShortcuts = new System.Windows.Forms.TabPage();
             this.tvShortcuts = new System.Windows.Forms.TreeView();
-            this.toolTip1 = new System.Windows.Forms.ToolTip();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl1.SuspendLayout();
             this.tabSkins.SuspendLayout();
             this.tabMappings.SuspendLayout();
@@ -79,10 +80,10 @@
             this.tabControl1.Controls.Add(this.tabMappings);
             this.tabControl1.Controls.Add(this.tabShortcuts);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(12, 12);
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(747, 505);
+            this.tabControl1.Size = new System.Drawing.Size(763, 529);
             this.tabControl1.TabIndex = 6;
             this.tabControl1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.eat_KeyPress);
             // 
@@ -92,7 +93,7 @@
             this.tabSkins.Location = new System.Drawing.Point(4, 25);
             this.tabSkins.Name = "tabSkins";
             this.tabSkins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSkins.Size = new System.Drawing.Size(739, 476);
+            this.tabSkins.Size = new System.Drawing.Size(755, 500);
             this.tabSkins.TabIndex = 0;
             this.tabSkins.Text = "Skins";
             this.tabSkins.UseVisualStyleBackColor = true;
@@ -140,14 +141,14 @@
             this.ClientSize = new System.Drawing.Size(763, 529);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.eat_KeyPress);
-            this.Load += new System.EventHandler(this.FormSettings_Load);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormSettings";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Settings";
+            this.Load += new System.EventHandler(this.FormSettings_Load);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.eat_KeyPress);
             this.tabControl1.ResumeLayout(false);
             this.tabSkins.ResumeLayout(false);
             this.tabMappings.ResumeLayout(false);

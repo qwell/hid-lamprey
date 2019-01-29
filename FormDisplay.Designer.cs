@@ -31,12 +31,12 @@ namespace Lamprey
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.picController = (new System.Windows.Forms.PictureBox());
-            this.contextMenuStrip = (new System.Windows.Forms.ContextMenuStrip(this.components));
-            this.tsmiSettings = (new System.Windows.Forms.ToolStripMenuItem());
-            this.tsmiAlwaysOnTop = (new System.Windows.Forms.ToolStripMenuItem());
-            this.tsmiExit = (new System.Windows.Forms.ToolStripMenuItem());
-            this.timer1 = (new System.Windows.Forms.Timer(this.components));
+            this.picController = new System.Windows.Forms.PictureBox();
+            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmiSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picController)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -55,9 +55,10 @@ namespace Lamprey
             // contextMenuStrip
             // 
             this.contextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[3] {
-                this.tsmiSettings, this.tsmiAlwaysOnTop, this.tsmiExit
-            });
+            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiSettings,
+            this.tsmiAlwaysOnTop,
+            this.tsmiExit});
             this.contextMenuStrip.Name = "contextMenuStrip1";
             this.contextMenuStrip.Size = new System.Drawing.Size(175, 76);
             // 
@@ -94,10 +95,11 @@ namespace Lamprey
             // 
             // FormDisplay
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(148, 36);
+            this.ClientSize = new System.Drawing.Size(800, 450);
             this.ContextMenuStrip = this.contextMenuStrip;
             this.Controls.Add(this.picController);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -111,9 +113,8 @@ namespace Lamprey
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormDisplay_MouseDown);
             ((System.ComponentModel.ISupportInitialize)(this.picController)).EndInit();
             this.contextMenuStrip.ResumeLayout(false);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "FormDisplay";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
