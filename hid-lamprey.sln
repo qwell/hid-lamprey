@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28407.52
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lamprey", "hid-lamprey.csproj", "{0FD997AB-E6DE-4024-9F55-ABC30ECD6C41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hid-lamprey", "hid-lamprey.csproj", "{0FD997AB-E6DE-4024-9F55-ABC30ECD6C41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dummy_designer", "dummy_designer\dummy_designer.csproj", "{39FD8045-CB5E-4D99-804E-9D78001E88DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{0FD997AB-E6DE-4024-9F55-ABC30ECD6C41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FD997AB-E6DE-4024-9F55-ABC30ECD6C41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FD997AB-E6DE-4024-9F55-ABC30ECD6C41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39FD8045-CB5E-4D99-804E-9D78001E88DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39FD8045-CB5E-4D99-804E-9D78001E88DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39FD8045-CB5E-4D99-804E-9D78001E88DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39FD8045-CB5E-4D99-804E-9D78001E88DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
