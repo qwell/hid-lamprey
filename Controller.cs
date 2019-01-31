@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Lamprey
 {
@@ -13,7 +12,7 @@ namespace Lamprey
 
         public class Button : InputCode
         {
-            public Button(InputType Type, InputCodeZ Code, String Description) : base(Type, Code, Description) { }
+            public Button(InputType Type, InputCodeZ Code, string Description) : base(Type, Code, Description) { }
             public int Value { get; set; }
             public int Decay { get; set; }
         }
@@ -35,7 +34,7 @@ namespace Lamprey
             public int Count => List.Count;
         }
 
-        public String Name { get; }
+        public string Name { get; }
         public ControllerButtons Buttons { get; set; } = new ControllerButtons();
     }
 }

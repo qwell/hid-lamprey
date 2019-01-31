@@ -17,7 +17,7 @@ namespace Lamprey
 
         public class Button : InputCode
         {
-            public Button(InputType Type, InputCodeZ Code, String Description) : base(Type, Code, Description) { }
+            public Button(InputType Type, InputCodeZ Code, string Description) : base(Type, Code, Description) { }
             public string Filename { get; set; }
             public int PosX { get; set; }
             public int PosY { get; set; }
@@ -27,14 +27,14 @@ namespace Lamprey
         {
             public class AxisX : InputCode
             {
-                public AxisX(InputType Type, InputCodeZ Code, String Description) : base(Type, Code, Description) { }
+                public AxisX(InputType Type, InputCodeZ Code, string Description) : base(Type, Code, Description) { }
                 public int Offset { get; set; }
                 public int Trigger { get; set; }
             }
 
             public class AxisY : InputCode
             {
-                public AxisY(InputType Type, InputCodeZ Code, String Description) : base(Type, Code, Description) { }
+                public AxisY(InputType Type, InputCodeZ Code, string Description) : base(Type, Code, Description) { }
                 public int Offset { get; set; }
                 public int Trigger { get; set; }
             }

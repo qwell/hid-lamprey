@@ -17,7 +17,7 @@ namespace Lamprey
             InitializeComponent();
         }
 
-        private void update_mapping(String device, String rawname, Object tag)
+        private void update_mapping(string device, string rawname, Object tag)
         {
             InputCode inputCode = (InputCode)tag;
 
@@ -53,11 +53,11 @@ namespace Lamprey
             Settings.Instance.Save();
         }
 
-        void output_raw(String device, String rawname, int value)
+        void output_raw(string device, string rawname, int value)
         {
             if (this.tvMappings.InvokeRequired)
             {
-                this.tvMappings.Invoke(new Action<String, String, int>(this.output_raw), device, rawname, value);
+                this.tvMappings.Invoke(new Action<string, string, int>(this.output_raw), device, rawname, value);
             }
             else
             {
@@ -131,10 +131,10 @@ namespace Lamprey
             Skins skins = Skins.Instance;
             foreach (Skin skin in skins)
             {
-                TreeNode node = new TreeNode(new String(skin.Name));
+                TreeNode node = new TreeNode(skin.Name);
                 foreach (Skin.Background background in skin.Backgrounds)
                 {
-                    node.Nodes.Add(new String(background.Name));
+                    node.Nodes.Add(background.Name);
                 }
                 tvSkins.Nodes.Add(node);
             }
@@ -148,7 +148,7 @@ namespace Lamprey
             {
                 if (!inputMapping.Builtin)
                 {
-                    String strDevice = new String(inputMapping.Device);
+                    string strDevice = inputMapping.Device;
                     TreeNode nodeDevice = null;
                     for (int j = 0; j < this.tvMappings.Nodes.Count; j++)
                     {
@@ -162,7 +162,7 @@ namespace Lamprey
                     {
                         nodeDevice = new TreeNode(strDevice)
                         {
-                            Name = new String(strDevice)
+                            Name = strDevice
                         };
                     }
 
@@ -170,9 +170,7 @@ namespace Lamprey
                     {
                         if (inputCode.Code == inputMapping.Code)
                         {
-                            String text = inputMapping.Name + "  |  " + inputCode.Description ?? inputCode.Code.ToString();
-
-                            TreeNode nodeButton = new TreeNode(text)
+                            TreeNode nodeButton = new TreeNode(inputMapping.Name + "  |  " + inputCode.Description ?? inputCode.Code.ToString())
                             {
                                 Name = inputMapping.Name,
                                 Tag = inputCode,
@@ -202,7 +200,7 @@ namespace Lamprey
                 {
                     if (inputCode.Code >= 0)
                     {
-                        String codeType;
+                        string codeType;
 
                         switch (inputCode.Type)
                         {
