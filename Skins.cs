@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -38,12 +39,11 @@ namespace Lamprey
                 xml.MoveToContent();
                 if (xml.HasAttributes)
                 {
-                    skin = new Skin
-                    {
+                    skin = new Skin {
                         Name = xml.GetAttribute("name"),
                         Path = file.Substring(0, file.Length - "skin.xml".Length)
                     };
-                    // TODO: Add backwards compat for NintendoSpy type=
+                    // TODO: Add backwards compat for NintendoSpy type= attribute.
                 }
 
                 if (skin == null || skin.Name.Length == 0)
@@ -63,8 +63,7 @@ namespace Lamprey
                                 case "background":
                                     if (xml.HasAttributes)
                                     {
-                                        Skin.Background background = new Skin.Background
-                                        {
+                                        Skin.Background background = new Skin.Background {
                                             Name = xml.GetAttribute("name"),
                                             Filename = xml.GetAttribute("image")
                                         };
@@ -76,6 +75,42 @@ namespace Lamprey
                                         skin.Backgrounds.Add(background);
                                     }
                                     break;
+                                    /*
+                                case "button":
+                                    if (xml.HasAttributes)
+                                    {
+                                        Skin.Button button = new Skin.Button {
+                                            Filename = xml.GetAttribute("image"),
+                                            Category = (InputCode.InputCategory)int.Parse(xml.GetAttribute("type")),
+                                            Code = int.Parse(xml.GetAttribute("code")),
+                                            PosX = int.Parse(xml.GetAttribute("x") ?? xml.GetAttribute("X")),
+                                            PosY = int.Parse(xml.GetAttribute("y") ?? xml.GetAttribute("Y")),
+                                        };
+
+                                        skin.Buttons.Add(button);
+                                    }
+                                    break;
+                                case "axis":
+                                    if (xml.HasAttributes)
+                                    {
+                                        Skin.Axis axis = new Skin.Axis {
+                                            Filename = xml.GetAttribute("image"),
+                                            PosX = int.Parse(xml.GetAttribute("x") ?? xml.GetAttribute("X")),
+                                            PosY = int.Parse(xml.GetAttribute("y") ?? xml.GetAttribute("Y")),
+                                            X = xml.GetAttribute("code_x").Length == 0 ? null : new Skin.Axis.AxisX {
+                                                Category = (InputCode.InputCategory)int.Parse(xml.GetAttribute("type_x")),
+                                                Code = int.Parse(xml.GetAttribute("code_x")),
+                                            },
+                                            Y = xml.GetAttribute("code_y").Length > 0 ? null : new Skin.Axis.AxisY {
+                                                Category = (InputCode.InputCategory)int.Parse(xml.GetAttribute("type_y")),
+                                                Code = int.Parse(xml.GetAttribute("code_y")),
+                                            },
+                                        };
+
+                                        skin.Axes.Add(axis);
+                                    }
+                                    break;
+                                    */
                             }
                             break;
                     }

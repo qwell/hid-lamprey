@@ -8,8 +8,6 @@ namespace Lamprey
 {
     public partial class FormDisplay : Form
     {
-        const int EV_REL = 0;
-
         const int WM_NCLBUTTONDOWN = 0xA1;
         const int HT_CAPTION = 0x2;
         [DllImportAttribute("user32.dll")]
@@ -56,8 +54,8 @@ namespace Lamprey
                     if ((ControllerButton.Category == SkinAxis.X.Category && ControllerButton.Code == SkinAxis.X.Code) ||
                         (ControllerButton.Category == SkinAxis.Y.Category && ControllerButton.Code == SkinAxis.Y.Code))
                     {
-                        int offset_x = SkinAxisPictureBox.Location.X - SkinAxis.X.X;
-                        int offset_y = SkinAxisPictureBox.Location.Y - SkinAxis.Y.Y;
+                        int offset_x = SkinAxisPictureBox.Location.X - SkinAxis.PosX;
+                        int offset_y = SkinAxisPictureBox.Location.Y - SkinAxis.PosY;
                         bool visible = false;
 
                         if (ControllerButton.Category == SkinAxis.X.Category && ControllerButton.Code == SkinAxis.X.Code && (SkinAxis.X.Trigger == 0 || (SkinAxis.X.Trigger > 0 && ControllerButton.Value > SkinAxis.X.Trigger) || (SkinAxis.X.Trigger < 0 && ControllerButton.Value < SkinAxis.X.Trigger)))
@@ -66,7 +64,7 @@ namespace Lamprey
                             {
                                 if (SkinAxis.X.Offset != 0)
                                 {
-                                    offset_x = (ControllerButton.Category == EV_REL ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.X.Offset);
+                                    offset_x = (ControllerButton.Category == InputCode.InputCategory.AxisRelative ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.X.Offset);
                                 }
                                 else
                                 {
@@ -86,7 +84,7 @@ namespace Lamprey
                             {
                                 if (SkinAxis.Y.Offset != 0)
                                 {
-                                    offset_y = (ControllerButton.Category == EV_REL ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.Y.Offset);
+                                    offset_y = (ControllerButton.Category == InputCode.InputCategory.AxisRelative ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.Y.Offset);
                                 }
                                 else
                                 {
@@ -100,7 +98,7 @@ namespace Lamprey
                             }
                         }
 
-                        SkinAxisPictureBox.Location = new Point(SkinAxis.X.X + offset_x, SkinAxis.Y.Y + offset_y);
+                        SkinAxisPictureBox.Location = new Point(SkinAxis.PosX + offset_x, SkinAxis.PosY + offset_y);
                         if (visible)
                         {
                             e.Graphics.DrawImage(SkinAxisPictureBox.Image, new RectangleF(SkinAxisPictureBox.Location, SkinAxisPictureBox.Size));
@@ -154,7 +152,7 @@ namespace Lamprey
         {
             foreach (Controller.Button Button in Controller.Instance.Buttons)
             {
-                if (Button.Category == EV_REL && Button.Value != 0)
+                if (Button.Category == InputCode.InputCategory.AxisRelative && Button.Value != 0)
                 {
                     int decay_amount;
                     if (Math.Abs(Button.Value) < 10)
@@ -223,7 +221,7 @@ namespace Lamprey
                 picButton.BackColor = Color.Transparent;
                 picButton.Enabled = false;
                 picButton.Image = buttonImage;
-                picButton.Location = new Point(Button.X, Button.Y);
+                picButton.Location = new Point(Button.PosX, Button.PosY);
                 picButton.Name = "picButton" + Button.GetHashCode();
                 picButton.Padding = new Padding(0, 0, 0, 0);
                 picButton.Size = buttonImage.Size;
@@ -251,7 +249,7 @@ namespace Lamprey
                 picAxis.BackColor = Color.Transparent;
                 picAxis.Enabled = false;
                 picAxis.Image = axisImage;
-                picAxis.Location = new Point(Axis.X.X, Axis.Y.Y);
+                picAxis.Location = new Point(Axis.PosX, Axis.PosY);
                 picAxis.Name = "picAxis" + Axis.GetHashCode();
                 picAxis.Padding = new Padding(0, 0, 0, 0);
                 picAxis.Size = axisImage.Size;

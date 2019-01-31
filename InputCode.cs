@@ -24,9 +24,9 @@ namespace Lamprey
             RelativeAxis,
         }
 
-        public InputCategory Category { get; } = InputCategory.UnknownCategory;
-        public InputCodeType Type { get; } = InputCodeType.UnknownType;
-        public int Code { get; }
-        public String Description { get; }
+        public InputCategory Category { get; set; } = InputCategory.UnknownCategory;
+        public InputCodeType Type { get; set; } = InputCodeType.UnknownType;
+        public int Code { get; set; }
+        public String Description { get; set; }
     }
 }

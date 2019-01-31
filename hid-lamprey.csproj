@@ -12,6 +12,7 @@
     <Version>1.0.0</Version>
     <SignAssembly>false</SignAssembly>
     <Win32Resource />
+    <Product>Lamprey</Product>
   </PropertyGroup>
 
   <ItemGroup>

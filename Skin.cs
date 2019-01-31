@@ -17,30 +17,30 @@ namespace Lamprey
 
         public class Button : InputCode
         {
-            public string Filename { get; }
-            public int X { get; }
-            public int Y { get; }
+            public string Filename { get; set; }
+            public int PosX { get; set; }
+            public int PosY { get; set; }
         }
 
         public class Axis
         {
             public class AxisX : InputCode
             {
-                public int X { get; }
-                public int Offset { get; }
-                public int Trigger { get; }
+                public int Offset { get; set; }
+                public int Trigger { get; set; }
             }
 
             public class AxisY : InputCode
             {
-                public int Y { get; }
-                public int Offset { get; }
-                public int Trigger { get; }
+                public int Offset { get; set; }
+                public int Trigger { get; set; }
             }
 
-            public string Filename { get; }
-            public AxisX X { get; }
-            public AxisY Y { get; }
+            public string Filename { get; set; }
+            public int PosX { get; set; }
+            public int PosY { get; set; }
+            public AxisX X { get; set; }
+            public AxisY Y { get; set; }
         }
 
         public class SkinBackgrounds : IEnumerable<Skin.Background>
@@ -97,6 +97,16 @@ namespace Lamprey
             private List<Skin.Button> List { get; } = new List<Skin.Button>();
 
             public int Count => List.Count;
+
+            public void Add(Skin.Button button)
+            {
+                List.Add(button);
+            }
+
+            public void Remove(Skin.Button button)
+            {
+                List.Remove(button);
+            }
         }
 
         public class SkinAxes : IEnumerable<Skin.Axis>
@@ -114,6 +124,16 @@ namespace Lamprey
             private List<Skin.Axis> List { get; } = new List<Skin.Axis>();
 
             public int Count => List.Count;
+
+            public void Add(Skin.Axis axis)
+            {
+                List.Add(axis);
+            }
+
+            public void Remove(Skin.Axis axis)
+            {
+                List.Remove(axis);
+            }
         }
 
         public string Name { get; set; }
