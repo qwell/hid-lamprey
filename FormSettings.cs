@@ -33,7 +33,6 @@ namespace Lamprey
                     {
                         inputMapping.Value = 0;
                         inputMapping.Builtin = false;
-                        inputMapping.Category = inputCode.Category;
                         inputMapping.Code = inputCode.Code;
                     }
 
@@ -48,8 +47,7 @@ namespace Lamprey
                 Builtin = false,
                 Device = device,
                 Name = rawname,
-                Category = inputCode != null ? inputCode.Category : 0,
-                Code = inputCode != null ? inputCode.Code : 0,
+                Code = inputCode != null ? inputCode.Code : InputCode.InputCodeZ.UnknownCode,
             });
 
             Settings.Instance.Save();
@@ -170,7 +168,7 @@ namespace Lamprey
 
                     foreach (InputCode inputCode in inputCodes)
                     {
-                        if (inputCode.Category == inputMapping.Category && inputCode.Code == inputMapping.Code)
+                        if (inputCode.Code == inputMapping.Code)
                         {
                             String text = inputMapping.Name + "  |  " + inputCode.Description ?? inputCode.Code.ToString();
 
@@ -200,7 +198,7 @@ namespace Lamprey
             foreach (InputCode inputCode in inputCodes)
             {
                 TreeNode nodeCategory = null;
-                if (inputCode.Type != InputCode.InputCodeType.UnknownType)
+                if (inputCode.Type != InputCode.InputType.UnknownType)
                 {
                     if (inputCode.Code >= 0)
                     {
@@ -208,25 +206,25 @@ namespace Lamprey
 
                         switch (inputCode.Type)
                         {
-                            case InputCode.InputCodeType.GamepadButton:
+                            case InputCode.InputType.GamepadButton:
                                 codeType = "Gamepad Buttons";
                                 break;
-                            case InputCode.InputCodeType.MouseButton:
+                            case InputCode.InputType.MouseButton:
                                 codeType = "Mouse Buttons";
                                 break;
-                            case InputCode.InputCodeType.KeyboardKey:
+                            case InputCode.InputType.KeyboardKey:
                                 codeType = "Keyboard Keys";
                                 break;
-                            case InputCode.InputCodeType.KeyboardNumpadKey:
+                            case InputCode.InputType.NumpadKey:
                                 codeType = "Keyboard Numpad Keys";
                                 break;
-                            case InputCode.InputCodeType.KeyboardMiscKey:
+                            case InputCode.InputType.MiscKey:
                                 codeType = "Keyboard Misc Keys";
                                 break;
-                            case InputCode.InputCodeType.AbsoluteAxis:
+                            case InputCode.InputType.AbsoluteAxis:
                                 codeType = "Absolute Axis";
                                 break;
-                            case InputCode.InputCodeType.RelativeAxis:
+                            case InputCode.InputType.RelativeAxis:
                                 codeType = "Relative Axis";
                                 break;
                             default:
@@ -277,7 +275,7 @@ namespace Lamprey
                 {
                     foreach (InputCode inputCode in inputCodes)
                     {
-                        if (inputCode.Type == button.Type && inputCode.Code == button.Code)
+                        if (inputCode.Code == button.Code)
                         {
                             TreeNode nodeButton = new TreeNode(inputCode.Description ?? inputCode.Code.ToString());
                             nodeShortcut.Nodes.Add(nodeButton);

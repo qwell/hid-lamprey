@@ -8,6 +8,7 @@ namespace Lamprey
     {
         public class Button : InputCode
         {
+            public Button(InputType Type, InputCodeZ Code, String Description) : base(Type, Code, Description) { }
             public int TriggerLow { get; }
             public int TriggerHigh { get; }
         }

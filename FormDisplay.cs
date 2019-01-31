@@ -39,7 +39,7 @@ namespace Lamprey
                 foreach (SkinButtonPictureBox SkinButtonPictureBox in this.skinButtons)
                 {
                     Skin.Button SkinButton = SkinButtonPictureBox.SkinButton;
-                    if (ControllerButton.Type == SkinButtonPictureBox.SkinButton.Type && ControllerButton.Code == SkinButtonPictureBox.SkinButton.Code)
+                    if (ControllerButton.Code == SkinButtonPictureBox.SkinButton.Code)
                     {
                         if (ControllerButton.Value != 0)
                         {
@@ -51,20 +51,19 @@ namespace Lamprey
                 foreach (SkinAxisPictureBox SkinAxisPictureBox in this.skinAxes)
                 {
                     Skin.Axis SkinAxis = SkinAxisPictureBox.SkinAxis;
-                    if ((ControllerButton.Category == SkinAxis.X.Category && ControllerButton.Code == SkinAxis.X.Code) ||
-                        (ControllerButton.Category == SkinAxis.Y.Category && ControllerButton.Code == SkinAxis.Y.Code))
+                    if (ControllerButton.Code == SkinAxis.X.Code || ControllerButton.Code == SkinAxis.Y.Code)
                     {
                         int offset_x = SkinAxisPictureBox.Location.X - SkinAxis.PosX;
                         int offset_y = SkinAxisPictureBox.Location.Y - SkinAxis.PosY;
                         bool visible = false;
 
-                        if (ControllerButton.Category == SkinAxis.X.Category && ControllerButton.Code == SkinAxis.X.Code && (SkinAxis.X.Trigger == 0 || (SkinAxis.X.Trigger > 0 && ControllerButton.Value > SkinAxis.X.Trigger) || (SkinAxis.X.Trigger < 0 && ControllerButton.Value < SkinAxis.X.Trigger)))
+                        if (ControllerButton.Code == SkinAxis.X.Code && (SkinAxis.X.Trigger == 0 || (SkinAxis.X.Trigger > 0 && ControllerButton.Value > SkinAxis.X.Trigger) || (SkinAxis.X.Trigger < 0 && ControllerButton.Value < SkinAxis.X.Trigger)))
                         {
                             if (ControllerButton.Value != 0)
                             {
                                 if (SkinAxis.X.Offset != 0)
                                 {
-                                    offset_x = (ControllerButton.Category == InputCode.InputCategory.AxisRelative ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.X.Offset);
+                                    offset_x = (ControllerButton.Type == InputCode.InputType.RelativeAxis ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.X.Offset);
                                 }
                                 else
                                 {
@@ -78,13 +77,13 @@ namespace Lamprey
                             }
                         }
 
-                        if (ControllerButton.Category == SkinAxis.Y.Category && ControllerButton.Code == SkinAxis.Y.Code && (SkinAxis.Y.Trigger == 0 || (SkinAxis.Y.Trigger > 0 && ControllerButton.Value > SkinAxis.Y.Trigger) || (SkinAxis.Y.Trigger < 0 && ControllerButton.Value < SkinAxis.Y.Trigger)))
+                        if (ControllerButton.Code == SkinAxis.Y.Code && (SkinAxis.Y.Trigger == 0 || (SkinAxis.Y.Trigger > 0 && ControllerButton.Value > SkinAxis.Y.Trigger) || (SkinAxis.Y.Trigger < 0 && ControllerButton.Value < SkinAxis.Y.Trigger)))
                         {
                             if (ControllerButton.Value != 0)
                             {
                                 if (SkinAxis.Y.Offset != 0)
                                 {
-                                    offset_y = (ControllerButton.Category == InputCode.InputCategory.AxisRelative ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.Y.Offset);
+                                    offset_y = (ControllerButton.Type == InputCode.InputType.RelativeAxis ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.Y.Offset);
                                 }
                                 else
                                 {
@@ -152,7 +151,7 @@ namespace Lamprey
         {
             foreach (Controller.Button Button in Controller.Instance.Buttons)
             {
-                if (Button.Category == InputCode.InputCategory.AxisRelative && Button.Value != 0)
+                if (Button.Type == InputCode.InputType.RelativeAxis && Button.Value != 0)
                 {
                     int decay_amount;
                     if (Math.Abs(Button.Value) < 10)
