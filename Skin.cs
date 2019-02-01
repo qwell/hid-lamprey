@@ -15,9 +15,9 @@ namespace Lamprey
             public string Filename { get; set; }
         }
 
-        public class Button : InputCode
+        public class Button : Input
         {
-            public Button(InputCode inputCode) : base(inputCode) { }
+            public Button(Input input) : base(input) { }
             public string Filename { get; set; }
             public int PosX { get; set; }
             public int PosY { get; set; }
@@ -25,16 +25,16 @@ namespace Lamprey
 
         public class Axis
         {
-            public class AxisX : InputCode
+            public class AxisX : Input
             {
-                public AxisX(InputCode inputCode) : base(inputCode) { }
+                public AxisX(Input input) : base(input) { }
                 public int Offset { get; set; }
                 public int Trigger { get; set; }
             }
 
-            public class AxisY : InputCode
+            public class AxisY : Input
             {
-                public AxisY(InputCode inputCode) : base(inputCode) { }
+                public AxisY(Input input) : base(input) { }
                 public int Offset { get; set; }
                 public int Trigger { get; set; }
             }

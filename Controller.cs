@@ -10,9 +10,9 @@ namespace Lamprey
         static Controller() { }
         private Controller() { }
 
-        public class Button : InputCode
+        public class Button : Input
         {
-            public Button(InputType Type, InputCodeZ Code, string Description) : base(Type, Code, Description) { }
+            public Button(InputType Type, InputCode Code, string Description) : base(Type, Code, Description) { }
             public int Value { get; set; }
             public int Decay { get; set; }
         }

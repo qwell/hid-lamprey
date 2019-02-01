@@ -63,7 +63,7 @@ namespace Lamprey
                             {
                                 if (SkinAxis.X.Offset != 0)
                                 {
-                                    offset_x = (ControllerButton.Type == InputCode.InputType.RelativeAxis ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.X.Offset);
+                                    offset_x = (ControllerButton.Type == Input.InputType.RelativeAxis ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.X.Offset);
                                 }
                                 else
                                 {
@@ -83,7 +83,7 @@ namespace Lamprey
                             {
                                 if (SkinAxis.Y.Offset != 0)
                                 {
-                                    offset_y = (ControllerButton.Type == InputCode.InputType.RelativeAxis ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.Y.Offset);
+                                    offset_y = (ControllerButton.Type == Input.InputType.RelativeAxis ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.Y.Offset);
                                 }
                                 else
                                 {
@@ -151,7 +151,7 @@ namespace Lamprey
         {
             foreach (Controller.Button Button in Controller.Instance.Buttons)
             {
-                if (Button.Type == InputCode.InputType.RelativeAxis && Button.Value != 0)
+                if (Button.Type == Input.InputType.RelativeAxis && Button.Value != 0)
                 {
                     int decay_amount;
                     if (Math.Abs(Button.Value) < 10)

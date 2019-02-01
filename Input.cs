@@ -2,7 +2,7 @@
 
 namespace Lamprey
 {
-    public class InputCode
+    public class Input
     {
         public enum InputType
         {
@@ -16,14 +16,14 @@ namespace Lamprey
             RelativeAxis,
         }
 
-        public InputCode(InputCode inputCode)
+        public Input(Input input)
         {
-            this.Type = inputCode.Type;
-            this.Code = inputCode.Code;
-            this.Description = inputCode.Description;
+            this.Type = input.Type;
+            this.Code = input.Code;
+            this.Description = input.Description;
         }
 
-        public InputCode(InputType Type, InputCodeZ Code, string Description)
+        public Input(InputType Type, InputCode Code, string Description)
         {
             this.Type = Type;
             this.Code = Code;
@@ -31,10 +31,10 @@ namespace Lamprey
         }
 
         public InputType Type { get; } = InputType.UnknownType;
-        public InputCodeZ Code { get; } = InputCodeZ.UnknownCode;
-        public string Description { get; } = InputCodeZ.UnknownCode.ToString();
+        public InputCode Code { get; } = InputCode.UnknownCode;
+        public string Description { get; } = InputCode.UnknownCode.ToString();
 
-        public enum InputCodeZ
+        public enum InputCode
         {
             UnknownCode,
 

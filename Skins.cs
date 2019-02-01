@@ -80,10 +80,10 @@ namespace Lamprey
                                 case "button":
                                     if (xml.HasAttributes)
                                     {
-                                        InputCode inputCode = InputCodes.Instance.FindByCode(xml.GetAttribute("code"));
-                                        if (inputCode != null)
+                                        Input input = Inputs.Instance.FindByCode(xml.GetAttribute("code"));
+                                        if (input != null)
                                         {
-                                            Skin.Button button = new Skin.Button(inputCode)
+                                            Skin.Button button = new Skin.Button(input)
                                             {
                                                 Filename = xml.GetAttribute("image"),
                                                 PosX = int.Parse(xml.GetAttribute("x") ?? xml.GetAttribute("X")),
@@ -97,7 +97,7 @@ namespace Lamprey
                                 case "axis":
                                     if (xml.HasAttributes)
                                     {
-                                        InputCode inputCode;
+                                        Input input;
                                         Skin.Axis axis = new Skin.Axis
                                         {
                                             Filename = xml.GetAttribute("image"),
@@ -107,16 +107,16 @@ namespace Lamprey
                                             Y = null
                                         };
 
-                                        inputCode = InputCodes.Instance.FindByCode(xml.GetAttribute("code_x"));
-                                        if (inputCode != null)
+                                        input = Inputs.Instance.FindByCode(xml.GetAttribute("code_x"));
+                                        if (input != null)
                                         {
-                                            axis.X = new Skin.Axis.AxisX(inputCode);
+                                            axis.X = new Skin.Axis.AxisX(input);
                                         }
 
-                                        inputCode = InputCodes.Instance.FindByCode(xml.GetAttribute("code_y"));
-                                        if (inputCode != null)
+                                        input = Inputs.Instance.FindByCode(xml.GetAttribute("code_y"));
+                                        if (input != null)
                                         {
-                                            axis.Y = new Skin.Axis.AxisY(inputCode);
+                                            axis.Y = new Skin.Axis.AxisY(input);
                                         }
 
                                         skin.Axes.Add(axis);

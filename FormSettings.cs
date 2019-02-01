@@ -19,13 +19,13 @@ namespace Lamprey
 
         private void update_mapping(string device, string rawname, Object tag)
         {
-            InputCode inputCode = (InputCode)tag;
+            Input input = (Input)tag;
 
             foreach (InputMapping inputMapping in InputMappings.Instance)
             {
                 if (device == inputMapping.Device && rawname == inputMapping.Name)
                 {
-                    if (inputCode == null)
+                    if (input == null)
                     {
                         InputMappings.Instance.Remove(inputMapping);
                     }
@@ -33,7 +33,7 @@ namespace Lamprey
                     {
                         inputMapping.Value = 0;
                         inputMapping.Builtin = false;
-                        inputMapping.Code = inputCode.Code;
+                        inputMapping.Code = input.Code;
                     }
 
                     Settings.Instance.Save();
@@ -47,7 +47,7 @@ namespace Lamprey
                 Builtin = false,
                 Device = device,
                 Name = rawname,
-                Code = inputCode != null ? inputCode.Code : InputCode.InputCodeZ.UnknownCode,
+                Code = input != null ? input.Code : Input.InputCode.UnknownCode,
             });
 
             Settings.Instance.Save();
@@ -142,7 +142,7 @@ namespace Lamprey
 
             tvMappings.BeginUpdate();
             tvMappings.Nodes.Clear();
-            InputCodes inputCodes = InputCodes.Instance;
+            Inputs inputs = Inputs.Instance;
             InputMappings inputMappings = InputMappings.Instance;
             foreach (InputMapping inputMapping in inputMappings)
             {
@@ -166,14 +166,14 @@ namespace Lamprey
                         };
                     }
 
-                    foreach (InputCode inputCode in inputCodes)
+                    foreach (Input input in inputs)
                     {
-                        if (inputCode.Code == inputMapping.Code)
+                        if (input.Code == inputMapping.Code)
                         {
-                            TreeNode nodeButton = new TreeNode(inputMapping.Name + "  |  " + inputCode.Description ?? inputCode.Code.ToString())
+                            TreeNode nodeButton = new TreeNode(inputMapping.Name + "  |  " + input.Description ?? input.Code.ToString())
                             {
                                 Name = inputMapping.Name,
-                                Tag = inputCode,
+                                Tag = input,
                                 ForeColor = Color.Green
                             };
 
@@ -193,36 +193,36 @@ namespace Lamprey
             tvMapButtons.BeginUpdate();
             tvMapButtons.Nodes.Clear();
 
-            foreach (InputCode inputCode in inputCodes)
+            foreach (Input input in inputs)
             {
                 TreeNode nodeCategory = null;
-                if (inputCode.Type != InputCode.InputType.UnknownType)
+                if (input.Type != Input.InputType.UnknownType)
                 {
-                    if (inputCode.Code >= 0)
+                    if (input.Code >= 0)
                     {
                         string codeType;
 
-                        switch (inputCode.Type)
+                        switch (input.Type)
                         {
-                            case InputCode.InputType.GamepadButton:
+                            case Input.InputType.GamepadButton:
                                 codeType = "Gamepad Buttons";
                                 break;
-                            case InputCode.InputType.MouseButton:
+                            case Input.InputType.MouseButton:
                                 codeType = "Mouse Buttons";
                                 break;
-                            case InputCode.InputType.KeyboardKey:
+                            case Input.InputType.KeyboardKey:
                                 codeType = "Keyboard Keys";
                                 break;
-                            case InputCode.InputType.NumpadKey:
+                            case Input.InputType.NumpadKey:
                                 codeType = "Keyboard Numpad Keys";
                                 break;
-                            case InputCode.InputType.MiscKey:
+                            case Input.InputType.MiscKey:
                                 codeType = "Keyboard Misc Keys";
                                 break;
-                            case InputCode.InputType.AbsoluteAxis:
+                            case Input.InputType.AbsoluteAxis:
                                 codeType = "Absolute Axis";
                                 break;
-                            case InputCode.InputType.RelativeAxis:
+                            case Input.InputType.RelativeAxis:
                                 codeType = "Relative Axis";
                                 break;
                             default:
@@ -247,10 +247,10 @@ namespace Lamprey
                             };
                         }
 
-                        TreeNode nodeCode = new TreeNode(inputCode.Description ?? inputCode.Code.ToString())
+                        TreeNode nodeCode = new TreeNode(input.Description ?? input.Code.ToString())
                         {
-                            Name = inputCode.Description ?? inputCode.Code.ToString(),
-                            Tag = inputCode
+                            Name = input.Description ?? input.Code.ToString(),
+                            Tag = input
                         };
 
                         nodeCategory.Nodes.Add(nodeCode);
@@ -271,11 +271,11 @@ namespace Lamprey
 
                 foreach (Shortcut.Button button in shortcut.Buttons)
                 {
-                    foreach (InputCode inputCode in inputCodes)
+                    foreach (Input input in inputs)
                     {
-                        if (inputCode.Code == button.Code)
+                        if (input.Code == button.Code)
                         {
-                            TreeNode nodeButton = new TreeNode(inputCode.Description ?? inputCode.Code.ToString());
+                            TreeNode nodeButton = new TreeNode(input.Description ?? input.Code.ToString());
                             nodeShortcut.Nodes.Add(nodeButton);
                         }
                     }
