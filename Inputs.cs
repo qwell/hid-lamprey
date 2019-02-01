@@ -50,16 +50,18 @@ namespace Lamprey
 
         public Input FindByCode(string code)
         {
-            try
-            {
-                Input input = (Input)Enum.Parse(typeof(Input.InputCode), code);
-
-                return this.FindByCode(input.Code);
-            }
-            catch (ArgumentException)
+            if (string.IsNullOrEmpty(code))
             {
                 return null;
             }
+
+            Input.InputCode inputCode;
+            if (!Enum.TryParse(code, true, out inputCode))
+            {
+                return null;
+            }
+
+            return this.FindByCode(inputCode);
         }
 
         private void Load()
