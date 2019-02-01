@@ -30,7 +30,6 @@ namespace Lamprey
 
         private void Load()
         {
-            EnumerationOptions x = new EnumerationOptions();
             foreach (string file in Directory.EnumerateFiles("skins", "skin.xml", SearchOption.AllDirectories))
             {
                 Skin skin = null;
@@ -70,7 +69,7 @@ namespace Lamprey
                                             Filename = xml.GetAttribute("image")
                                         };
 
-                                        if (background.Name.Length == 0 || background.Filename.Length == 0)
+                                        if (string.IsNullOrEmpty(background.Name) || string.IsNullOrEmpty(background.Filename))
                                         {
                                             continue;
                                         }
