@@ -14,6 +14,19 @@ namespace Lamprey
             Load();
         }
 
+        public Skin Skin { get; set; }
+        public Skin.Background SkinBackground { get; set; }
+        public float DeadzoneAxis { get; set; } = 0.2F;
+        public float DeadzoneHat { get; set; } = 0F;
+
+        // TODO: Properly implement this.
+        public class Device
+        {
+            public string Name { get; set; }
+            public string Location { get; set; }
+        }
+        public List<Device> Devices { get; set; }
+
         private void Load()
         {
             XmlReader xml = XmlReader.Create(@"settings\settings.xml");
@@ -32,7 +45,8 @@ namespace Lamprey
                                     if (Skin != null)
                                     {
                                         SkinBackground = Skin.Backgrounds.FindByName(xml.GetAttribute("background"));
-                                    } else
+                                    }
+                                    else
                                     {
                                         SkinBackground = null;
                                     }
@@ -57,7 +71,8 @@ namespace Lamprey
                                 {
                                     if (xml.GetAttribute("name").Length > 0)
                                     {
-                                        Device device = new Device {
+                                        Device device = new Device
+                                        {
                                             Name = xml.GetAttribute("name"),
                                             Location = xml.ReadElementContentAsString()
                                         };
@@ -72,17 +87,5 @@ namespace Lamprey
             }
         }
         public void Save() { }
-        public Skin Skin { get; set; }
-        public Skin.Background SkinBackground { get; set; }
-        public float DeadzoneAxis { get; set; } = 0.2F;
-        public float DeadzoneHat { get; set; } = 0F;
-
-        // TODO: Properly implement this.
-        public class Device
-        {
-            public string Name { get; set; }
-            public string Location { get; set; }
-        }
-        public List<Device> Devices { get; set; }
     }
 }

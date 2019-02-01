@@ -31,9 +31,9 @@ namespace Lamprey
             List.Add(input);
         }
 
-        public void Remove(Input input)
+        public bool Remove(Input input)
         {
-            List.Remove(input);
+            return List.Remove(input);
         }
 
         public Input FindByCode(Input.InputCode code)

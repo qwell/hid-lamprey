@@ -28,6 +28,28 @@ namespace Lamprey
 
         public int Count => List.Count;
 
+        public void Add(Skin skin)
+        {
+            List.Add(skin);
+        }
+
+        public bool Remove(Skin skin)
+        {
+            return List.Remove(skin);
+        }
+
+        public Skin FindByName(string name)
+        {
+            foreach (Skin skin in List)
+            {
+                if (name == skin.Name)
+                {
+                    return skin;
+                }
+            }
+            return null;
+        }
+
         private void Load()
         {
             foreach (string file in Directory.EnumerateFiles("skins", "skin.xml", SearchOption.AllDirectories))
@@ -46,7 +68,7 @@ namespace Lamprey
                     // TODO: Add backwards compat for NintendoSpy type= attribute.
                 }
 
-                if (skin == null || skin.Name.Length == 0)
+                if (skin == null || string.IsNullOrEmpty(skin.Name))
                 {
                     continue;
                 }
@@ -126,28 +148,6 @@ namespace Lamprey
                     }
                 }
             }
-        }
-
-        public void Add(Skin skin)
-        {
-            List.Add(skin);
-        }
-
-        public void Remove(Skin skin)
-        {
-            List.Remove(skin);
-        }
-
-        public Skin FindByName(string name)
-        {
-            foreach (Skin skin in List)
-            {
-                if (name == skin.Name)
-                {
-                    return skin;
-                }
-            }
-            return null;
         }
     }
 }

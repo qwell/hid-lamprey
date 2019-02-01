@@ -7,7 +7,9 @@ namespace Lamprey
     {
         public static InputMappings Instance { get; } = new InputMappings();
         static InputMappings() { }
-        private InputMappings() { }
+        private InputMappings() {
+            Load();
+        }
 
         public IEnumerator GetEnumerator()
         {
@@ -27,9 +29,14 @@ namespace Lamprey
             List.Add(inputMapping);
         }
 
-        public void Remove(InputMapping inputMapping)
+        public bool Remove(InputMapping inputMapping)
         {
-            List.Remove(inputMapping);
+            return List.Remove(inputMapping);
+        }
+
+        private void Load()
+        {
+
         }
     }
 }
