@@ -214,10 +214,10 @@ namespace Lamprey
                                 codeType = "Keyboard Keys";
                                 break;
                             case Input.InputType.NumpadKey:
-                                codeType = "Keyboard Numpad Keys";
+                                codeType = "Numpad Keys";
                                 break;
                             case Input.InputType.MiscKey:
-                                codeType = "Keyboard Misc Keys";
+                                codeType = "Misc Keys";
                                 break;
                             case Input.InputType.AbsoluteAxis:
                                 codeType = "Absolute Axis";
