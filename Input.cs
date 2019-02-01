@@ -16,12 +16,9 @@ namespace Lamprey
             RelativeAxis,
         }
 
-        public Input(Input input)
-        {
-            this.Type = input.Type;
-            this.Code = input.Code;
-            this.Description = input.Description;
-        }
+        public Input(Input input) : this(input.Type, input.Code, input.Description) { }
+
+        public Input(InputType Type, InputCode Code) : this(Type, Code, null) { }
 
         public Input(InputType Type, InputCode Code, string Description)
         {
