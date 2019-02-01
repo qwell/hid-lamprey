@@ -18,16 +18,32 @@
 
   <ItemGroup>
     <Compile Remove="Debug\**" />
+    <Compile Remove="dummy_designer\**" />
+    <Compile Remove="legacy\autoconf\**" />
+    <Compile Remove="legacy\glade\**" />
     <Compile Remove="Release\**" />
     <EmbeddedResource Remove="Debug\**" />
+    <EmbeddedResource Remove="dummy_designer\**" />
+    <EmbeddedResource Remove="legacy\autoconf\**" />
+    <EmbeddedResource Remove="legacy\glade\**" />
     <EmbeddedResource Remove="Release\**" />
     <None Remove="Debug\**" />
+    <None Remove="dummy_designer\**" />
+    <None Remove="legacy\autoconf\**" />
+    <None Remove="legacy\glade\**" />
     <None Remove="Release\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove=".gitmodules" />
+    <None Remove="legacy\config.guess" />
+    <None Remove="legacy\config.out.in" />
+    <None Remove="legacy\config.sub" />
+    <None Remove="legacy\configure" />
+    <None Remove="legacy\configure.ac" />
+    <None Remove="legacy\install-sh" />
+    <None Remove="legacy\Makefile" />
     <None Remove="LICENSE" />
     <None Remove="LICENSE.resources" />
     <None Remove="README" />
