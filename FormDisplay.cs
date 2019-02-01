@@ -120,6 +120,7 @@ namespace Lamprey
         void tmsiSettings_Click(object sender, EventArgs e)
         {
             FormSettings settings = new FormSettings();
+            settings.SkinChanged += new EventHandler(FormDisplay_SkinChanged);
             settings.ShowDialog(this);
             settings.Dispose();
         }
@@ -195,6 +196,11 @@ namespace Lamprey
         void output_controller()
         {
             this.needRefresh = true;
+        }
+
+        void FormDisplay_SkinChanged(object sender, EventArgs e)
+        {
+            this.loadSkinImages();
         }
 
         void loadSkinImages()

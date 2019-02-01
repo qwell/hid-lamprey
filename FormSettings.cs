@@ -12,6 +12,8 @@ namespace Lamprey
 {
     public partial class FormSettings : Form
     {
+        public event EventHandler SkinChanged;
+
         public FormSettings()
         {
             InitializeComponent();
@@ -309,7 +311,10 @@ namespace Lamprey
                     }
                 }
 
-                //formMain.loadSkinImages();
+                if (this.SkinChanged != null)
+                {
+                    SkinChanged(this, null);
+                }
             }
         }
 
