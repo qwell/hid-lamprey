@@ -16,6 +16,13 @@ namespace Lamprey
             RelativeAxis,
         }
 
+        public InputCode(InputCode inputCode)
+        {
+            this.Type = inputCode.Type;
+            this.Code = inputCode.Code;
+            this.Description = inputCode.Description;
+        }
+
         public InputCode(InputType Type, InputCodeZ Code, string Description)
         {
             this.Type = Type;

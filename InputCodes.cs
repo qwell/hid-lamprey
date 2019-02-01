@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Lamprey
@@ -33,6 +34,31 @@ namespace Lamprey
         public void Remove(InputCode inputCode)
         {
             List.Remove(inputCode);
+        }
+
+        public InputCode FindByCode(InputCode.InputCodeZ code)
+        {
+            foreach (InputCode inputCode in List)
+            {
+                if (code == inputCode.Code)
+                {
+                    return inputCode;
+                }
+            }
+            return null;
+        }
+
+        public InputCode FindByCode(string code)
+        {
+            try
+            {
+                InputCode inputCode = (InputCode)Enum.Parse(typeof(InputCode.InputCodeZ), code);
+
+                return this.FindByCode(inputCode.Code);
+            }
+            catch (ArgumentException) {
+                return null;
+            }
         }
 
         private void Load()
