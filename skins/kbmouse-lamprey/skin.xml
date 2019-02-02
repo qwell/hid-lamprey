@@ -1,13 +1,13 @@
-﻿<skin name="kbmouse-lamprey">
+<skin name="kbmouse-lamprey">
 	<background name="default" image="kbmouse-base.png"/>
 
-	<button image="keyboard-button.png" code="KEY_W" x="60" y="0"/>
-	<button image="keyboard-button.png" code="KEY_A" x="0" y="60"/>
-	<button image="keyboard-button.png" code="KEY_S" x="70" y="60"/>
-	<button image="keyboard-button.png" code="KEY_D" x="140" y="60"/>
+	<button image="keyboard-button.png" code="KeyW" x="60" y="0"/>
+	<button image="keyboard-button.png" code="KeyA" x="0" y="60"/>
+	<button image="keyboard-button.png" code="KeyS" x="70" y="60"/>
+	<button image="keyboard-button.png" code="KeyD" x="140" y="60"/>
 
-	<button image="mouse-left.png" code="BTN_LEFT" x="229" y="2"/>
-	<button image="mouse-right.png" code="BTN_RIGHT" x="289" y="2"/>
+	<button image="mouse-left.png" code="MouseLeft" x="229" y="2"/>
+	<button image="mouse-right.png" code="MouseRight" x="289" y="2"/>
 
 	<axis image="mouse-scrollup.png" code_y="REL_WHEEL" trigger_y="1" x="275" y="16"/>
 	<axis image="mouse-scrolldown.png" code_y="REL_WHEEL" trigger_y="-1" x="275" y="42"/>
