@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Lamprey
 {
@@ -11,6 +12,12 @@ namespace Lamprey
         private Inputs()
         {
             Load();
+
+            Thread t = new Thread(new ThreadStart(XInput.Poll))
+            {
+                IsBackground = true
+            };
+            t.Start();
         }
 
         public IEnumerator GetEnumerator()

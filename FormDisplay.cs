@@ -34,73 +34,76 @@ namespace Lamprey
 
         void picController_onPaint(object sender, PaintEventArgs e)
         {
-            foreach (Controller.Button ControllerButton in Controller.Instance.Buttons)
+            foreach (Controller Controller in Controllers.Instance)
             {
-                foreach (SkinButtonPictureBox SkinButtonPictureBox in this.skinButtons)
+                foreach (Controller.Button ControllerButton in Controller.Buttons)
                 {
-                    Skin.Button SkinButton = SkinButtonPictureBox.SkinButton;
-                    if (ControllerButton.Code == SkinButtonPictureBox.SkinButton.Code)
+                    foreach (SkinButtonPictureBox SkinButtonPictureBox in this.skinButtons)
                     {
-                        if (ControllerButton.Value != 0)
-                        {
-                            e.Graphics.DrawImage(SkinButtonPictureBox.Image, new RectangleF(SkinButtonPictureBox.Location, SkinButtonPictureBox.Size));
-                        }
-                    }
-                }
-
-                foreach (SkinAxisPictureBox SkinAxisPictureBox in this.skinAxes)
-                {
-                    Skin.Axis SkinAxis = SkinAxisPictureBox.SkinAxis;
-                    if (ControllerButton.Code == SkinAxis.X.Code || ControllerButton.Code == SkinAxis.Y.Code)
-                    {
-                        int offset_x = SkinAxisPictureBox.Location.X - SkinAxis.PosX;
-                        int offset_y = SkinAxisPictureBox.Location.Y - SkinAxis.PosY;
-                        bool visible = false;
-
-                        if (ControllerButton.Code == SkinAxis.X.Code && (SkinAxis.X.Trigger == 0 || (SkinAxis.X.Trigger > 0 && ControllerButton.Value > SkinAxis.X.Trigger) || (SkinAxis.X.Trigger < 0 && ControllerButton.Value < SkinAxis.X.Trigger)))
+                        Skin.Button SkinButton = SkinButtonPictureBox.SkinButton;
+                        if (ControllerButton.Code == SkinButtonPictureBox.SkinButton.Code)
                         {
                             if (ControllerButton.Value != 0)
                             {
-                                if (SkinAxis.X.Offset != 0)
+                                e.Graphics.DrawImage(SkinButtonPictureBox.Image, new RectangleF(SkinButtonPictureBox.Location, SkinButtonPictureBox.Size));
+                            }
+                        }
+                    }
+
+                    foreach (SkinAxisPictureBox SkinAxisPictureBox in this.skinAxes)
+                    {
+                        Skin.Axis SkinAxis = SkinAxisPictureBox.SkinAxis;
+                        if ((SkinAxis.X != null && ControllerButton.Code == SkinAxis.X.Code) || (SkinAxis.Y != null && ControllerButton.Code == SkinAxis.Y.Code))
+                        {
+                            int offset_x = SkinAxisPictureBox.Location.X - SkinAxis.PosX;
+                            int offset_y = SkinAxisPictureBox.Location.Y - SkinAxis.PosY;
+                            bool visible = false;
+
+                            if (ControllerButton.Code == SkinAxis.X.Code && (SkinAxis.X.Trigger == 0 || (SkinAxis.X.Trigger > 0 && ControllerButton.Value > SkinAxis.X.Trigger) || (SkinAxis.X.Trigger < 0 && ControllerButton.Value < SkinAxis.X.Trigger)))
+                            {
+                                if (ControllerButton.Value != 0)
                                 {
-                                    offset_x = (ControllerButton.Type == Input.InputType.RelativeAxis ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.X.Offset);
+                                    if (SkinAxis.X.Offset != 0)
+                                    {
+                                        offset_x = (ControllerButton.Type == Input.InputType.RelativeAxis ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.X.Offset);
+                                    }
+                                    else
+                                    {
+                                        offset_x = 0;
+                                    }
+                                    visible = true;
                                 }
                                 else
                                 {
                                     offset_x = 0;
                                 }
-                                visible = true;
                             }
-                            else
-                            {
-                                offset_x = 0;
-                            }
-                        }
 
-                        if (ControllerButton.Code == SkinAxis.Y.Code && (SkinAxis.Y.Trigger == 0 || (SkinAxis.Y.Trigger > 0 && ControllerButton.Value > SkinAxis.Y.Trigger) || (SkinAxis.Y.Trigger < 0 && ControllerButton.Value < SkinAxis.Y.Trigger)))
-                        {
-                            if (ControllerButton.Value != 0)
+                            if (ControllerButton.Code == SkinAxis.Y.Code && (SkinAxis.Y.Trigger == 0 || (SkinAxis.Y.Trigger > 0 && ControllerButton.Value > SkinAxis.Y.Trigger) || (SkinAxis.Y.Trigger < 0 && ControllerButton.Value < SkinAxis.Y.Trigger)))
                             {
-                                if (SkinAxis.Y.Offset != 0)
+                                if (ControllerButton.Value != 0)
                                 {
-                                    offset_y = (ControllerButton.Type == Input.InputType.RelativeAxis ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.Y.Offset);
+                                    if (SkinAxis.Y.Offset != 0)
+                                    {
+                                        offset_y = (ControllerButton.Type == Input.InputType.RelativeAxis ? ControllerButton.Decay : ControllerButton.Value) / (256 / SkinAxis.Y.Offset);
+                                    }
+                                    else
+                                    {
+                                        offset_y = 0;
+                                    }
+                                    visible = true;
                                 }
                                 else
                                 {
                                     offset_y = 0;
                                 }
-                                visible = true;
                             }
-                            else
-                            {
-                                offset_y = 0;
-                            }
-                        }
 
-                        SkinAxisPictureBox.Location = new Point(SkinAxis.PosX + offset_x, SkinAxis.PosY + offset_y);
-                        if (visible)
-                        {
-                            e.Graphics.DrawImage(SkinAxisPictureBox.Image, new RectangleF(SkinAxisPictureBox.Location, SkinAxisPictureBox.Size));
+                            SkinAxisPictureBox.Location = new Point(SkinAxis.PosX + offset_x, SkinAxis.PosY + offset_y);
+                            if (visible)
+                            {
+                                e.Graphics.DrawImage(SkinAxisPictureBox.Image, new RectangleF(SkinAxisPictureBox.Location, SkinAxisPictureBox.Size));
+                            }
                         }
                     }
                 }
@@ -150,26 +153,29 @@ namespace Lamprey
 
         void timer1_Tick(object sender, EventArgs e)
         {
-            foreach (Controller.Button Button in Controller.Instance.Buttons)
+            foreach (Controller Controller in Controllers.Instance)
             {
-                if (Button.Type == Input.InputType.RelativeAxis && Button.Value != 0)
+                foreach (Controller.Button Button in Controller.Buttons)
                 {
-                    int decay_amount;
-                    if (Math.Abs(Button.Value) < 10)
+                    if (Button.Type == Input.InputType.RelativeAxis && Button.Value != 0)
                     {
-                        decay_amount = Button.Value;
+                        int decay_amount;
+                        if (Math.Abs(Button.Value) < 10)
+                        {
+                            decay_amount = Button.Value;
+                        }
+                        else
+                        {
+                            decay_amount = (int)(Button.Value * .1);
+                        }
+                        Button.Decay -= decay_amount;
+                        if (Math.Abs(Button.Decay) < Math.Abs(decay_amount))
+                        {
+                            Button.Decay = 0;
+                            Button.Value = 0;
+                        }
+                        this.needRefresh = true;
                     }
-                    else
-                    {
-                        decay_amount = (int)(Button.Value * .1);
-                    }
-                    Button.Decay -= decay_amount;
-                    if (Math.Abs(Button.Decay) < Math.Abs(decay_amount))
-                    {
-                        Button.Decay = 0;
-                        Button.Value = 0;
-                    }
-                    this.needRefresh = true;
                 }
             }
 
