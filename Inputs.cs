@@ -13,7 +13,7 @@ namespace Lamprey
         {
             Load();
 
-            Thread t = new Thread(new ThreadStart(XInput.Poll))
+            Thread t = new Thread(new ThreadStart((new XInput()).Poll))
             {
                 IsBackground = true
             };

@@ -52,40 +52,18 @@ namespace Lamprey
             new CompatInput(XINPUT_GAMEPAD_Y, Input.InputCode.ButtonNorth),
         };
 
-        public static void Poll()
+        public void Poll()
         {
             uint[] PacketNumber = new uint[MaxDevices];
-            for (int i = 0; i < MaxDevices; i++)
-            {
-                if (Controllers.Instance.FindByName("XInput" + i) == null)
-                {
-                    Controller controller = new Controller()
-                    {
-                        Name = "XInput" + i,
-                    };
-
-                    foreach (CompatInput compatInput in compatInputs)
-                    {
-                        Input input = Inputs.Instance.FindByCode(compatInput.InputCode);
-                        if (input != null)
-                        {
-                            controller.Buttons.Add(new Controller.Button(input));
-                        }
-                    }
-
-                    Controllers.Instance.Add(controller);
-                }
-            }
 
             int res = 0;
             do
             {
                 for (int i = 0; i < MaxDevices; i++)
                 {
-                    Controller controller = Controllers.Instance.FindByName("XInput" + i);
-                    XInputState newState = new XInputState();
                     bool changed = false;
 
+                    XInputState newState = new XInputState();
                     if (XInputGetState(i, ref newState) != 0)
                     {
                         continue;
@@ -97,23 +75,49 @@ namespace Lamprey
                     }
                     PacketNumber[i] = newState.PacketNumber;
 
-                    foreach (CompatInput compatInput in compatInputs)
+                    Controller controller = Controllers.Instance.FindByName("XInput" + i);
+                    if (controller == null)
                     {
-                        int value = (newState.Gamepad.Buttons & compatInput.XInputCode) != 0 ? 1 : 0;
-
-                        Controller.Button button = controller.Buttons.FindByCode(compatInput.InputCode);
-                        if (button != null)
+                        controller = new Controller()
                         {
-                            if (button.Value != value)
-                            {
-                                button.Value = value;
-                                changed = true;
-                            }
-                        }
+                            Name = "XInput" + i,
+                        };
+
+                        Controllers.Instance.Add(controller);
+
+                        changed = true;
                     }
 
+                    foreach (CompatInput compatInput in compatInputs)
+                    {
+                        Controller.Button button = controller.Buttons.FindByCode(compatInput.InputCode);
+                        if (button == null)
+                        {
+                            Input input = Inputs.Instance.FindByCode(compatInput.InputCode);
+                            if (input == null)
+                            {
+                                continue;
+                            }
+                            button = new Controller.Button(input);
+                            controller.Buttons.Add(button);
+
+                            changed = true;
+                        }
+
+                        int value = (newState.Gamepad.Buttons & compatInput.XInputCode) != 0 ? 1 : 0;
+                        if (button.Value != value)
+                        {
+                            button.Value = value;
+                            changed = true;
+                        }
+
+                        if (changed)
+                        {
+                            Controllers.Instance.Change();
+                        }
+                    }
                 }
-                Thread.Sleep(33);
+                Thread.Yield();
             } while (res == 0);
         }
 

@@ -20,8 +20,6 @@ namespace Lamprey
             InitializeComponent();
         }
 
-        bool needRefresh = true;
-
         private class SkinButtonPictureBox : PictureBox
         {
             public Skin.Button SkinButton { get; set; }
@@ -123,7 +121,7 @@ namespace Lamprey
         void tmsiSettings_Click(object sender, EventArgs e)
         {
             FormSettings settings = new FormSettings();
-            settings.SkinChanged += new EventHandler(FormDisplay_SkinChanged);
+            settings.SkinChanged += FormDisplay_SkinChanged;
             settings.ShowDialog(this);
             settings.Dispose();
         }
@@ -135,11 +133,14 @@ namespace Lamprey
 
         void FormDisplay_Closed(object sender, EventArgs e)
         {
+            Controllers.Instance.ControllerChanged -= FormDisplay_ControllerChanged;
         }
 
         void FormDisplay_Shown(object sender, EventArgs e)
         {
             this.loadSkinImages();
+
+            Controllers.Instance.ControllerChanged += FormDisplay_ControllerChanged;
         }
 
         void FormDisplay_MouseDown(object sender, MouseEventArgs e)
@@ -151,8 +152,20 @@ namespace Lamprey
             }
         }
 
+        void FormDisplay_ControllerChanged(object sender, EventArgs e)
+        {
+            this.refreshImage();
+        }
+
+        void FormDisplay_SkinChanged(object sender, EventArgs e)
+        {
+            this.loadSkinImages();
+        }
+
         void timer1_Tick(object sender, EventArgs e)
         {
+            bool needRefresh = false;
+
             foreach (Controller Controller in Controllers.Instance)
             {
                 foreach (Controller.Button Button in Controller.Buttons)
@@ -174,39 +187,27 @@ namespace Lamprey
                             Button.Decay = 0;
                             Button.Value = 0;
                         }
-                        this.needRefresh = true;
+                        needRefresh = true;
                     }
                 }
             }
 
-            if (this.needRefresh)
+            if (needRefresh)
             {
-                if (this.picController.InvokeRequired)
-                {
-                    this.picController.Invoke(new Action(this.refreshImage));
-                }
-                else
-                {
-                    this.refreshImage();
-                }
+                this.refreshImage();
             }
         }
 
         void refreshImage()
         {
-            this.needRefresh = false;
-
-            this.picController.Refresh();
-        }
-
-        void output_controller()
-        {
-            this.needRefresh = true;
-        }
-
-        void FormDisplay_SkinChanged(object sender, EventArgs e)
-        {
-            this.loadSkinImages();
+            if (this.picController.InvokeRequired)
+            {
+                this.picController.Invoke(new Action(this.picController.Refresh));
+            }
+            else
+            {
+                this.picController.Refresh();
+            }
         }
 
         void loadSkinImages()

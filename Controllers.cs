@@ -20,6 +20,7 @@ namespace Lamprey
         }
 
         private List<Controller> List { get; } = new List<Controller>();
+        public event EventHandler ControllerChanged;
 
         public int Count => List.Count;
 
@@ -43,6 +44,11 @@ namespace Lamprey
                 }
             }
             return null;
+        }
+
+        public void Change()
+        {
+            ControllerChanged?.Invoke(this, null);
         }
     }
 }
