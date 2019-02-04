@@ -25,6 +25,14 @@ namespace Lamprey
                 IsBackground = true
             };
             t.Start();
+
+            /*
+            t = new Thread(new ThreadStart((new NintendoSpy()).Poll))
+            {
+                IsBackground = true
+            };
+            t.Start();
+            */
         }
 
         public IEnumerator GetEnumerator()
