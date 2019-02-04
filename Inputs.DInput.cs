@@ -7,9 +7,9 @@ using System.Threading;
 
 namespace Lamprey
 {
-    public partial class Inputs
+    partial class Inputs
     {
-        public class DInput
+        class DInput
         {
             private DirectInput DirectInput { get; } = new DirectInput();
             private List<WaitDevice> WaitDevices { get; } = new List<WaitDevice>();

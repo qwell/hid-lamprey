@@ -4,9 +4,9 @@ using System.Threading;
 
 namespace Lamprey
 {
-    public partial class Inputs
+    partial class Inputs
     {
-        private class XInput
+        class XInput
         {
             private static readonly int MaxDevices = 4;
 
