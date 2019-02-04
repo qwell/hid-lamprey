@@ -9,8 +9,8 @@ namespace Lamprey
 {
     public class DInput
     {
-        private readonly static DirectInput DirectInput = new DirectInput();
-        private static List<WaitDevice> waitDevices = new List<WaitDevice>();
+        private DirectInput DirectInput { get; } = new DirectInput();
+        private List<WaitDevice> WaitDevices { get; } = new List<WaitDevice>();
 
         private class CompatInput
         {
@@ -102,7 +102,7 @@ namespace Lamprey
                         device.SetNotification(waitHandle);
                         device.Acquire();
 
-                        waitDevices.Add(new WaitDevice(waitHandle, device));
+                        WaitDevices.Add(new WaitDevice(waitHandle, device));
                     }
 
                     changed = true;
@@ -117,7 +117,7 @@ namespace Lamprey
 
         public void Poll()
         {
-            if (waitDevices.Count == 0)
+            if (WaitDevices.Count == 0)
             {
                 RefreshDevices();
             }
@@ -125,7 +125,7 @@ namespace Lamprey
             int res = 0;
             do
             {
-                int triggerHandle = WaitHandle.WaitAny(waitDevices.ConvertAll(new Converter<WaitDevice, WaitHandle>(i => i.Handle)).ToArray(), 500);
+                int triggerHandle = WaitHandle.WaitAny(WaitDevices.ConvertAll(new Converter<WaitDevice, WaitHandle>(i => i.Handle)).ToArray(), 500);
                 if (triggerHandle >= 256)
                 {
                     this.RefreshDevices();
@@ -134,7 +134,7 @@ namespace Lamprey
 
                 bool changed = false;
 
-                Device device = waitDevices.ConvertAll(new Converter<WaitDevice, Device>(i => i.Device)).ToArray()[triggerHandle];
+                Device device = WaitDevices.ConvertAll(new Converter<WaitDevice, Device>(i => i.Device)).ToArray()[triggerHandle];
 
                 string deviceName = "DInput " + device.Information.Type + " " + device.Information.InstanceGuid;
                 Controller controller = Controllers.Instance.FindByName(deviceName);
