@@ -55,70 +55,79 @@ namespace Lamprey
             Settings.Instance.Save();
         }
 
-        void output_raw(string device, string rawname, int value)
+        void FormSettings_ControllerChanged(object sender, EventArgs e)
         {
             if (this.tvMappings.InvokeRequired)
             {
-                this.tvMappings.Invoke(new Action<string, string, int>(this.output_raw), device, rawname, value);
+                this.tvMappings.Invoke(new Action<object, EventArgs>(this.FormSettings_ControllerChanged), sender, e);
             }
             else
             {
-                TreeNode nodeDevice = null;
-                TreeNode nodeButton;
-
-                foreach (TreeNode node in tvMappings.Nodes)
-                {
-                    if (device == node.Text)
-                    {
-                        nodeDevice = node;
-
-                        foreach (TreeNode node2 in nodeDevice.Nodes)
-                        {
-                            if (node2.Name == rawname)
-                            {
-                                if (value != 0)
-                                {
-                                    node2.ForeColor = Color.Gold;
-                                }
-                                else if (node2.Name == node2.Text)
-                                {
-                                    node2.ForeColor = Color.Red;
-                                }
-                                else
-                                {
-                                    node2.ForeColor = Color.Green;
-                                }
-                                return;
-                            }
-                        }
-                        break;
-                    }
-                }
-                if (nodeDevice == null)
-                {
-                    nodeDevice = new TreeNode(device)
-                    {
-                        Name = device
-                    };
-                }
-
                 tvMappings.BeginUpdate();
 
-                nodeButton = new TreeNode(rawname)
+                foreach (Controller controller in Controllers.Instance)
                 {
-                    Name = rawname,
-                    ForeColor = Color.Red
-                };
+                    TreeNode nodeDevice = null;
 
-                nodeDevice.Nodes.Add(nodeButton);
-                nodeDevice.Expand();
+                    foreach (TreeNode node in tvMappings.Nodes)
+                    {
+                        if (controller.Name == node.Text)
+                        {
+                            nodeDevice = node;
+                            break;
+                        }
+                    }
 
-                if (nodeDevice.TreeView == null)
-                {
-                    tvMappings.Nodes.Add(nodeDevice);
+                    if (nodeDevice == null)
+                    {
+                        nodeDevice = new TreeNode(controller.Name)
+                        {
+                            Name = controller.Name,
+                        };
+                        nodeDevice.Expand();
+                        tvMappings.Nodes.Add(nodeDevice);
+                    }
+
+                    foreach (Controller.Button button in controller.Buttons)
+                    {
+                        TreeNode nodeButton = null;
+
+                        foreach (TreeNode node in nodeDevice.Nodes)
+                        {
+                            if (node.Name == button.Code.ToString())
+                            {
+                                nodeButton = node;
+                                break;
+                            }
+                        }
+
+                        if (nodeButton == null)
+                        {
+                            nodeButton = new TreeNode(button.Code.ToString())
+                            {
+                                Name = button.Code.ToString(),
+                                ForeColor = Color.Red
+                            };
+                            nodeDevice.Nodes.Add(nodeButton);
+                            nodeDevice.Expand();
+                        }
+
+                        if (button.Value != 0)
+                        {
+                            nodeButton.ForeColor = Color.Gold;
+                        }
+                        else if (nodeButton.Name == nodeButton.Text)
+                        {
+                            nodeButton.ForeColor = Color.Red;
+                        }
+                        else
+                        {
+                            nodeButton.ForeColor = Color.Green;
+                        }
+                    }
+
+                    tvMappings.EndUpdate();
                 }
-
-                tvMappings.EndUpdate();
             }
         }
 
@@ -287,6 +296,13 @@ namespace Lamprey
             }
             tvShortcuts.ExpandAll();
             tvShortcuts.EndUpdate();
+
+            Controllers.Instance.ControllerChanged += FormSettings_ControllerChanged;
+        }
+
+        void FormSettings_Closed(object sender, EventArgs e)
+        {
+            Controllers.Instance.ControllerChanged -= FormSettings_ControllerChanged;
         }
 
         private void tvSkins_AfterSelect(object sender, TreeViewEventArgs e)

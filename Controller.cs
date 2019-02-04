@@ -10,6 +10,7 @@ namespace Lamprey
         public class Button : Input
         {
             public Button(Input input) : base(input) { }
+            public string Name { get; set; }
             public int Value { get; set; }
             public int Decay { get; set; }
         }
@@ -45,6 +46,18 @@ namespace Lamprey
                 foreach (Button button in List)
                 {
                     if (code == button.Code)
+                    {
+                        return button;
+                    }
+                }
+                return null;
+            }
+
+            public Button FindByName(string name)
+            {
+                foreach (Button button in List)
+                {
+                    if (name == button.Name)
                     {
                         return button;
                     }

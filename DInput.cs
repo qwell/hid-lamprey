@@ -45,7 +45,7 @@ namespace Lamprey
                     continue;
                 }
 
-                string deviceName = "DInput " + deviceInstance.Type + " " + deviceInstance.InstanceGuid;
+                string deviceName = "DirectInput " + deviceInstance.InstanceName;
                 bool changed = false;
 
                 if (Controllers.Instance.FindByName(deviceName) == null)
@@ -55,20 +55,6 @@ namespace Lamprey
                         Name = deviceName,
                     };
 
-                    foreach (CompatInput compatInput in CompatInputs)
-                    {
-                        Controller.Button button = controller.Buttons.FindByCode(compatInput.InputCode);
-                        if (button == null)
-                        {
-                            Input input = Inputs.Instance.FindByCode(compatInput.InputCode);
-                            if (input == null)
-                            {
-                                continue;
-                            }
-                            button = new Controller.Button(input);
-                            controller.Buttons.Add(button);
-                        }
-                    }
                     Controllers.Instance.Add(controller);
 
                     WaitHandle waitHandle = new AutoResetEvent(false);
@@ -79,8 +65,28 @@ namespace Lamprey
                         case DeviceType.Gamepad:
                         case DeviceType.Joystick:
                             Joystick joystick = new Joystick(DirectInput, deviceInstance.InstanceGuid);
-                            joystick.Properties.Range = new InputRange(-256, 256);
                             device = joystick;
+
+                            joystick.Properties.Range = new InputRange(-256, 256);
+
+                            JoystickState joystickState = joystick.GetCurrentState();
+                            for (int i = 0; i < joystick.Capabilities.ButtonCount; i++)
+                            {
+                                bool joystickButton = joystickState.Buttons[i];
+
+                                Controller.Button button = controller.Buttons.FindByName("button:" + i);
+                                if (button == null)
+                                {
+                                    Input input = Inputs.Instance.FindByCode(Input.InputCode.UnknownCode);
+                                    if (input == null)
+                                    {
+                                        continue;
+                                    }
+                                    button = new Controller.Button(input);
+                                    controller.Buttons.Add(button);
+                                }
+
+                            }
 
                             break;
                         case DeviceType.Mouse:
@@ -93,6 +99,20 @@ namespace Lamprey
                             Keyboard keyboard = new Keyboard(DirectInput);
                             device = keyboard;
 
+                            foreach (CompatInput compatInput in CompatInputs)
+                            {
+                                Controller.Button button = controller.Buttons.FindByCode(compatInput.InputCode);
+                                if (button == null)
+                                {
+                                    Input input = Inputs.Instance.FindByCode(compatInput.InputCode);
+                                    if (input == null)
+                                    {
+                                        continue;
+                                    }
+                                    button = new Controller.Button(input);
+                                    controller.Buttons.Add(button);
+                                }
+                            }
                             break;
                     }
 
@@ -128,7 +148,7 @@ namespace Lamprey
                 int triggerHandle = WaitHandle.WaitAny(WaitDevices.ConvertAll(new Converter<WaitDevice, WaitHandle>(i => i.Handle)).ToArray(), 500);
                 if (triggerHandle >= 256)
                 {
-                    this.RefreshDevices();
+                    RefreshDevices();
                     continue;
                 }
 
@@ -136,7 +156,7 @@ namespace Lamprey
 
                 Device device = WaitDevices.ConvertAll(new Converter<WaitDevice, Device>(i => i.Device)).ToArray()[triggerHandle];
 
-                string deviceName = "DInput " + device.Information.Type + " " + device.Information.InstanceGuid;
+                string deviceName = "DirectInput " + device.Information.InstanceName;
                 Controller controller = Controllers.Instance.FindByName(deviceName);
 
                 switch (device.Information.Type)
@@ -144,6 +164,7 @@ namespace Lamprey
                     case DeviceType.Gamepad:
                     case DeviceType.Joystick:
                         Joystick joystick = (Joystick)device;
+                        JoystickState joystickState = joystick.GetCurrentState();
 
                         break;
                     case DeviceType.Mouse:
