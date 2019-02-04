@@ -66,7 +66,10 @@ namespace Lamprey
                             {
                                 continue;
                             }
-                            button = new Controller.Button(input);
+                            button = new Controller.Button(input)
+                            {
+                                Name = input.Description,
+                            };
                             controller.Buttons.Add(button);
 
                             changed = true;
