@@ -69,11 +69,8 @@ namespace Lamprey
 
                             joystick.Properties.Range = new InputRange(-256, 256);
 
-                            JoystickState joystickState = joystick.GetCurrentState();
                             for (int i = 0; i < joystick.Capabilities.ButtonCount; i++)
                             {
-                                bool joystickButton = joystickState.Buttons[i];
-
                                 Controller.Button button = controller.Buttons.FindByName("button:" + i);
                                 if (button == null)
                                 {
@@ -82,7 +79,10 @@ namespace Lamprey
                                     {
                                         continue;
                                     }
-                                    button = new Controller.Button(input);
+                                    button = new Controller.Button(input)
+                                    {
+                                        Name = "button:" + i,
+                                    };
                                     controller.Buttons.Add(button);
                                 }
 
@@ -93,6 +93,25 @@ namespace Lamprey
                         case DeviceType.ScreenPointer:
                             Mouse mouse = new Mouse(DirectInput);
                             device = mouse;
+
+                            for (int i = 0; i < mouse.Capabilities.ButtonCount; i++)
+                            {
+                                Controller.Button button = controller.Buttons.FindByName("button:" + i);
+                                if (button == null)
+                                {
+                                    Input input = Inputs.Instance.FindByCode(Input.InputCode.UnknownCode);
+                                    if (input == null)
+                                    {
+                                        continue;
+                                    }
+                                    button = new Controller.Button(input)
+                                    {
+                                        Name = "button:" + i,
+                                    };
+                                    controller.Buttons.Add(button);
+                                }
+
+                            }
 
                             break;
                         case DeviceType.Keyboard:

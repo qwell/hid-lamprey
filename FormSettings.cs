@@ -94,7 +94,7 @@ namespace Lamprey
 
                         foreach (TreeNode node in nodeDevice.Nodes)
                         {
-                            if (node.Name == button.Code.ToString())
+                            if (node.Name == button.Name)
                             {
                                 nodeButton = node;
                                 break;
@@ -103,9 +103,9 @@ namespace Lamprey
 
                         if (nodeButton == null)
                         {
-                            nodeButton = new TreeNode(button.Code.ToString())
+                            nodeButton = new TreeNode(button.Name)
                             {
-                                Name = button.Code.ToString(),
+                                Name = button.Name,
                                 ForeColor = Color.Red
                             };
                             nodeDevice.Nodes.Add(nodeButton);

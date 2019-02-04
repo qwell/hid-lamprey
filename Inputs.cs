@@ -81,6 +81,8 @@ namespace Lamprey
         private void Load()
         {
             List.AddRange(new Input[] {
+                new Input(Input.InputType.UnknownType, Input.InputCode.UnknownCode, "Unknown"),
+
                 new Input(Input.InputType.GamepadButton, Input.InputCode.ButtonEast, "A (East)"),
                 new Input(Input.InputType.GamepadButton, Input.InputCode.ButtonSouth, "B (South)"),
                 new Input(Input.InputType.GamepadButton, Input.InputCode.ButtonC, "C"),

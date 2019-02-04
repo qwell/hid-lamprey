@@ -9,7 +9,10 @@ namespace Lamprey
     {
         public class Button : Input
         {
-            public Button(Input input) : base(input) { }
+            public Button(Input input) : base(input)
+            {
+                this.Name = input.Code.ToString();
+            }
             public string Name { get; set; }
             public int Value { get; set; }
             public int Decay { get; set; }
