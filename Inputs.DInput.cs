@@ -7,220 +7,222 @@ using System.Threading;
 
 namespace Lamprey
 {
-    public class DInput
+    public partial class Inputs
     {
-        private DirectInput DirectInput { get; } = new DirectInput();
-        private List<WaitDevice> WaitDevices { get; } = new List<WaitDevice>();
-
-        private class CompatInput
+        public class DInput
         {
-            public Key DInputKey { get; }
-            public Input.InputCode InputCode { get; }
+            private DirectInput DirectInput { get; } = new DirectInput();
+            private List<WaitDevice> WaitDevices { get; } = new List<WaitDevice>();
 
-            public CompatInput(Key DInputKey, Input.InputCode InputCode)
+            private class CompatInput
             {
-                this.DInputKey = DInputKey;
-                this.InputCode = InputCode;
-            }
-        }
+                public Key DInputKey { get; }
+                public Input.InputCode InputCode { get; }
 
-        class WaitDevice
-        {
-            public WaitHandle Handle { get; }
-            public Device Device { get; }
-
-            public WaitDevice(WaitHandle Handle, Device Device)
-            {
-                this.Handle = Handle;
-                this.Device = Device;
-            }
-        }
-
-        private void RefreshDevices()
-        {
-            foreach (DeviceInstance deviceInstance in DirectInput.GetDevices())
-            {
-                if (deviceInstance.Type == DeviceType.Device)
+                public CompatInput(Key DInputKey, Input.InputCode InputCode)
                 {
-                    continue;
+                    this.DInputKey = DInputKey;
+                    this.InputCode = InputCode;
+                }
+            }
+
+            class WaitDevice
+            {
+                public WaitHandle Handle { get; }
+                public Device Device { get; }
+
+                public WaitDevice(WaitHandle Handle, Device Device)
+                {
+                    this.Handle = Handle;
+                    this.Device = Device;
+                }
+            }
+
+            private void RefreshDevices()
+            {
+                foreach (DeviceInstance deviceInstance in DirectInput.GetDevices())
+                {
+                    if (deviceInstance.Type == DeviceType.Device)
+                    {
+                        continue;
+                    }
+
+                    string deviceName = "DirectInput " + deviceInstance.InstanceName;
+                    bool changed = false;
+
+                    if (Controllers.Instance.FindByName(deviceName) == null)
+                    {
+                        Controller controller = new Controller()
+                        {
+                            Name = deviceName,
+                        };
+
+                        Controllers.Instance.Add(controller);
+
+                        WaitHandle waitHandle = new AutoResetEvent(false);
+                        Device device = null;
+
+                        switch (deviceInstance.Type)
+                        {
+                            case DeviceType.Gamepad:
+                            case DeviceType.Joystick:
+                                Joystick joystick = new Joystick(DirectInput, deviceInstance.InstanceGuid);
+                                device = joystick;
+
+                                joystick.Properties.Range = new InputRange(-256, 256);
+
+                                for (int i = 0; i < joystick.Capabilities.ButtonCount; i++)
+                                {
+                                    Controller.Button button = controller.Buttons.FindByName("button:" + i);
+                                    if (button == null)
+                                    {
+                                        Input input = Inputs.Instance.FindByCode(Input.InputCode.UnknownCode);
+                                        if (input == null)
+                                        {
+                                            continue;
+                                        }
+                                        button = new Controller.Button(input)
+                                        {
+                                            Name = "button:" + i,
+                                        };
+                                        controller.Buttons.Add(button);
+                                    }
+
+                                }
+
+                                break;
+                            case DeviceType.Mouse:
+                            case DeviceType.ScreenPointer:
+                                Mouse mouse = new Mouse(DirectInput);
+                                device = mouse;
+
+                                for (int i = 0; i < mouse.Capabilities.ButtonCount; i++)
+                                {
+                                    Controller.Button button = controller.Buttons.FindByName("button:" + i);
+                                    if (button == null)
+                                    {
+                                        Input input = Inputs.Instance.FindByCode(Input.InputCode.UnknownCode);
+                                        if (input == null)
+                                        {
+                                            continue;
+                                        }
+                                        button = new Controller.Button(input)
+                                        {
+                                            Name = "button:" + i,
+                                        };
+                                        controller.Buttons.Add(button);
+                                    }
+
+                                }
+
+                                break;
+                            case DeviceType.Keyboard:
+                                Keyboard keyboard = new Keyboard(DirectInput);
+                                device = keyboard;
+
+                                foreach (CompatInput compatInput in CompatInputs)
+                                {
+                                    Controller.Button button = controller.Buttons.FindByCode(compatInput.InputCode);
+                                    if (button == null)
+                                    {
+                                        Input input = Inputs.Instance.FindByCode(compatInput.InputCode);
+                                        if (input == null)
+                                        {
+                                            continue;
+                                        }
+                                        button = new Controller.Button(input)
+                                        {
+                                            Name = input.Description,
+                                        };
+                                        controller.Buttons.Add(button);
+                                    }
+                                }
+                                break;
+                        }
+
+                        if (device != null)
+                        {
+                            device.SetCooperativeLevel(Process.GetCurrentProcess().MainWindowHandle, CooperativeLevel.Background | CooperativeLevel.NonExclusive);
+                            device.SetNotification(waitHandle);
+                            device.Acquire();
+
+                            WaitDevices.Add(new WaitDevice(waitHandle, device));
+                        }
+
+                        changed = true;
+                    }
+
+                    if (changed)
+                    {
+                        Controllers.Instance.Change();
+                    }
+                }
+            }
+
+            public void Poll()
+            {
+                if (WaitDevices.Count == 0)
+                {
+                    RefreshDevices();
                 }
 
-                string deviceName = "DirectInput " + deviceInstance.InstanceName;
-                bool changed = false;
-
-                if (Controllers.Instance.FindByName(deviceName) == null)
+                int res = 0;
+                do
                 {
-                    Controller controller = new Controller()
+                    int triggerHandle = WaitHandle.WaitAny(WaitDevices.ConvertAll(new Converter<WaitDevice, WaitHandle>(i => i.Handle)).ToArray(), 500);
+                    if (triggerHandle >= 256)
                     {
-                        Name = deviceName,
-                    };
+                        RefreshDevices();
+                        continue;
+                    }
 
-                    Controllers.Instance.Add(controller);
+                    bool changed = false;
 
-                    WaitHandle waitHandle = new AutoResetEvent(false);
-                    Device device = null;
+                    Device device = WaitDevices.ConvertAll(new Converter<WaitDevice, Device>(i => i.Device)).ToArray()[triggerHandle];
 
-                    switch (deviceInstance.Type)
+                    string deviceName = "DirectInput " + device.Information.InstanceName;
+                    Controller controller = Controllers.Instance.FindByName(deviceName);
+
+                    switch (device.Information.Type)
                     {
                         case DeviceType.Gamepad:
                         case DeviceType.Joystick:
-                            Joystick joystick = new Joystick(DirectInput, deviceInstance.InstanceGuid);
-                            device = joystick;
-
-                            joystick.Properties.Range = new InputRange(-256, 256);
-
-                            for (int i = 0; i < joystick.Capabilities.ButtonCount; i++)
-                            {
-                                Controller.Button button = controller.Buttons.FindByName("button:" + i);
-                                if (button == null)
-                                {
-                                    Input input = Inputs.Instance.FindByCode(Input.InputCode.UnknownCode);
-                                    if (input == null)
-                                    {
-                                        continue;
-                                    }
-                                    button = new Controller.Button(input)
-                                    {
-                                        Name = "button:" + i,
-                                    };
-                                    controller.Buttons.Add(button);
-                                }
-
-                            }
+                            Joystick joystick = (Joystick)device;
+                            JoystickState joystickState = joystick.GetCurrentState();
 
                             break;
                         case DeviceType.Mouse:
                         case DeviceType.ScreenPointer:
-                            Mouse mouse = new Mouse(DirectInput);
-                            device = mouse;
-
-                            for (int i = 0; i < mouse.Capabilities.ButtonCount; i++)
-                            {
-                                Controller.Button button = controller.Buttons.FindByName("button:" + i);
-                                if (button == null)
-                                {
-                                    Input input = Inputs.Instance.FindByCode(Input.InputCode.UnknownCode);
-                                    if (input == null)
-                                    {
-                                        continue;
-                                    }
-                                    button = new Controller.Button(input)
-                                    {
-                                        Name = "button:" + i,
-                                    };
-                                    controller.Buttons.Add(button);
-                                }
-
-                            }
+                            Mouse mouse = (Mouse)device;
 
                             break;
                         case DeviceType.Keyboard:
-                            Keyboard keyboard = new Keyboard(DirectInput);
-                            device = keyboard;
+                            Keyboard keyboard = (Keyboard)device;
+                            KeyboardState keyboardState = keyboard.GetCurrentState();
 
                             foreach (CompatInput compatInput in CompatInputs)
                             {
                                 Controller.Button button = controller.Buttons.FindByCode(compatInput.InputCode);
-                                if (button == null)
+
+                                int value = keyboardState.IsPressed(compatInput.DInputKey) ? 1 : 0;
+                                if (button.Value != value)
                                 {
-                                    Input input = Inputs.Instance.FindByCode(compatInput.InputCode);
-                                    if (input == null)
-                                    {
-                                        continue;
-                                    }
-                                    button = new Controller.Button(input)
-                                    {
-                                        Name = input.Description,
-                                    };
-                                    controller.Buttons.Add(button);
+                                    button.Value = value;
+                                    changed = true;
                                 }
                             }
+
                             break;
                     }
 
-                    if (device != null)
+                    if (changed)
                     {
-                        device.SetCooperativeLevel(Process.GetCurrentProcess().MainWindowHandle, CooperativeLevel.Background | CooperativeLevel.NonExclusive);
-                        device.SetNotification(waitHandle);
-                        device.Acquire();
-
-                        WaitDevices.Add(new WaitDevice(waitHandle, device));
+                        Controllers.Instance.Change();
                     }
-
-                    changed = true;
-                }
-
-                if (changed)
-                {
-                    Controllers.Instance.Change();
-                }
-            }
-        }
-
-        public void Poll()
-        {
-            if (WaitDevices.Count == 0)
-            {
-                RefreshDevices();
+                } while (res == 0);
             }
 
-            int res = 0;
-            do
-            {
-                int triggerHandle = WaitHandle.WaitAny(WaitDevices.ConvertAll(new Converter<WaitDevice, WaitHandle>(i => i.Handle)).ToArray(), 500);
-                if (triggerHandle >= 256)
-                {
-                    RefreshDevices();
-                    continue;
-                }
-
-                bool changed = false;
-
-                Device device = WaitDevices.ConvertAll(new Converter<WaitDevice, Device>(i => i.Device)).ToArray()[triggerHandle];
-
-                string deviceName = "DirectInput " + device.Information.InstanceName;
-                Controller controller = Controllers.Instance.FindByName(deviceName);
-
-                switch (device.Information.Type)
-                {
-                    case DeviceType.Gamepad:
-                    case DeviceType.Joystick:
-                        Joystick joystick = (Joystick)device;
-                        JoystickState joystickState = joystick.GetCurrentState();
-
-                        break;
-                    case DeviceType.Mouse:
-                    case DeviceType.ScreenPointer:
-                        Mouse mouse = (Mouse)device;
-
-                        break;
-                    case DeviceType.Keyboard:
-                        Keyboard keyboard = (Keyboard)device;
-                        KeyboardState keyboardState = keyboard.GetCurrentState();
-
-                        foreach (CompatInput compatInput in CompatInputs)
-                        {
-                            Controller.Button button = controller.Buttons.FindByCode(compatInput.InputCode);
-
-                            int value = keyboardState.IsPressed(compatInput.DInputKey) ? 1 : 0;
-                            if (button.Value != value)
-                            {
-                                button.Value = value;
-                                changed = true;
-                            }
-                        }
-
-                        break;
-                }
-
-                if (changed)
-                {
-                    Controllers.Instance.Change();
-                }
-            } while (res == 0);
-        }
-
-        private readonly CompatInput[] CompatInputs = new CompatInput[] {
+            private readonly CompatInput[] CompatInputs = new CompatInput[] {
             new CompatInput(Key.D0, Input.InputCode.Key0),
             new CompatInput(Key.D1, Input.InputCode.Key1),
             new CompatInput(Key.D2, Input.InputCode.Key2),
@@ -284,5 +286,6 @@ namespace Lamprey
             new CompatInput(Key.NumberPad8, Input.InputCode.Numpad8),
             new CompatInput(Key.NumberPad9, Input.InputCode.Numpad9),
         };
+        }
     }
 }

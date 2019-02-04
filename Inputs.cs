@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Lamprey
 {
-    public sealed class Inputs : IEnumerable<Input>
+    public sealed partial class Inputs : IEnumerable<Input>
     {
         public static Inputs Instance { get; } = new Inputs();
         static Inputs() { }
