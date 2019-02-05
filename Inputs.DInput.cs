@@ -87,7 +87,28 @@ namespace Lamprey
                                         };
                                         controller.Buttons.Add(button);
                                     }
+                                }
 
+                                for (int i = 0; i < joystick.Capabilities.PovCount; i++)
+                                {
+                                    string[] directions = { "up", "down", "left", "right" };
+                                    foreach (string direction in directions)
+                                    {
+                                        Controller.Button button = controller.Buttons.FindByName("dpad_" + direction + ":" + i);
+                                        if (button == null)
+                                        {
+                                            Input input = Inputs.Instance.FindByCode(Input.InputCode.UnknownCode);
+                                            if (input == null)
+                                            {
+                                                continue;
+                                            }
+                                            button = new Controller.Button(input)
+                                            {
+                                                Name = "dpad_" + direction + ":" + i,
+                                            };
+                                            controller.Buttons.Add(button);
+                                        }
+                                    }
                                 }
 
                                 break;
