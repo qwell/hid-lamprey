@@ -10,6 +10,5 @@ namespace Lamprey
         public string Device { get; set; }
         public string Name { get; set; }
         public Input.InputCode Code { get; set; }
-        public int Value { get; set; }
     }
 }

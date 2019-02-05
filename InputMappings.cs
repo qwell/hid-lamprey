@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace Lamprey
 {
@@ -7,7 +9,8 @@ namespace Lamprey
     {
         public static InputMappings Instance { get; } = new InputMappings();
         static InputMappings() { }
-        private InputMappings() {
+        private InputMappings()
+        {
             Load();
         }
 
@@ -34,9 +37,65 @@ namespace Lamprey
             return List.Remove(inputMapping);
         }
 
+        public InputMapping FindByDeviceName(string device, string name)
+        {
+            foreach (InputMapping inputMapping in List)
+            {
+                if (device == inputMapping.Device && name == inputMapping.Name)
+                {
+                    return inputMapping;
+                }
+            }
+            return null;
+        }
+
         private void Load()
         {
+            //TODO: Add builtin mappings?
 
+            XmlReader xml = XmlReader.Create(@"settings\mappings.xml");
+            xml.MoveToContent();
+            while (xml.Read())
+            {
+                switch (xml.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        switch (xml.Name)
+                        {
+                            case "mapping":
+                                if (xml.HasAttributes)
+                                {
+                                    string device = xml.GetAttribute("device");
+                                    string name = xml.GetAttribute("name");
+
+                                    Input.InputCode inputCode;
+                                    if (!Enum.TryParse(xml.GetAttribute("code"), true, out inputCode))
+                                    {
+                                        inputCode = Input.InputCode.UnknownCode;
+                                    }
+
+                                    InputMapping inputMapping = this.FindByDeviceName(device, name);
+                                    if (inputMapping == null)
+                                    {
+                                        this.Add(new InputMapping()
+                                        {
+                                            Device = device,
+                                            Name = name,
+                                            Code = inputCode,
+                                        });
+                                    }
+                                    else
+                                    {
+                                        inputMapping.Code = inputCode;
+                                    }
+                                }
+
+                                break;
+                        }
+
+                        break;
+                }
+            }
         }
     }
 }

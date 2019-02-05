@@ -33,7 +33,6 @@ namespace Lamprey
                     }
                     else
                     {
-                        inputMapping.Value = 0;
                         inputMapping.Builtin = false;
                         inputMapping.Code = input.Code;
                     }
@@ -45,7 +44,6 @@ namespace Lamprey
 
             InputMappings.Instance.Add(new InputMapping
             {
-                Value = 0,
                 Builtin = false,
                 Device = device,
                 Name = rawname,
@@ -103,11 +101,25 @@ namespace Lamprey
 
                         if (nodeButton == null)
                         {
-                            nodeButton = new TreeNode(button.Name)
+                            Input input = Inputs.Instance.FindByCode(button.Code);
+                            if (input != null)
                             {
-                                Name = button.Name,
-                                ForeColor = Color.Red
-                            };
+                                nodeButton = new TreeNode(button.Name + "  |  " + input.Description ?? input.Code.ToString())
+                                {
+                                    Name = button.Name,
+                                    Tag = input,
+                                    ForeColor = Color.Green
+                                };
+                            }
+                            else
+                            {
+                                nodeButton = new TreeNode(button.Name)
+                                {
+                                    Name = button.Name,
+                                    ForeColor = Color.Red
+                                };
+                            }
+
                             nodeDevice.Nodes.Add(nodeButton);
                             nodeDevice.Expand();
                         }
@@ -177,19 +189,24 @@ namespace Lamprey
                         };
                     }
 
-                    foreach (Input input in inputs)
+                    Input input = inputs.FindByCode(inputMapping.Code);
+                    if (input != null && input.Code != Input.InputCode.UnknownCode)
                     {
-                        if (input.Code == inputMapping.Code)
+                        nodeDevice.Nodes.Add(new TreeNode(inputMapping.Name + "  |  " + input.Description ?? input.Code.ToString())
                         {
-                            TreeNode nodeButton = new TreeNode(inputMapping.Name + "  |  " + input.Description ?? input.Code.ToString())
-                            {
-                                Name = inputMapping.Name,
-                                Tag = input,
-                                ForeColor = Color.Green
-                            };
+                            Name = inputMapping.Name,
+                            Tag = input,
+                            ForeColor = Color.Green
+                        });
+                    }
+                    else
+                    {
+                        nodeDevice.Nodes.Add(new TreeNode(inputMapping.Name)
+                        {
+                            Name = inputMapping.Name,
+                            ForeColor = Color.Red
+                        });
 
-                            nodeDevice.Nodes.Add(nodeButton);
-                        }
                     }
 
                     if (nodeDevice.TreeView == null)

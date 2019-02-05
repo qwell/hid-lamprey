@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mappings>
-  <mapping device="Dinput gamepad0" rawname="button:0" maptype="EV_KEY" mapcode="BTN_NORTH"/>
-  <mapping device="Dinput gamepad0" rawname="button:1" maptype="EV_KEY" mapcode="BTN_EAST"/>
-  <mapping device="Dinput gamepad0" rawname="button:2" maptype="EV_KEY" mapcode="BTN_SOUTH"/>
-  <mapping device="Dinput gamepad0" rawname="button:3" maptype="EV_KEY" mapcode="BTN_WEST"/>
-  <mapping device="Dinput gamepad0" rawname="button:4" maptype="EV_KEY" mapcode="BTN_TL"/>
-  <mapping device="Dinput gamepad0" rawname="button:5" maptype="EV_KEY" mapcode="BTN_TR"/>
-  <mapping device="Dinput gamepad0" rawname="button:6" maptype="EV_KEY" mapcode="BTN_SELECT"/>
-  <mapping device="Dinput gamepad0" rawname="button:7" maptype="EV_KEY" mapcode="BTN_START"/>
-  <mapping device="Dinput gamepad0" rawname="dpad_up:0" maptype="EV_KEY" mapcode="BTN_DPAD_UP"/>
-  <mapping device="Dinput gamepad0" rawname="dpad_right:0" maptype="EV_KEY" mapcode="BTN_DPAD_RIGHT"/>
-  <mapping device="Dinput gamepad0" rawname="dpad_down:0" maptype="EV_KEY" mapcode="BTN_DPAD_DOWN"/>
-  <mapping device="Dinput gamepad0" rawname="dpad_left:0" maptype="EV_KEY" mapcode="BTN_DPAD_LEFT"/>
-  <mapping device="Dinput gamepad0" rawname="axis:lX" maptype="EV_ABS" mapcode="ABS_X"/>
-  <mapping device="Dinput gamepad0" rawname="axis:lY" maptype="EV_ABS" mapcode="ABS_Y"/>
-  <mapping device="Dinput mouse0" rawname="axis:lZ" maptype="EV_REL" mapcode="REL_WHEEL"/>
-  <mapping device="Dinput mouse0" rawname="button:0" maptype="EV_KEY" mapcode="BTN_LEFT"/>
-  <mapping device="Dinput mouse0" rawname="button:1" maptype="EV_KEY" mapcode="BTN_RIGHT"/>
-  <mapping device="Dinput mouse0" rawname="axis:lX" maptype="EV_REL" mapcode="REL_X"/>
-  <mapping device="Dinput mouse0" rawname="axis:lY" maptype="EV_REL" mapcode="REL_Y"/>
+  <mapping device="DirectInput Gamepad0" name="button:0" code="ButtonNorth"/>
+  <mapping device="DirectInput Gamepad0" name="button:1" code="ButtonEast"/>
+  <mapping device="DirectInput Gamepad0" name="button:2" code="ButtonSouth"/>
+  <mapping device="DirectInput Gamepad0" name="button:3" code="ButtonWest"/>
+  <mapping device="DirectInput Gamepad0" name="button:4" code="ButtonTriggerL"/>
+  <mapping device="DirectInput Gamepad0" name="button:5" code="ButtonTriggerR"/>
+  <mapping device="DirectInput Gamepad0" name="button:6" code="ButtonSelect"/>
+  <mapping device="DirectInput Gamepad0" name="button:7" code="ButtonStart"/>
+  <mapping device="DirectInput Gamepad0" name="dpad_up:0" code="ButtonDPadUp"/>
+  <mapping device="DirectInput Gamepad0" name="dpad_right:0" code="ButtonDPadRight"/>
+  <mapping device="DirectInput Gamepad0" name="dpad_down:0" code="ButtonDPadDown"/>
+  <mapping device="DirectInput Gamepad0" name="dpad_left:0" code="ButtonDPadLeft"/>
+  <mapping device="DirectInput Gamepad0" name="axis:lX" code="ABS_X"/>
+  <mapping device="DirectInput Gamepad0" name="axis:lY" code="ABS_Y"/>
+  <mapping device="DirectInput Mouse" name="axis:lZ" code="REL_WHEEL"/>
+  <mapping device="DirectInput Mouse" name="button:0" code="MouseButtonLeft"/>
+  <mapping device="DirectInput Mouse" name="button:1" code="MouseButtonRight"/>
+  <mapping device="DirectInput Mouse" name="axis:lX" code="REL_X"/>
+  <mapping device="DirectInput Mouse" name="axis:lY" code="REL_Y"/>
 </mappings>
