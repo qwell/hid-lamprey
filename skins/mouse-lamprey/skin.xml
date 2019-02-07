@@ -1,8 +1,8 @@
 <skin name="mouse-lamprey">
 	<background name="default" image="mouse-base.png"/>
 
-	<button image="mouse-left.png" code="MouseLeft" x="15" y="3"/>
-	<button image="mouse-right.png" code="MouseRight" x="75" y="3"/>
+	<button image="mouse-left.png" code="MouseButtonLeft" x="15" y="3"/>
+	<button image="mouse-right.png" code="MouseButtonRight" x="75" y="3"/>
 
 	<axis image="mouse-scrollup.png" code_y="REL_WHEEL" trigger_y="1" x="61" y="16"/>
 	<axis image="mouse-scrolldown.png" code_y="REL_WHEEL" trigger_y="-1" x="61" y="42"/>

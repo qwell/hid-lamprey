@@ -11,8 +11,8 @@
 	<button image="ABXY.png" code="ButtonSouth" x="484" y="171"/>
 	<button image="ABXY.png" code="ButtonWest" x="423" y="123"/>
 
-	<button image="L.png" code="ButtonL" x="72" y="4"/>
-	<button image="R.png" code="ButtonR" x="430" y="4"/>
+	<button image="L.png" code="ButtonTriggerL" x="72" y="4"/>
+	<button image="R.png" code="ButtonTriggerR" x="430" y="4"/>
 
 	<button image="select.png" code="ButtonSelect" x="239" y="146"/>
 	<button image="start.png" code="ButtonStart" x="308" y="146"/>
