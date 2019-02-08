@@ -76,8 +76,7 @@ namespace Lamprey
                                     Controller.Button button = controller.Buttons.FindByName("button:" + i);
                                     if (button == null)
                                     {
-                                        InputMapping inputMapping = InputMappings.Instance.FindByDeviceName(deviceName, "button:" + i);
-                                        Input input = Inputs.Instance.FindByCode(inputMapping != null ? inputMapping.Code : Input.InputCode.UnknownCode);
+                                        Input input = Inputs.Instance.GetMappedInput(deviceName, "button:" + i);
                                         if (input == null)
                                         {
                                             continue;
@@ -98,8 +97,7 @@ namespace Lamprey
                                         Controller.Button button = controller.Buttons.FindByName("dpad_" + direction + ":" + i);
                                         if (button == null)
                                         {
-                                            InputMapping inputMapping = InputMappings.Instance.FindByDeviceName(deviceName, "dpad_" + direction + ":" + i);
-                                            Input input = Inputs.Instance.FindByCode(inputMapping != null ? inputMapping.Code : Input.InputCode.UnknownCode);
+                                            Input input = Inputs.Instance.GetMappedInput(deviceName, "dpad_" + direction + ":" + i);
                                             if (input == null)
                                             {
                                                 continue;
@@ -124,8 +122,7 @@ namespace Lamprey
                                     Controller.Button button = controller.Buttons.FindByName("button:" + i);
                                     if (button == null)
                                     {
-                                        InputMapping inputMapping = InputMappings.Instance.FindByDeviceName(deviceName, "button:" + i);
-                                        Input input = Inputs.Instance.FindByCode(inputMapping != null ? inputMapping.Code : Input.InputCode.UnknownCode);
+                                        Input input = Inputs.Instance.GetMappedInput(deviceName, "button:" + i);
                                         if (input == null)
                                         {
                                             continue;
@@ -148,8 +145,7 @@ namespace Lamprey
                                     Controller.Button button = controller.Buttons.FindByName(compatInput.DInputKey.ToString());
                                     if (button == null)
                                     {
-                                        InputMapping inputMapping = InputMappings.Instance.FindByDeviceName(deviceName, "key:" + compatInput.DInputKey.ToString());
-                                        Input input = Inputs.Instance.FindByCode(inputMapping != null ? inputMapping.Code : compatInput.InputCode);
+                                        Input input = Inputs.Instance.GetMappedInput(deviceName, "key:" + compatInput.DInputKey.ToString(), compatInput.InputCode);
                                         if (input == null)
                                         {
                                             continue;

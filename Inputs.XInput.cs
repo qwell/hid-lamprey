@@ -32,6 +32,7 @@ namespace Lamprey
                     for (int i = 0; i < MaxDevices; i++)
                     {
                         bool changed = false;
+                        string deviceName = "XInput" + i;
 
                         XInputState newState = new XInputState();
                         if (XInputGetState(i, ref newState) != 0)
@@ -45,12 +46,12 @@ namespace Lamprey
                         }
                         PacketNumber[i] = newState.PacketNumber;
 
-                        Controller controller = Controllers.Instance.FindByName("XInput" + i);
+                        Controller controller = Controllers.Instance.FindByName(deviceName);
                         if (controller == null)
                         {
                             controller = new Controller()
                             {
-                                Name = "XInput" + i,
+                                Name = deviceName,
                             };
 
                             Controllers.Instance.Add(controller);
@@ -63,7 +64,7 @@ namespace Lamprey
                             Controller.Button button = controller.Buttons.FindByCode(compatInput.InputCode);
                             if (button == null)
                             {
-                                Input input = Inputs.Instance.FindByCode(compatInput.InputCode);
+                                Input input = Inputs.Instance.GetMappedInput(deviceName, compatInput.InputCode.ToString(), compatInput.InputCode);
                                 if (input == null)
                                 {
                                     continue;

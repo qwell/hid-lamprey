@@ -86,6 +86,19 @@ namespace Lamprey
             return this.FindByCode(inputCode);
         }
 
+        public Input GetMappedInput(string device, string name, Input.InputCode fallback)
+        {
+            InputMapping inputMapping = InputMappings.Instance.FindByDeviceName(device, name);
+            Input input = Inputs.Instance.FindByCode(inputMapping != null ? inputMapping.Code : fallback);
+
+            return input;
+        }
+
+        public Input GetMappedInput(string device, string name)
+        {
+            return GetMappedInput(device, name, Input.InputCode.UnknownCode);
+        }
+
         private void Load()
         {
             List.AddRange(new Input[] {
